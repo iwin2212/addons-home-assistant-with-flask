@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Light</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thêm đèn Yeelight</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://yeelight.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <form style='margin-top: 2%;' action='./add_light' method='POST'>
+                    <a href='./light' class='btn btn-info' type="button" id="back" style="margin-bottom: 2%;">Danh sách
+                        đèn Yeelight</a>
+                    <div id='notify_denied' class='alert alert-danger alert-dismissible' style="display: none;"></div>
+                    <div id='notify_success' class='alert alert-success alert-dismissible' style="display: none;"></div>
+                    <big>
+                        <pre>
+    <big><strong>Các bước thực hiện:</strong></big>
+    - Tải ứng dụng Yeelight về điện thoại và làm theo hướng dẫn của ứng dụng để Add đèn Yeelight vào trong mạng.
+    - Bật chế độ <strong>"LAN Control"</strong> của đèn Yeelight (Khi thiết lập đèn mới có lựa chọn này hoặc vào ứng dụng, chọn vào
+      thiết bị tương ứng, chọn vào mũi tên góc phải dưới sẽ thấy lựa chọn <strong>"LAN Control"</strong> và tiến hành bật lên.)
+    - Tìm địa chỉ IP của đèn Yeelight bằng cách chọn vào thiết bị bạn muốn kết nối trong ứng dụng
+      <strong>Yeelight/ "dấu 3 gạch góc phải trên"/ "Device Info"/ "IP address".</strong>
+    - Điền địa chỉ IP address vừa tìm được vào ô "Địa chỉ IP" phía dưới.
+    - Đặt tên cho đèn Yeelight mà bạn muốn thêm vào.
+    - Ấn <strong>"Cấu hình"</strong> để thực hiện.
+                        </pre>
+                    </big>
+                    <table class="table" style="margin-top: 3%;">
+                        <tr>
+                            <td>Địa chỉ IP</td>
+                            <td><input type='text' name='host' id='host' onkeypress="return on_keyup(event);" class="form-control" placeholder="ví dụ: 192.168.1.37" required></td>
+                        </tr>
+                    </table>
+                    <div style="display: none;" id='pending' class="spinner-border text-primary"></div>
+                    <input onclick="config_yeelight()" id="config" type="button" value='Cấu hình' class="btn btn-primary">
+                </form>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+    <script>
+        // Prevent form submission on Enter key press
+        function on_keyup(e) {
+            if (e.keyCode == 13) {
+                config_yeelight();
+                return false;
+            }
+        }
+
+        function config_yeelight() {
+            host = document.getElementById('host').value;
+            $('#config').hide();
+            $('#pending').show();
+            $('#notify_denied').hide();
+            $('#notify_success').hide();
+            var timeleft = 60;
+            var downloadTimer = setInterval(function () {
+                timeleft -= 1;
+                if (timeleft <= 0) {
+                    document.getElementById('notify_denied').innerHTML = `Hệ thống đã xảy ra lỗi. Vui lòng khởi động lại tại <a
+                            href="./homeassistant">đây</a>.`;
+                    $('#notify_denied').show();
+                }
+            }, 1000);
+            $.post(".//config_yeelight?host=" + host, function (data, status) {
+                clearInterval(downloadTimer);
+                $('#config').show();
+                $('#pending').hide();
+                var content = data.data;
+                if (!data.error) {
+                    if (content.reason == 'already_configured') {
+                        document.getElementById('notify_denied').innerHTML = "Thiết bị đã được thêm vào trong hệ thống.";
+                        $('#notify_denied').show();
+                    }
+                    else if (content.reason == 'already_in_progress') {
+                        document.getElementById('notify_denied').innerHTML = `Hệ thống đã xảy ra lỗi. Vui lòng khởi động lại tại <a
+                            href="./homeassistant">đây</a>.`;
+                        $('#notify_denied').show();
+                    }
+                    else if (content.type == 'form') {
+                        error = content.errors;
+                        if (error.base == 'cannot_connect') {
+                            document.getElementById('notify_denied').innerHTML = "Thiết bị đèn Yeelight đang bị mất kết nối. Vui lòng kiểm tra lại thiết bị.";
+                            $('#notify_denied').show();
+                        }
+                    }
+                    else if (content.type == 'create_entry') {
+                        add_success();
+                    }
+                }
+                else {
+                    if (data['error']['reason'] == "single_instance_allowed") {
+                        document.getElementById('notify_denied').innerHTML = "Yêu cầu bị từ chối do các thiết bị đều đã được cấu hình.";
+                        $('#notify_denied').show();
+                    }
+                    else {
+                        document.getElementById('notify_denied').innerHTML = "Đã có lỗi xảy ra khi kết nối. Vui lòng thử lại sau.";
+                        $('#notify_denied').show();
+                    }
+                }
+            });
+        }
+
+        function add_success() {
+            document.getElementById('notify_success').innerHTML = "Thêm thiết bị thành công.";
+            $('#notify_success').show();
+            var timeleft = 3;
+            var downloadTimer = setInterval(function () {
+                timeleft -= 1;
+                if (timeleft <= 0) {
+                    window.location.href = "./show_light";
+                }
+            }, 1000);
+        }
+    </script>
+
+</html>

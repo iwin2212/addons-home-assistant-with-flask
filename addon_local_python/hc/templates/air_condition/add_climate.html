@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Climate</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+
+                <h3 id='title'>Thêm mới điều hoà</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://dieuhoa.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <form action='./add_climate' method='POST' name='myForm'>
+                    <table id="table_select" class="table">
+                        <tr>
+                            <td width="35%">Tên điều hoà</td>
+                            <td><input type='text' name='name' class="form-control" placeholder="ví dụ: điều hoà phòng ngủ" required></td>
+                        </tr>
+                        <tr>
+                            <td width="35%">Chọn remote hồng ngoại</td>
+                            <td><select id="entity_id" name='entity_id' class='form-control' value="" required>
+                                    <option disabled selected value> -- Chọn remote -- </option>
+                                    {%for gateway in list_gateway%}
+                                    <option>{{gateway['entity_id']}}</option>
+                                    {%endfor%}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="35%">Hãng sản xuất</td>
+                            <!-- <td>
+                                <input type = 'text' class = 'form-control' name = 'model'>
+                            </td> -->
+                            <td>
+                                <select name='model' onchange="myFunc({{list_ir}})" id='model' class='form-control selectpicker' data-dropup-auto="false" data-size="7" data-live-search="true">
+                                    <option disabled selected value>--Chọn hãng--</option>
+                                    {% for model in list_ir%}
+                                    <option>{{model}}</option>
+                                    {%endfor%}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr id='code'>
+                            <td width="35%">Mã model thiết bị</td>
+                            <td id="code">
+                                <input type='text' name='device_code' class='form-control' required placeholder="Là mã ứng với từng loại điều hòa. Ví dụ: 1000">
+                            </td>
+                        </tr>
+                        <tr id="test_device" style="display: none;">
+                            <td>Thử điều khiển điều hoà</td>
+                            <td id="func">
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <input type='submit' value='Lưu' class="btn btn-primary">
+
+                </form>
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+
+    <script>
+        $(function () {
+            $('.selectpicker').selectpicker();
+        });
+
+        function myFunc(list_ir) {
+            model = document.getElementById('model').value;
+            string = '';
+            string = '<td width="35%">Chọn mã model</td><td><select name = "device_code" id="model_test" class = "form-control selectpicker" data-dropup-auto="false" data-size="7" data-live-search="true" onchange="show_test()"><option disabled selected value>--chọn 1 model tương ứng--</option>'
+            for (i in list_ir[model]) {
+                string += '<option>' + i + "(" + list_ir[model][i] + ")" + '</option>';
+            }
+            string += '</select></td>'
+            // $('#code').remove();
+            document.getElementById('code').innerHTML = string;
+            $(function () {
+                $('.selectpicker').selectpicker();
+            });
+        }
+
+        function show_test() {
+            model = document.getElementById('model_test').value;
+            model = model.split('(')[1].split(')')[0];
+
+            $.post('./test_climate?device=' + model, function (data, status) {
+                operationModes = data['operationModes'];
+                fanModes = data['fanModes'];
+                string = "<table><tr><td>Bật điều hoà</td><td><input type='button' class='btn btn-info' value='BẬT' onclick='climate_on()'></td></tr><tr><td>Tắt điều hoà</td><td><input type='button' class='btn btn-info' value='TẮT' onclick='climate_off()'></td></tr>";
+                len_mode = operationModes.length;
+                len_fan = fanModes.length;
+                string += "<tr><td>Chế độ <b>Cool<b>:</td>";
+                for (j = 0; j < len_fan; j++) {
+                    var btn = fanModes[j].toUpperCase();
+                    string += "<td><input type='button' onclick='button(" + j + ")' class='btn btn-info' value=" + btn + "></td>";
+                }
+                string += '</tr>';
+                if (i == len_mode - 1) {
+                    string += "</table>";
+                }
+                document.getElementById('func').innerHTML = string;
+            });
+            $(test_device).show();
+        }
+
+        function climate_off() {
+            gateway = document.getElementById('entity_id').value;
+            model = document.getElementById('model_test').value;
+            model = model.split('(')[1].split(')')[0];
+            $.post('./check_command_climate_off?gateway=' + gateway + '&model=' + model, function (data, status) {
+            });
+        }
+
+        function climate_on() {
+            gateway = document.getElementById('entity_id').value;
+            model = document.getElementById('model_test').value;
+            model = model.split('(')[1].split(')')[0];
+            $.post('./check_command_climate_on?gateway=' + gateway + '&model=' + model, function (data, status) {
+            });
+        }
+
+        function button(order) {
+            gateway = document.getElementById('entity_id').value;
+            model = document.getElementById('model_test').value;
+            model = model.split('(')[1].split(')')[0];
+            $.post('./check_command_climate?gateway=' + gateway + '&model=' + model + '&order=' + order, function (data, status) {
+            });
+        }
+
+
+
+        function gen_unique_id() {
+            var device_name = document.myForm.name.value;
+            var x = device_name.split(" ").join("_");
+            str = x.toLowerCase();
+            str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+            str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+            str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+            str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+            str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+            str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+            str = str.replace(/đ/g, "d");
+            str = str.replace(/ + /g, " ");
+            str = str.trim();
+            document.getElementById("unique_id").value = str;
+        }
+
+    </script>

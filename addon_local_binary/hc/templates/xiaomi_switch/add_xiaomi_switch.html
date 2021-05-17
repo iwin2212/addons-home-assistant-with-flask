@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Xiaomi Switch</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thêm ổ cắm Xiaomi</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://ocamxiaomi.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <form style="margin-top: 6%;" action='./add_xiaomi_switch' method='POST'>
+                    <table class="table">
+                        <tr>
+                            <td>Platform</td>
+                            <td><input type='text' id='platform' name='platform' class="form-control"
+                                    value='xiaomi_miio' disabled></td>
+                        </tr>
+                        <tr>
+                            <td>Địa chỉ Host</td>
+                            <td><input type='text' name='host' class='form-control'
+                                    placeholder="địa chỉ mạng kết nối với công tắc, ví dụ: 192.168.1.5" required></td>
+                        </tr>
+                        <tr>
+                            <td>Tên</td>
+                            <td><input type='text' name='name' class='form-control' placeholder="ví dụ: công tắc xiaomi"
+                                    required></td>
+                        </tr>
+                        <tr>
+                            <td>Token</td>
+                            <td><input type='text' name='token' class='form-control'
+                                    placeholder="chuỗi kích hoạt thiết bị, ví dụ: 2e4bc079e99eac2fd613fbbcf060270d"
+                                    required></td>
+                        </tr>
+                        <tr>
+                            <td>Model</td>
+                            <td>
+                                <!-- <input type = 'text' name = 'model' list = "list_type" class = 'form-control' oninput = 'myFunc()' id = 'type' required>
+                                    <datalist id = "list_type">
+                                        <option>chuangmi.plug.v1</option>
+                                        <option>qmi.powerstrip.v1</option>
+                                        <option>zimi.powerstrip.v2</option>
+                                        <option>chuangmi.plug.m1</option>
+                                        <option>chuangmi.plug.m3</option>
+                                        <option>chuangmi.plug.v2</option>
+                                        <option>chuangmi.plug.v3</option>
+                                        <option>chuangmi.plug.hmi205</option>
+                                    </datalist> -->
+                                <select name='model' class='form-control' required>
+                                    <option disabled selected value>--Chọn 1 model--</option>
+                                    <option>chuangmi.plug.v1</option>
+                                    <option>qmi.powerstrip.v1</option>
+                                    <option>zimi.powerstrip.v2</option>
+                                    <option>chuangmi.plug.m1</option>
+                                    <option>chuangmi.plug.m3</option>
+                                    <option>chuangmi.plug.v2</option>
+                                    <option>chuangmi.plug.v3</option>
+                                    <option>chuangmi.plug.hmi205</option>
+                                </select>
+                            </td>
+
+                        </tr>
+                    </table>
+                    <input type='submit' value='Lưu' class="btn btn-primary">
+                </form>
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>

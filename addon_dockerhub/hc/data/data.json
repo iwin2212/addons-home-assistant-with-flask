@@ -1,0 +1,178 @@
+{
+    "media_player": {
+        "Philips": {
+            "Unknown": 1000
+        },
+        "Sony": {
+            "KDL-46HX800": 1020
+        },
+        "LG": {
+            "22MT47DC": 1040
+        },
+        "Samsung": {
+            "UE40F6500": 1060,
+            "LE40D550": 1060,
+            "UE40H6400": 1060
+        },
+        "Insignia": {
+            "NS-42D510NA15": 1080
+        }
+    },
+    "climate": {
+        "Toyotomi": {
+            "AKIRA GAN/GAG-A128 VL": 1000
+        },
+        "Panasonic": {
+            "CS-CE7HKEW": 1020,
+            "CS-CE9HKEW": 1020,
+            "CS-CE12HKEW": 1020,
+            "CS-RE9GKE": 1021,
+            "CS-RE12GKE": 1021,
+            "CS-Z25TK": 1022,
+            "CS-HE9JKE": 1023,
+            "CS-HE12JKE": 1023
+        },
+        "Genaral": {
+            "Unknown": 1040
+        },
+        "LG": {
+            "R09AWN": 1060,
+            "R24AWN": 1060,
+            "E09EK": 1060,
+            "Unknown": 1061,
+            "LG InverterV P12RK": 1062,
+            "LG Inverter P12EP1 (AKB74955603 Remote)": 1063
+        },
+        "Hitachi": {
+            "Unknown": 1080,
+            "RAS-10EH3": 1081
+        },
+        "Daikin": {
+            "Unknown": 1100,
+            "FTXS20LVMA": 1101,
+            "FTXS25LVMA": 1101,
+            "FTXS35LVMA": 1101,
+            "FTXS46LVMA": 1101,
+            "FTXS50LVMA": 1101,
+            "FTXS60LVMA": 1101,
+            "FTXS71LVMA": 1101,
+            "FTXS85LVMA": 1101,
+            "FTXS95LVMA": 1101
+        },
+        "Mitsubishi Electric": {
+            "MSZ-GL25VGD": 1120,
+            "MSZ-GL35VGD": 1120,
+            "MSZ-GL42VGD": 1120,
+            "MSZ-GL50VG": 1120,
+            "MSZ-GL60VGD": 1120,
+            "MSZ-GL71VGD": 1120,
+            "MSZ-GL80VGD": 1120,
+            "MSZ-GA35VA": 1121
+        },
+        "Actron": {
+            "Unknown": 1140
+        },
+        "Carrier": {
+            "Unknown": 1160
+        },
+        "Gree": {
+            "Unknown_1": 1180,
+            "Unknown_2": 1181
+        },
+        "Tosot": {
+            "Unknown": 1200
+        },
+        "Sungold": {
+            "Unknown": 1220
+        },
+        "Toshiba": {
+            "RAS-13NKV-E / RAS-13NAV-E": 1260,
+            "RAS-13NKV-A / RAS-13NAV-A": 1260,
+            "RAS-16NKV-E / RAS-16NAV-E": 1260,
+            "RAS-16NKV-A / RAS-16NAV-A": 1260
+        },
+        "Fujitsu": {
+            "AR-RBE1E (Remote control)": 1280,
+            "AR-RAE1/AR-RAE1E": 1281,
+            "AR-JW11 (Remote control)": 1282,
+            "AR-AB5 (Remote control)": 1283,
+            "AR-REG1U (Remote control)": 1284
+        },
+        "Sharp": {
+            "AY-B22DM": 1300
+        },
+        "Haier": {
+            "Unknown": 1320
+        },
+        "Tadiran": {
+            "Unknown": 1340,
+            "WIND 3P": 1560
+        },
+        "Springer": {
+            "Split Hi Wall Maxiflex": 1360
+        },
+        "Midea": {
+            "Unknown_1": 1380,
+            "Unknown_2": 1381
+        },
+        "Samsung": {
+            "Unknown": 1400,
+            "AR##HSF/JFS##": 1401
+        },
+        "Sintech": {
+            "KFR-34GW": 1420
+        },
+        "Akai": {
+            "Unknown": 1440
+        },
+        "Alliance": {
+            "Unknown": 1460
+        },
+        "Junkers": {
+            "Excellence": 1480
+        },
+        "Sanyo": {
+            "Unknown": 1500
+        },
+        "Hisense": {
+            "Unknown_1": 1520,
+            "Unknown_2": 1521
+        },
+        "Whirlpool": {
+            "SPIS412L": 1540
+        },
+        "Chigo": {
+            "Unknown": 1580
+        },
+        "Beko": {
+            "BEVCA": 1600
+        },
+        "Tornado": {
+            "Unknown": 1620
+        },
+        "Fujiko": {
+            "Unknown": 1640
+        },
+        "Royal": {
+            "08HPN1T1": 1660
+        },
+        "Mitsubishi Heavy": {
+            "SRK25ZJ-S1": 1680,
+            "SRK71ZK-S": 1681
+        }
+    },
+    "fan": {
+        "Kaze": {
+            "Unknown": 1000
+        },
+        "Acorn": {
+            "Unknown": 1020
+        },
+        "Lucci Air": {
+            "Aria": 1040
+        },
+        "Super Fan": {
+            "A1": 1060
+        }
+    }
+}

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Switch</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body onload="step1(), get_form()">
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+
+                <h3 id='title'>Học lệnh RF qua Broadlink RM4 Pro</h3>
+                <div id='post'>
+                    <form action="./add_switch_rf" method='POST' id='form1'></form>
+                </div>
+                <div id='command_on'>
+                    <form action='./learn_command_rf' method='POST' id='form2'></form>
+                </div>
+                <div id='command_off'>
+                    <form action='./learn_command_rf' method='POST' id='form3'></form>
+                </div>
+                <div id='pairing'>
+                    <form action='./pairing_rf' method='POST' id='form4'></form>
+                </div>
+                <a target="_blank" rel="noopener noreferrer" href=" http://congtacrf.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <table class="table">
+                    <tr>
+                        <td colspan="2" id='instruction' style="color: #830B29;"><big>Bước 1: chọn bộ Broadlink RM4
+                                Pro và nhập tên công tắc RF</big></td>
+                    </tr>
+
+                    <tr>
+                        <td>Chọn bộ Broadlink RM4 Pro</td>
+                        <td>
+                            <select name='entity_id' id='entity_id' class='form-control' form='form1'
+                                onchange="get_form()" required>
+                                <option disabled>--Chọn 1 Broadlink RM4 Pro đã thiết lập--</option>
+                                {%for broadlink in list_broadlink%}
+                                <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}" {% if
+                                    broadlink['entity_id']==entity_id %} selected {% endif %} {% if
+                                    list_mac[loop.index-1] in list_mini_devices %} disabled {% endif %}>
+                                    {{broadlink['entity_id']}}
+                                </option>
+                                {%endfor%}
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Tên công tắc RF</td>
+                        <td><input type='text' name='name' class='form-control' form='form1'
+                                placeholder="Nên viết có dấu. Ví dụ: rèm cửa sổ" required></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" id='instruction2' style="display: none; color: #830B29;"><big>Bước 2: Nhận
+                                dạng
+                                tần số RF bằng cách <b>"Bấm và Giữ"</b> một nút bất kỳ trên điều khiển đến khi có
+                                thông báo thành công</big></td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td id='pairing' style="display: none;">
+                            <input type='button' onclick="pairing_rf()" value='Tiến hành nhận dạng' form='form4'
+                                class='btn btn-primary' id='pair' name='pairing' class="btn btn-primary">
+                            <input style="display: none;" type='text' name='command_on' class='form-control'
+                                id='pair_res' required>
+                            <div id="countdown3" style="background-color: rgb(206, 255, 192); align-content: center">
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" id='instruction3' style="display: none; color: #830B29;"><big>Bước 3: Tiến
+                                hành
+                                học lệnh cho từng nút</big></td>
+                    </tr>
+
+                    <tr id='command_on' style="display: none;">
+                        <td>Lệnh bật (Command On)</td>
+                        <td>
+                            <div id="countdown" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='command_on' class='form-control' form='form1' id='cmd_on_res'
+                                placeholder="bấm nút học lệnh và làm theo hướng dẫn" required>
+                        </td>
+                        <td id='learn_command_on'>
+                            <input type='button' onclick="learning_command_on()" value='Học lệnh' form='form2'
+                                class='btn btn-primary' id='cmd_on' class="btn btn-primary">
+                        </td>
+                    </tr>
+                    <tr id='command_off' style="display: none;">
+                        <td>Lệnh tắt (Command Off)</td>
+                        <td>
+                            <div id="countdown2" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='command_off' class='form-control' form='form1' id='cmd_off_res'
+                                placeholder="bấm nút học lệnh và làm theo hướng dẫn" required>
+                        </td>
+                        <td id='learn_command_off'>
+                            <input type='button' onclick="learning_command_off()" value='Học lệnh' form='form3'
+                                class='btn btn-primary' id='cmd_off' class="btn btn-primary">
+                        </td>
+                    </tr>
+                </table>
+                <input id="save" style="display: none;" type='submit' value='Lưu' class="btn btn-primary" form='form1'>
+                </form>
+
+            </div>
+        </section>
+
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+        </div>
+    </body>
+
+</html>
+<script>
+    function step2() {
+        $(instruction3).show();
+        $(command_on).show();
+        $(command_off).show();
+        $(save).show();
+    }
+    function step1() {
+        $(instruction2).show();
+        $(pairing).show();
+    }
+
+    function pairing_rf() {
+        x = document.getElementById('entity_id').value;
+        document.getElementById('pairing').innerHTML = "<form action='./pairing_rf?" + x + "' method='POST' id='form4'></form>";
+
+        var timeleft = 31;
+        var downloadTimer = setInterval(function () {
+            timeleft -= 1;
+            document.getElementById("countdown3").innerHTML = "Thời gian còn lại: " + timeleft + " giây";
+            if (timeleft < 0) {
+                // window.alert("done")
+                clearInterval(downloadTimer);
+                pairing_success = document.getElementById('pair_res').value;
+                if (pairing_success == 1) {
+                    document.getElementById("countdown3").innerHTML = "Đã nhận dạng thành công. Hãy tiến hành học lệnh!";
+                    step2();
+                }
+                else {
+                    document.getElementById("countdown3").style.color == "red";
+                    document.getElementById("countdown3").innerHTML = "Xin thử lại...";
+                }
+            }
+        }, 1000);
+        $.post('./pairing_rf?' + x, function (data, status) {
+            $('#pair_res').val(data['result']);
+            pairing_success = document.getElementById('pair_res').value;
+            if (pairing_success == 1) {
+                clearInterval(downloadTimer);
+                document.getElementById("countdown3").innerHTML = "Đã nhận dạng thành công. Hãy tiến hành học lệnh!";
+                step2();
+            }
+            document.getElementById("countdown").innerHTML = '';
+        });
+        $('#pair').prop('disabled', false);
+    }
+
+
+    function learning_command_on() {
+        x = document.getElementById('entity_id').value;
+        document.getElementById('command_on').innerHTML = "<form action='./learn_command_rf?" + x + "' method = 'POST' id = 'form2'></form>";
+
+        $('#cmd_on').prop('disabled', true);
+        document.getElementById("countdown").innerHTML = 'Chờ người dùng bấm nút trên điều khiển';
+
+        $.post('./learn_command_rf?' + x, function (data, status) {
+            if (data['result'] != '') {
+                $('#cmd_on_res').val(data['result']);
+                document.getElementById("countdown").innerHTML = '';
+            }
+            else (document.getElementById("countdown").innerHTML = 'Thử lại...');
+        });
+        $('#cmd_on').prop('disabled', false);
+    }
+
+
+    function learning_command_off() {
+        x = document.getElementById('entity_id').value;
+        document.getElementById('command_off').innerHTML = "<form action='./learn_command_rf?" + x + "' method = 'POST' id = 'form3'></form>";
+
+        $('#cmd_off').prop('disabled', true);
+        document.getElementById("countdown2").innerHTML = 'Chờ người dùng nút trên điều khiển';
+
+        $.post('./learn_command_rf?' + x, function (data, status) {
+            if (data['result'] != '') {
+                $('#cmd_off_res').val(data['result']);
+                document.getElementById("countdown2").innerHTML = '';
+            }
+            else (document.getElementById("countdown").innerHTML = 'Thử lại...');
+            $('#cmd_off').prop('disabled', false);
+        });
+    }
+
+    function get_form() {
+        x = document.getElementById('entity_id').value;
+        document.getElementById('post').innerHTML = `<form action="./add_switch_rf?` + x + `" method='POST' id='form1'></form>`;
+    }
+</script>

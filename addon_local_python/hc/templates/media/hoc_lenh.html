@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Học lệnh bộ điều khiển TV mới</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+
+                <h3 id='title'>Học lệnh bộ điều khiển TV mới</h3>
+                <form style="margin-top: 2%;" action='./hoc_lenh' method='POST' id='form1'></form>
+                <a target="_blank" rel="noopener noreferrer" href=" http://dieukhientv.javisco.vn"
+                    style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <table class="table">
+                    <tr>
+                        <td>Chọn bộ Broadlink RM</td>
+                        <td>
+                            <select id="gateway" class='form-control' form='form1' name='gateway'
+                                onchange='gatewayFunc()'>
+                                {%for broadlink in list_broadlink%}
+                                <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}">
+                                    {{broadlink['entity_id']}}
+                                </option>
+                                {%endfor%}
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr id='manufacture'>
+                        <td>Nhập tên hãng sản xuất TV</td>
+                        <td>
+                            <input type='text' id='manifacture' class="form-control" form='form1' name='manufacture'
+                                list='list_model' required>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr id='model_name'>
+                        <td>Nhập model TV</td>
+                        <td>
+                            <input type='text' id='model' class='form-control' form='form1' name='model' required>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>TURN_ON</td>
+                        <td>
+                            <div id="countdown_11" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='turn_on' class='form-control' form='form1' id='11_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form12'
+                                class='btn btn-primary' id='cmd_11'>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>TURN_OFF</td>
+                        <td>
+                            <div id="countdown_12" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='turn_off' class='form-control' form='form1' id='12_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form13'
+                                class='btn btn-primary' id='cmd_12'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PREVIOUS_CHANNEL</td>
+                        <td>
+                            <div id="countdown_13" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='previous_channel' class='form-control' form='form1' id='13_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form14'
+                                class='btn btn-primary' id='cmd_13'></td>
+                    </tr>
+                    <tr>
+                        <td>NEXT_CHANNEL</td>
+                        <td>
+                            <div id="countdown_14" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='next_channel' class='form-control' form='form1' id='14_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form15'
+                                class='btn btn-primary' id='cmd_14'></td>
+                    </tr>
+                    <tr>
+                        <td>VOLUME_UP</td>
+                        <td>
+                            <div id="countdown_15" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='volume_up' class='form-control' form='form1' id='15_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form16'
+                                class='btn btn-primary' id='cmd_15'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>VOLUME_DOWN</td>
+                        <td>
+                            <div id="countdown_16" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='volume_down' class='form-control' form='form1' id='16_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form17'
+                                class='btn btn-primary' id='cmd_16'></td>
+                    </tr>
+                    <tr>
+                        <td>MUTE</td>
+                        <td>
+                            <div id="countdown_17" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='mute' class='form-control' form='form1' id='17_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form18'
+                                class='btn btn-primary' id='cmd_17'>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>CHANNEL 0</td>
+                        <td>
+                            <div id="countdown_1" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel0' class='form-control' form='form1' id='1_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form2'
+                                class='btn btn-primary' id='cmd_1'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 1</td>
+                        <td>
+                            <div id="countdown_2" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel1' class='form-control' form='form1' id='2_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form3'
+                                class='btn btn-primary' id='cmd_2'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 2</td>
+                        <td>
+                            <div id="countdown_3" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel2' class='form-control' form='form1' id='3_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form4'
+                                class='btn btn-primary' id='cmd_3'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 3</td>
+                        <td>
+                            <div id="countdown_4" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel3' class='form-control' form='form1' id='4_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form5'
+                                class='btn btn-primary' id='cmd_4'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 4</td>
+                        <td>
+                            <div id="countdown_5" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel4' class='form-control' form='form1' id='5_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form6'
+                                class='btn btn-primary' id='cmd_5'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 5</td>
+                        <td>
+                            <div id="countdown_6" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel5' class='form-control' form='form1' id='6_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form7'
+                                class='btn btn-primary' id='cmd_6'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 6</td>
+                        <td>
+                            <div id="countdown_7" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel6' class='form-control' form='form1' id='7_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form8'
+                                class='btn btn-primary' id='cmd_7'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 7</td>
+                        <td>
+                            <div id="countdown_8" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel7' class='form-control' form='form1' id='8_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form9'
+                                class='btn btn-primary' id='cmd_8'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 8</td>
+                        <td>
+                            <div id="countdown_9" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel8' class='form-control' form='form1' id='9_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form10'
+                                class='btn btn-primary' id='cmd_9'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 9</td>
+                        <td>
+                            <div id="countdown_10" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel9' class='form-control' form='form1' id='10_res'>
+                        </td>
+                        <td><input type='submit' onclick="get_code(this);" value='Học lệnh' form='form11'
+                                class='btn btn-primary' id='cmd_10'>
+                        </td>
+                    </tr>
+                </table>
+                <input type='submit' value='Lưu' class="btn btn-primary" form='form1' class='form-control'>
+                </form>
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+
+<script>
+    function get_code(obj) {
+        var gateway = document.getElementById("gateway").value;
+        var attr = obj.id.split('_')[1];
+        var cmd = '#cmd_' + attr;
+        var countdown = "countdown_" + attr;
+        var res = '#' + attr + "_res"
+        $(cmd).prop('disabled', true);
+        $.post('./learn_command?' + gateway, function (data, status) {
+            $(res).val(data['result']);
+            $(cmd).prop('disabled', false);
+            document.getElementById(countdown).innerHTML = "";
+        });
+    }
+
+</script>

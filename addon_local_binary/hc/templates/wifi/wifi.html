@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Wifi Connection</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+    </head>
+
+    <body onload="check_connected(); auto_reload(); get_index()">
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id=title>Kết nối Wifi</h3>
+                {% if broadlink_step1 == null %}
+                <div style="margin-top: 2%">
+                    <a class='btn btn-primary' href='./manage_known_networks'>Quản lý mạng đã kết nối</a>
+                </div>
+                {% endif %}
+                {% if wifi_list | length == 0 %}
+                <div class="row" style="margin-top: 3%; text-align:center;">
+                    <div id='no_scripts'>
+                        <h4>Không tìm thấy wifi</h4>
+                    </div>
+                </div>
+                {%else%}
+                {% if broadlink_step1 != null %}
+                <div id='connect_broadlink' class='alert alert-success alert-dismissible' {% if broadlink_step1=='' %} style="display: none; margin-top: 2%" {% endif %}>
+                    {{broadlink_step1}}
+                </div>
+                <div>
+                    <pre>   Hướng dẫn reset bộ Broadlink vào chế độ AP mode để kết nối WIFI:
+    1. Nhấn và giữ RESET cho đến khi đèn LED màu xanh lam nhấp nháy nhanh.
+    2. Nhấn và giữ một lần nữa cho đến khi đèn LED màu xanh lam nhấp nháy chậm (lúc này bộ Broadlink sẽ phát ra 1 mạng Wifi).
+    3. Đợi đến khi mạng Wifi của bộ Broadlink hiển thị dưới danh sách, kích chọn vào mạng Wifi tương ứng và nhấn "Connect".</pre>
+                </div>
+                {% endif %}
+                <div class="row" style="margin-top: 2%">
+                    <table id="connect_wifi" class='table table-borderless'>
+                        <thead class="thead-light">
+                            <th>Thứ tự</th>
+                            <th>Tên mạng</th>
+                            <th>Cường độ</th>
+                            <th>Bảo mật</th>
+                        </thead>
+                        {% for wifi in wifi_list %}
+                        {% if broadlink_step1 != null %}
+                        {% if 'broadlink' in wifi.lower() %}
+                        <tr id="{{loop.index-1}}" onclick="show_connect({{loop.index-1}})" onmouseenter='show_wifi_pos({{loop.index-1}})' onmouseleave='hide_wifi_pos({{loop.index-1}})'>
+                            <td width="10%" id="row_{{loop.index-1}}"></td>
+                            <td width="50%">
+                                <table id="show_connect" class="container table-borderless">
+                                    <thead>
+                                        <p id='wlan0'>{{wifi.strip()}}</p>
+                                        <p id='subtitle_{{loop.index-1}}' style="display: none;"></p>
+                                    </thead>
+                                    <tr id="tr_status_{{loop.index-1}}" style="display: none;">
+                                        <td>
+                                            <div id='status_{{loop.index-1}}' class='alert alert-danger alert-dismissible'>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td width="20%">
+                                {% if signal_list[loop.index-1].replace('_', '') | length == 1 %}
+                                <img src="./static/icon/wifi_level_1.png" class="img-fluid" alt="level_1" height="40" width="40">
+                                {% elif signal_list[loop.index-1].replace('_', '') | length == 2 %}
+                                <img src="./static/icon/wifi_level_2.png" class="img-fluid" alt="level_2" height="40" width="40">
+                                {% elif signal_list[loop.index-1].replace('_', '') | length == 3 %}
+                                <img src="./static/icon/wifi_level_3.png" class="img-fluid" alt="level_3" height="40" width="40">
+                                {% elif signal_list[loop.index-1].replace('_', '') | length == 4 %}
+                                <img src="./static/icon/wifi_level_4.png" class="img-fluid" alt="level_4" height="40" width="40">
+                                {% else %}
+                                <img src="./static/icon/wifi_level_5.png" class="img-fluid" alt="level_5" height="40" width="40">
+                                {% endif %}
+                            </td>
+                            <td id="security_{{loop.index-1}}" width="20%">
+                                {{security_list[loop.index-1]}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <table>
+                                    <tr id="add_connect_{{loop.index-1}}"></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% else %}
+                        {% if wifi != '' %}
+                        <tr id="{{loop.index-1}}" onclick="show_connect({{loop.index-1}})" onmouseenter='show_wifi_pos({{loop.index-1}})' onmouseleave='hide_wifi_pos({{loop.index-1}})'>
+                            <td width="10%" id="row_{{loop.index-1}}"></td>
+                            <td width="50%">
+                                <table id="show_connect" class="container table-borderless">
+                                    <thead>
+                                        <p id='wlan0'>{{wifi.strip()}}</p>
+                                        <p id='subtitle_{{loop.index-1}}' style="display: none;"></p>
+                                    </thead>
+                                    <tr id="tr_status_{{loop.index-1}}" style="display: none;">
+                                        <td>
+                                            <div id='status_{{loop.index-1}}' class='alert alert-danger alert-dismissible'>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td width="20%">
+                                {% if signal_list[loop.index-1].replace('_', '') | length == 1 %}
+                                <img src="./static/icon/wifi_level_1.png" class="img-fluid" alt="level_1" height="40" width="40">
+                                {% elif signal_list[loop.index-1].replace('_', '') | length == 2 %}
+                                <img src="./static/icon/wifi_level_2.png" class="img-fluid" alt="level_2" height="40" width="40">
+                                {% elif signal_list[loop.index-1].replace('_', '') | length == 3 %}
+                                <img src="./static/icon/wifi_level_3.png" class="img-fluid" alt="level_3" height="40" width="40">
+                                {% elif signal_list[loop.index-1].replace('_', '') | length == 4 %}
+                                <img src="./static/icon/wifi_level_4.png" class="img-fluid" alt="level_4" height="40" width="40">
+                                {% else %}
+                                <img src="./static/icon/wifi_level_5.png" class="img-fluid" alt="level_5" height="40" width="40">
+                                {% endif %}
+                            </td>
+                            <td id="security_{{loop.index-1}}" width="20%">{{security_list[loop.index-1]}}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <table>
+                                    <tr id="add_connect_{{loop.index-1}}"></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endif %}
+
+                        {% endfor %}
+                    </table>
+                </div>
+                {%endif%}
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+        </div>
+    </body>
+
+</html>
+
+<script>
+    wifi_list = {{ wifi_list | tojson }};
+    wifi_list_len = {{ wifi_list | tojson }}.length;
+    wifi_connected = {{ wifi_connected | tojson }};
+    known_wifi_list = {{ known_wifi_list | tojson }};
+    connected_to_ip = {{ connected_to_ip | tojson }};
+    function check_connected() {
+        len_wifi_list = wifi_list.length;
+        for (var index = 0; index < len_wifi_list; index++) {
+            wifi_name = wifi_list[index];
+            try {
+                if (wifi_name == wifi_connected) {
+                    document.getElementById("subtitle_" + index).innerHTML = ' connected to ' + connected_to_ip.split('/')[0];
+                    $("#subtitle_" + index).css({ "color": "green" });
+                    $("#subtitle_" + index).show();
+                }
+            }
+            catch { }
+        }
+    }
+
+    // step1: wifi onclick
+    function show_connect(index) {
+        remove_subtitle();
+        wifi = wifi_list[index];
+        string1 = `<tr id="add_connect_` + index + `">
+                        <td><input id='pwd_`+ index + `' type='text'></td>
+                        <td><input id='continue' type='button' onclick="get_pwd(` + index + `)" class='btn btn-primary' value="Connect"></td>
+                        <td><input id='cancel_` + index + `' onclick="reset_add_connect()" type='button' class='btn btn-danger' value="Cancel"></td>
+                    </tr>`;
+        string2 = `<tr id="add_connect_` + index + `">
+                        <td></td>
+                        <td><input id='continue' type='button' onclick="get_pwd_no_pwd(` + index + `)" class='btn btn-primary' value="Connect"></td>
+                        <td><input id='cancel_` + index + `' type='button' onclick="reset_add_connect()" class='btn btn-danger' value="Cancel"></td>
+                    </tr>`;
+        string3 = `<tr id="add_connect_` + index + `">
+                        <td></td>
+                        <td><input id='disconnect_` + index + `' type='button' onclick="disconnect(` + index + `)" class='btn btn-primary' value="Disconnect"></td>
+                        <td><input id='cancel_` + index + `' type='button' onclick="reset_add_connect()" class='btn btn-danger' value="Cancel"></td>
+                    </tr>`;
+
+        reset_add_connect();
+        security = (document.getElementById('security_' + index).textContent.replace('\n', '').trim())
+        if (document.getElementById("subtitle_" + index).textContent != '') {
+            $('#add_connect_' + index).replaceWith(string3);
+        }
+        else if (security == '' || known_wifi_list.indexOf(wifi) != -1) {
+            $('#add_connect_' + index).replaceWith(string2);
+        }
+        else {
+            $('#add_connect_' + index).replaceWith(string1);
+        }
+        check_connected();
+    }
+    // hiện thị dòng được chọn
+    function show_wifi_pos(index) {
+        $("#" + index).css("background-color", "#A4E8D0");
+    }
+    function hide_wifi_pos(index) {
+        $("#" + index).css("background-color", "transparent");
+    }
+
+    function reset_add_connect() {
+        for (var i = 0; i < wifi_list_len; i++) {
+            $('#add_connect_' + i).replaceWith(`<tr id="add_connect_` + i + `"></tr>`);
+        }
+    }
+
+    function remove_subtitle() {
+        for (var i = 0; i < wifi_list_len; i++) {
+            $("#subtitle_" + i).hide();
+        }
+    }
+
+    // step2: connect wifi
+    function get_pwd(index) {
+        remove_subtitle();
+        $("#wifi_" + index).hide();
+        wifi_name = wifi_list[index];
+        pwd = document.getElementById("pwd_" + index).value;
+        data = 'wifi=' + wifi_name + '&pwd=' + pwd;
+        $.post('./access_wifi?' + data, function (data, status) {
+            if (data['result'] == 'Failed') {
+                document.getElementById("subtitle_" + index).innerHTML = "Mật khẩu không đúng. Xin thử lại.";
+                $("#subtitle_" + index).css({ "color": "red" });
+                $("#subtitle_" + index).show();
+            }
+            else if (data['result'] == 'Successed') {
+                ip = data['ip'];
+                document.getElementById("subtitle_" + index).innerHTML = ' connected to ' + ip.split('/')[0];
+                $("#subtitle_" + index).css({ "color": "green" });
+                $("#subtitle_" + index).show();
+                reset_add_connect();
+                location.reload();
+            }
+        });
+    }
+
+    function get_pwd_no_pwd(index) {
+        remove_subtitle();
+        $("#wifi_" + index).hide();
+        wifi_name = wifi_list[index];
+        data = 'wifi=' + wifi_name + '&pwd=';
+        if (wifi_name.toLowerCase().search('broadlink') != -1) {
+            $.post('./access_wifi?' + data, function (data, status) {
+                if (data['result'] == 'Failed') {
+                    document.getElementById("subtitle_" + index).innerHTML = "Mật khẩu không đúng. Xin thử lại.";
+                    $("#subtitle_" + index).css({ "color": "red" });
+                    $("#subtitle_" + index).show();
+                }
+                else if (data['result'] == 'Successed') {
+                    ip = data['ip'];
+                    document.getElementById("subtitle_" + index).innerHTML = ' connected to ' + ip.split('/')[0];
+                    $("#subtitle_" + index).css({ "color": "green" });
+                    $("#subtitle_" + index).show();
+                    reset_add_connect();
+                    window.location.href = "./broadlink_configration";
+                }
+            });
+        }
+        else {
+            $.post('./access_wifi?' + data, function (data, status) {
+                if (data['result'] == 'Failed') {
+                    document.getElementById("subtitle_" + index).innerHTML = "Mật khẩu không đúng. Xin thử lại.";
+                    $("#subtitle_" + index).css({ "color": "red" });
+                    $("#subtitle_" + index).show();
+                }
+                else if (data['result'] == 'Successed') {
+                    ip = data['ip'];
+                    document.getElementById("subtitle_" + index).innerHTML = ' connected to ' + ip.split('/')[0];
+                    $("#subtitle_" + index).css({ "color": "green" });
+                    $("#subtitle_" + index).show();
+                    reset_add_connect();
+                    location.reload();
+                }
+            });
+        }
+    }
+
+    function disconnect(index) {
+        wifi_name = wifi_list[index];
+        $.post('./disconnect_wifi?wifi=' + wifi_name, function (data, status) {
+            document.getElementById("subtitle_" + index).innerHTML = '';
+            $("#subtitle_" + index).css({ "color": "green" });
+            $("#subtitle_" + index).hide();
+            reset_add_connect();
+            location.reload();
+        });
+    }
+
+    function auto_reload() {
+        var timeleft = 15;
+        var downloadTimer = setInterval(function () {
+            timeleft -= 1;
+            if (timeleft <= 0) {
+                clearInterval(downloadTimer);
+                location.reload();
+            }
+        }, 1000);
+    }
+
+    function get_index() {
+        len_wifi_list = wifi_list.length;
+        loop_count = 0;
+        for (var index = 0; index < len_wifi_list; index++) {
+            cnt = $('#' + index).index();
+            if (cnt != -1) {
+                if (document.getElementById("subtitle_" + index).textContent != '') {
+                    // Chuyển hướng trang
+                    var timeleft = 5;
+                    var downloadTimer = setInterval(function () {
+                        timeleft -= 1;
+                        if (timeleft <= 0) {
+                            clearInterval(downloadTimer);
+                            if (document.getElementById('wlan0').textContent.toLowerCase().search('broadlink') != -1) {
+                                window.location.href = "./broadlink_configration";
+                            }
+                        }
+                    }, 1000);
+                }
+                loop_count++;
+                document.getElementById('row_' + index).innerHTML = loop_count;
+            }
+        }
+    }
+
+</script>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>TV Channel Manager</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {% include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class='container'>
+                <h3 id='title'>Thiết lập chi tiết kênh TV</h3>
+                <div id='content'>
+                    <table style='margin-top: 6%;' class='table table-striped'>
+                        <tr>
+                            <td colspan="6">
+                                <h3 id="tvname">{{TV['name']}}</h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên kênh</th>
+                            <th>Mô tả kênh</th>
+                            <th>Số kênh</th>
+                            <th>Yêu thích</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        {% for channel in list_channel %}
+                        <form action='./delete_channel?model={{TV["unique_id"]}}&channel_name={{channel[1]}}' method='POST' id='form_{{channel[0]}}'>
+                        </form>
+                        <tr>
+                            <td>
+                                {{channel[0]}}
+                            </td>
+                            <td id='channel_name_{{channel[0]}}'>{{channel[1]}}</td>
+                            <td>
+                                {{channel[2]}}
+                            </td>
+                            <form action='./save_channel?model={{TV["unique_id"]}}&channel_name={{channel[1]}}' method='POST'>
+                                <td>
+                                    <input type="text" name="code" value="{{channel[3]}}" class="form-control" id='code_{{channel[0]}}' placeholder="Ví dụ 123">
+                                </td>
+                                <td>
+                                    {%if channel[4] == 1 %}
+                                    <input type="checkbox" name="favorite" value="YES" id='favorite_{{channel[0]}}' checked>
+                                    {%else%}
+                                    <input type="checkbox" name="favorite" value="YES" id='favorite_{{channel[0]}}'>
+                                    {%endif%}
+                                </td>
+                                <td>
+                                    <input type='submit' value='Save' class="btn btn-primary active" id='save_{{channel[1]}}'>
+                                    <input type='submit' onclick="return confirm('Bạn chắc chắn muốn xóa ? ')" value='Xoá' class="btn btn-danger" form="form_{{channel[0]}}">
+                                </td>
+                            </form>
+                        </tr>
+                        {%endfor%}
+                    </table>
+                </div>
+                <a class="btn btn-primary" role="button" href='./add_tv_channel?unique_id={{TV["unique_id"]}}'>Thêm</a>
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+<script>
+</script>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Edit TTS Nhac lich</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+
+                <h3 id='title'>Chỉnh sửa kịch bản nhắc lịch</h3>
+                <form action='./edit_automation?iden={{iden}}' method='POST'>
+                    <table class="table">
+                        <tr>
+                            <td><strong>Tên</strong></td>
+                            <td><input type='text' name='ten' class='form-control' value="{{name}}"></td>
+                        </tr>
+                        <tr>
+                            <td>Thời gian</td>
+                            <td><input type='text' placeholder='hh:mm' name='time' class='form-control'
+                                    value="{{trigger['at']}}" required></td>
+                        </tr>
+                        <tr>
+
+                            <td>Ngày</td>
+                            <td>
+                                <div class="row seven-cols">
+                                    <div class="col-md-1">
+                                        {% if "mon" in condition[0]['weekday'] %}
+                                        <input type="checkbox" value="2" name="mon" checked>Thứ hai
+                                        {%else%}
+                                        <input type="checkbox" value="2" name="mon">Thứ hai
+                                        {%endif%}
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if "tue" in condition[0]['weekday'] %}
+                                        <input type="checkbox" value="3" name="tue" checked>Thứ ba
+                                        {%else%}
+                                        <input type="checkbox" value="3" name="tue">Thứ ba
+                                        {%endif%}
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if "wed" in condition[0]['weekday'] %}
+                                        <input type="checkbox" value="4" name="wed" checked>Thứ tư
+                                        {%else%}
+                                        <input type="checkbox" value="4" name="wed">Thứ tư
+                                        {%endif%}
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if "thu" in condition[0]['weekday'] %}
+                                        <input type="checkbox" value="5" name="thu" checked>Thứ năm
+                                        {%else%}
+                                        <input type="checkbox" value="5" name="thu">Thứ năm
+                                        {%endif%}
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if "fri" in condition[0]['weekday'] %}
+                                        <input type="checkbox" value="6" name="fri" checked>Thứ sáu
+                                        {%else%}
+                                        <input type="checkbox" value="6" name="fri">Thứ sáu
+                                        {%endif%}
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if "sat" in condition[0]['weekday'] %}
+                                        <input type="checkbox" value="7" name="sat" checked>Thứ bảy
+                                        {%else%}
+                                        <input type="checkbox" value="7" name="sat">Thứ bảy
+                                        {%endif%}
+                                    </div>
+                                    <div class="col-md-1">
+                                        {% if "sun" in condition[0]['weekday'] %}
+                                        <input type="checkbox" value="8" name="sun" checked>Chủ nhật
+                                        {%else%}
+                                        <input type="checkbox" value="8" name="sun">Chủ nhật
+                                        {%endif%}
+                                    </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Mục "Chọn cửa cần kiểm tra" cho
+                                    phép thông báo ra loa trạng thái cửa đang Đóng/Mở<br><small>Lưu ý: Mục này là mục
+                                        tuỳ chọn. Trong trường hợp không cần kiểm tra có thể bỏ qua không
+                                        chọn.</small></strong></td>
+                        </tr>
+                        <tr>
+                            <td>Chọn cửa cần kiểm tra (tuỳ chọn)</td>
+                            <td>
+                                <select name='door_sensor' id='door_sensor' class='form-control'
+                                    onchange="check_condition()">
+                                    <option disabled selected value> -- Chọn 1 thiết bị --</option>
+                                    {%for i in list_entity_id%}
+                                    {%if (i.split(".")[0] == "sensor") or (i.split(".")[0] == "binary_sensor") %}
+                                    {% if (i.find("door") != -1) or (i.find("contact") != -1) or (i.find("_action_user")
+                                    != -1) or (i.find("_lock_action") != -1) %}
+                                    <option {% if condition|length !=1 %} {% if (condition[1]['entity_id']==i) %}
+                                        selected {% endif %} {% endif %}>
+                                        {{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                    {%endif%}
+                                    {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </td>
+                            <td id='status1' {% if condition|length==1 %} style="display: none;" {% endif %}><img
+                                    src="./static/icon/check.png" alt="OK" height="20" width="20">
+                            </td>
+                        </tr>
+                        <tr id="trigger_state" {% if condition|length==1 %} style="display: none;" {% endif %}>
+                            <td>Chọn kiểu trạng thái</td>
+                            <td>
+                                <select name='state' class='form-control'>
+                                    <option {% if condition|length !=1 %} {% if (condition[1]['state']=="on" ) %}
+                                        selected {% endif %} {% endif %} value="on">
+                                        Mở
+                                    </option>
+                                    <option {% if condition|length !=1 %} {% if (condition[1]['state']=="off" ) %}
+                                        selected {% endif %} {% endif %} value="off">
+                                        Đóng</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Chọn loa để thông báo nhắc
+                                    lịch</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Chọn loa</td>
+                            <td>
+                                <select name='entity_id' id='entity_id' class='form-control'
+                                    onchange="check_condition()" required>
+                                    {%for i in list_entity_id%}
+                                    {%if i.split(".")[0] == "media_player"%}
+                                    <option {% if (action["data"]["entity_id"]==i) %} selected {% endif %}>
+                                        {{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                    {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </td>
+                            <td id='status2'><img src="./static/icon/check.png" alt="OK" height="20" width="20">
+                            </td>
+                            <td id='err2' style="display: none;"><img src="./static/icon/close.png" alt="OK" height="20"
+                                    width="20">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Lời nhắc</td>
+                            <td>
+                                <input type="text" name="msg" class='form-control'
+                                    placeholder="Ví dụ: Đến giờ bật bình nóng lạnh"
+                                    value="{{action['data']['message']}}">
+                            </td>
+                        </tr>
+                    </table>
+                    <input type='submit' value='Lưu' class="btn btn-primary">
+                </form>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+        </div>
+
+    </body>
+
+    <script>
+
+        function check_condition() {
+            entity_id = document.getElementById('entity_id').value;
+            door_sensor = document.getElementById('door_sensor').value;
+            if (entity_id == '') {
+                $('#status1').show();
+                $('#err2').show();
+                $('#err1').hide();
+                $('#entity_id').focus();
+            }
+            else if (door_sensor == '') {
+                $('#status2').show();
+                $('#err1').show();
+                $('#err2').hide();
+                $('#door_sensor').focus();
+            }
+            else {
+                $('#trigger_state').show();
+                $('#status1').show();
+                $('#status2').show();
+                $('#err1').hide();
+                $('#err2').hide();
+            }
+        }
+    </script>
+
+</html>

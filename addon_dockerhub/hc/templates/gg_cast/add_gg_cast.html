@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Google Cast</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thêm thiết bị Google Cast</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://googlecast.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <form style='margin-top: 2%;' action='./add_gg_cast' method='POST'>
+                    <a href='./gg_cast' class='btn btn-info' type="button" id="back" style="margin-bottom: 2%;">Danh sách
+                        thiết bị Google Cast</a>
+                    <div id='notify_denied' class='alert alert-danger alert-dismissible' style="display: none;"></div>
+                    <div id='notify_success' class='alert alert-success alert-dismissible' style="display: none;"></div>
+                    <big>
+                        <pre>
+    <big><strong>Các bước thực hiện:</strong></big>
+    
+    <strong>Bước 1:</strong> Kết nối loa Google Home vào trong ứng dụng Google Home:
+    - Nhấn giữ nút reset phía dưới loa Google Home để đưa loa về trạng thái Reset
+    - Mở ứng dụng <strong>Google Home/ chọn dấu "+"/ "Thiết lập thiết bị"/ 'Thiết lập thiết bị mới"/ Chọn nhà tương ứng/ 
+    "Tiếp theo"</strong> và làm theo hướng dẫn của ứng dụng để tiến hành thêm loa Google Home vào trong ứng dụng.
+
+    <strong>Bước 2:</strong> Nhấn chọn "Cấu Hình" để tiến hành liên kết loa Google Home với bộ trung tâm JAVIS HC.
+                        </pre>
+                    </big>
+                    <!-- <table class="table" style="margin-top: 3%;">
+                        <tr>
+                            <td>Địa chỉ IP</td>
+                            <td><input type='text' name='host' id='host' onkeypress="return on_keyup(event);"
+                                    class="form-control" placeholder="ví dụ: 192.168.1.37" required></td>
+                        </tr>
+                    </table> -->
+                    <div style="display: none;" id='pending' class="spinner-border text-primary"></div>
+                    <input onclick="config_gg_cast()" id="config" type="button" value='Cấu hình'
+                        class="btn btn-primary">
+                </form>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+    <script>
+        // Prevent form submission on Enter key press
+        function on_keyup(e) {
+            if (e.keyCode == 13) {
+                config_gg_cast();
+                return false;
+            }
+        }
+
+        function config_gg_cast() {
+            $('#config').hide();
+            $('#pending').show();
+            $('#notify_denied').hide();
+            $('#notify_success').hide();
+            var timeleft = 60;
+            var downloadTimer = setInterval(function () {
+                timeleft -= 1;
+                if (timeleft <= 0) {
+                    document.getElementById('notify_denied').innerHTML = `Hệ thống đã xảy ra lỗi. Vui lòng khởi động lại tại <a
+                            href="./homeassistant">đây</a>.`;
+                    $('#notify_denied').show();
+                }
+            }, 1000);
+            $.post("./config_gg_cast", function (data, status) {
+                clearInterval(downloadTimer);
+                $('#config').show();
+                $('#pending').hide();
+                var content = data.data;
+                if (!data.error) {
+                    if (content.reason == 'already_configured') {
+                        document.getElementById('notify_denied').innerHTML = "Thiết bị đã được thêm vào trong hệ thống.";
+                        $('#notify_denied').show();
+                    }
+                    else if (content.reason == 'already_in_progress') {
+                        document.getElementById('notify_denied').innerHTML = `Hệ thống đã xảy ra lỗi. Vui lòng khởi động lại tại <a
+                            href="./homeassistant">đây</a>.`;
+                        $('#notify_denied').show();
+                    }
+                    else if (content.type == 'form') {
+                        error = content.errors;
+                        if (error.base == 'cannot_connect') {
+                            document.getElementById('notify_denied').innerHTML = "Thiết bị Google Cast đang bị mất kết nối. Vui lòng kiểm tra lại thiết bị.";
+                            $('#notify_denied').show();
+                        }
+                    }
+                    else if (content.type == 'create_entry') {
+                        add_success();
+                    }
+                }
+                else {
+                    if (data['error']['reason'] == "single_instance_allowed") {
+                        document.getElementById('notify_denied').innerHTML = "Yêu cầu bị từ chối do các thiết bị đều đã được cấu hình.";
+                        $('#notify_denied').show();
+                    }
+                    else {
+                        document.getElementById('notify_denied').innerHTML = "Đã có lỗi xảy ra khi kết nối. Vui lòng thử lại sau.";
+                        $('#notify_denied').show();
+                    }
+                }
+            });
+        }
+
+        function add_success() {
+            document.getElementById('notify_success').innerHTML = "Thêm thiết bị thành công.";
+            $('#notify_success').show();
+            var timeleft = 3;
+            var downloadTimer = setInterval(function () {
+                timeleft -= 1;
+                if (timeleft <= 0) {
+                    window.location.href = "./gg_cast";
+                }
+            }, 1000);
+        }
+    </script>
+
+</html>

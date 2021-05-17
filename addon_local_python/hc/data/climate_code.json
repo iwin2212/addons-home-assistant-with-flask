@@ -1,0 +1,702 @@
+{
+    "climate": {
+        "AIWA_RC_T501": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "AMCOR": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "ARGO": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "CARRIER_AC64": {
+            "mode": [
+                "off",
+                "cool",
+                "fan_only",
+                "heat"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "COOLIX": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "med",
+                "max",
+                "min"
+            ]
+        },
+        "DAIKIN": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low",
+                "max"
+            ]
+        },
+        "DAIKIN128": {
+            "mode": [
+                "off",
+                "cool",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "DAIKIN152": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "DAIKIN160": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "DAIKIN176": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "low"
+            ]
+        },
+        "DAIKIN2": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "DAIKIN216": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "DENON": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "DISH": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "ELECTRA_AC": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "EPSON": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "FUJITSU_AC": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "GICABLE": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "GOODWEATHER": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "GREE": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "HAIER_AC": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "HAIER_AC_YRW02": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "HITACHI_AC": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "HITACHI_AC1": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "HITACHI_AC2": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "HITACHI_AC424": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat"
+            ],
+            "fan_mode": [
+                "high",
+                "low",
+                "med",
+                "max",
+                "min"
+            ]
+        },
+        "INAX": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "JVC": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "KELVINATOR": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "LASERTAG": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "LEGOPF": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "LG": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "LG2": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "medium",
+                "low"
+            ]
+        },
+        "LUTRON": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "MAGIQUEST": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "MIDEA": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "MITSUBISHI_AC": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "MITSUBISHI112": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "MITSUBISHI136": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "MITSUBISHI2": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "MITSUBISHI_HEAVY_152": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "low",
+                "med",
+                "max"
+            ]
+        },
+        "MITSUBISHI_HEAVY_88": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "low",
+                "med"
+            ]
+        },
+        "MWM": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "NEC": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "NEC_LIKE": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "NEOCLIMA": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "NIKAI": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "PANASONIC_AC": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "medium",
+                "max",
+                "min"
+            ]
+        },
+        "PIONEER": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "RC5": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "RC5X": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "RC6": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "RCMM": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "SAMSUNG": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "SAMSUNG36": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "SAMSUNG_AC": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "low",
+                "med"
+            ]
+        },
+        "SANYO": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "SANYO_LC7461": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "SHARP_AC": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "SONY": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "TCL112AC": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "TECO": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "TOSHIBA_AC": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "TROTEC": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "VESTEL_AC": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "WHIRLPOOL_AC": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "ELECTROLUX": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "FUNIKI": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "SUMIKURA": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "CASPER": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "NAGAKAWA": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "ASANZO": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "REETECH": {
+            "mode": [],
+            "fan_mode": []
+        },
+        "FUNIKINEW": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        "CARRIER_AC": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only",
+                "heat",
+                "auto"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        }
+    }
+}

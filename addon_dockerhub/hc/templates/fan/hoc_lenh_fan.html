@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>FAN REMOTE LEARNING</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body onload="gatewayFunc(); change_mode();">
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Học lệnh điều khiển quạt hồng ngoại</h3>
+                <div class="row">
+
+                    <form action='./hoc_lenh_fan' method='POST' id='form1'></form>
+                    <div id='turn_on'>
+                        <form action='./learn_command' method='POST' id='form2'></form>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td>Chọn Gateway</td>
+                            <td>
+                                <select id="gateway" class='form-control' form='form1' name='gateway'
+                                    onchange='gatewayFunc()'>
+                                    <!-- <option selected disabled value>-- Chọn 1 gateway --</option> -->
+                                    {%for broadlink in list_broadlink%}
+                                    <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}">
+                                        {{broadlink['entity_id']}}
+                                    </option>
+                                    {%endfor%}
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr id='manufacture'>
+                            <td>Chọn hãng sản xuất</td>
+                            <td>
+                                <input type='text' id='manifacture' class="form-control" form='form1' name='manufacture'
+                                    list='list_model' required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr id='model_name'>
+                            <td>Nhập model</td>
+                            <td>
+                                <input type='text' id='model' class='form-control' form='form1' name='model' required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Bật tắt</td>
+                            <td>
+                                <div id="countdown11" style="background-color: pink; align-content: center"></div>
+                                <input type='text' name='turn_on' class='form-control' form='form1' id='turn_on_res'>
+                            </td>
+                            <td><input type='submit' value='Học lệnh' form='form12' class='btn btn-primary'
+                                    id='cmd_turn_on'>
+                            </td>
+                        </tr>
+                        <tr id='num_of_speed_level'>
+                            <td>Số mức gió</td>
+                            <td>
+                                <select onchange="change_mode();" type='text' id='numofspeed' class='form-control'
+                                    form='form1' name='numspeed' required>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option selected>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                    <option>6</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        {%for i in range(1,7) %}
+                        <tr class="countdown_{{i}}">
+                            <td>Mức gió {{i}}</td>
+                            <td>
+                                <div id="countdown_{{i}}" style="align-content: center">
+                                </div>
+                                <input type='text' name='button{{i}}' class='form-control' form='form1' id='{{i}}_res'>
+                            </td>
+                            <td>
+                                <input onclick="get_code(this);" type='submit' value='Học lệnh' form='form{{i}}'
+                                    class='btn btn-primary' id='cmd_{{i}}'>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </table>
+                    <form>
+                        <input type='submit' value='Lưu' class="btn btn-primary" form='form1' class='form-control'>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+<script>
+    function change_mode() {
+        numofspeed = document.getElementById("numofspeed").value;
+        var count = numofspeed;
+        var countdown = "";
+        for (count = 1; count <= numofspeed; count++) {
+            countdown = ".countdown_" + count;
+            $(countdown).show();
+        }
+        for (count; count <= 6; count++) {
+            countdown = ".countdown_" + count;
+            $(countdown).hide();
+        }
+    }
+
+    function get_code(obj) {
+        var attr = obj.id.split('_')[1];
+        var cmd = '#cmd_' + attr;
+        var countdown = "countdown_" + attr;
+        var res = '#' + attr + "_res"
+        $(cmd).prop('disabled', true);
+        $.post('./learn_command?' + gateway, function (data, status) {
+            $(res).val(data['result']);
+            $(cmd).prop('disabled', false);
+            document.getElementById(countdown).innerHTML = "";
+        });
+    }
+
+    function gatewayFunc() {
+        gateway = document.getElementById('gateway').value;
+        document.getElementById('turn_on').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form5'></form>";
+
+
+        $(function () {
+
+
+            //channel turn on 
+            $('#cmd_turn_on').bind('click', function () {
+                $.post('./learn_command?' + gateway, function (data, status) {
+                    $('#turn_on_res').val(data['result']);
+                    $('#cmd_turn_on').prop('disabled', false);
+                    document.getElementById("countdown11").innerHTML = "";
+                });
+
+            });
+
+        });
+    }
+
+
+
+</script>

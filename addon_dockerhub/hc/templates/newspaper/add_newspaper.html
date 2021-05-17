@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Quản lý kịch bản</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/style.css">
+    <script src="./static/js/jquery.min.js"></script>
+    <script src="./static/js/popper.min.js"></script>
+    <script src="./static/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    {%include 'head_foot/header.html' %}
+
+    <div class="container">
+        <h3 id="title">Thêm kịch bản</h3>
+        {%if index == 0%}
+        <div class='alert alert-danger alert-dismissible'>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            Không có dịch vụ tts
+        </div>
+        {%elif index == 1%}
+        <div class='alert alert-danger alert-dismissible'>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            Không có dịch vụ đọc báo
+            <a onclick="alert('Đã khởi động lại server')" href="./add_service_readnew">Thêm dịch vụ đọc báo</a>
+        </div>
+        {%endif%}
+        <form style="margin-top: 5%" method="POST" action='./add_newspaper_result'>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <label for="sel1">Entity id</label>
+                        </td>
+                        <td>
+                            <select class="form-control sel1" name="entity_id"
+                                onchange="setService(this, {{list_service}})">
+                                {% for en in list_media%}
+                                {% if en.split('.')[1] in ['speaker']%}
+                                <option value="{{en}}">{{en}}</option>
+                                {%endif%}
+                                {%endfor%}
+                            </select>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="sel2">Trang báo muốn nghe</label>
+                        </td>
+                        <td>
+                            <select class="form-control sel2" name="newsname" onchange="addMess(this)">
+                                <option value="Dân trí">Dân trí</option>
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Dịch vụ</td>
+                        <td>
+                            <select class="form-control sel2" name="service" ">
+                                <option value=" read_news.get">read_news.get</option>
+                            </select></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            {%if index != 2%}
+            <button style="width: 100px; position: relative; left: 85%;" type="submit"
+                class="btn btn-primary" disabled>Lưu</button>
+            {%else%}
+            <button style="width: 100px; position: relative; left: 85%;" type="submit"
+            class="btn btn-primary">Lưu</button>
+            {%endif%}
+        </form>
+
+    </div>
+    <br>
+    {%block content%}
+    {%include 'head_foot/footer.html' %}
+    {%endblock%}
+    </div>
+</body>
+
+</html>

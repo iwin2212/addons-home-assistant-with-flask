@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Switch</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h2 id='title'>Cấu hình thiết bị Broadlink</h2>
+                <div id='connect_broadlink' class='alert alert-success alert-dismissible' style="margin-top: 2%">
+                    Bước 2: Nhập thông tin của mạng Wifi cần kết nối với bộ Broadlink, sau đó nhấn nút "Cấu hình"
+                </div>
+                <div id='countdown4' class='alert alert-danger alert-dismissible' style="display: none;"></div>
+                <div class="row">
+                    <div id='config_broadlink'>
+                        <form action="./config_broadlink" method='POST' id='form2'></form>
+                    </div>
+                    <tr id='success' class="container-fluid row">
+                        <td><a class="btn btn-outline-primary submit-button1" href='./switch_broadlink'>Danh sách thiết
+                                bị broadlink</a></td>
+                    </tr>
+                </div>
+                <table class="table table-borderless" style="margin-top: 5%">
+
+                    <tr>
+                        <td>Nhập tên mạng (SSID)</td>
+                        <td colspan="3">
+                            <select id='name_wifi' name='name_wifi' class='form-control' form='form1' required>
+                                <option selected disabled> Chọn mạng WIFI </option>
+                                {% for wifi in wifi_list %}
+                                {% if wifi != '' %}
+                                <option value="{{wifi}}">{{wifi}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Mật khẩu</td>
+                        <td colspan="3">
+                            <div id="countdown" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='pass_wifi' class='form-control' form='form1' id='pass_wifi' required>
+                        </td>
+                    </tr>
+
+                    <tr id='text_success'>
+                        <td colspan="4" style="color: blue;">
+                            Lưu ý: Cấu hình thiết bị thành công thì đèn báo trên bộ Broadlink sẽ tắt.
+                        </td>
+                    </tr>
+                    <tr id='pairing'>
+                        <td></td>
+                        <td>
+                            <input type='submit' onclick="connect_broadlink()" value='Cấu hình' class='btn btn-primary' id='pair' name='pairing' class="btn btn-primary">
+                            <div style="display: none;" id='pending' class="spinner-border text-primary"></div>
+                            <a class="btn btn-primary" href='./econtrol_broadlink' id='again' style="display: none;">Thực
+                                hiện lại</a>
+                            <a class="btn btn-outline-primary submit-button1" href="./add_broadlink" id='next' style="display: none;">Tiếp tục</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+        </div>
+    </body>
+
+</html>
+<script>
+    function connect_broadlink() {
+        $('#pair').hide();
+        $('#pending').show();
+        name_wifi = document.getElementById('name_wifi').value;
+        pass_wifi = document.getElementById('pass_wifi').value;
+        x = 'ssid=' + name_wifi + '&pwd=' + pass_wifi;
+        try {
+            $.post('./configure_broadlink?' + x, function (data, status) {
+                $('#pair').show();
+                $('#pending').hide();
+            });
+        } catch (error) {
+            $('#pair').show();
+            $('#pending').hide();
+        }
+        var timeleft = 3;
+        var downloadTimer = setInterval(function () {
+            timeleft -= 1;
+            if (timeleft <= 0) {
+                clearInterval(downloadTimer);
+                check_broadlink();
+            }
+        }, 1000);
+    }
+
+    function check_broadlink() {
+        $.post('./check_available', function (data, status) {
+            if (data['list_ip'].length > 0) {
+                window.location.href = "./add_broadlink";
+            }
+            else {
+                window.alert(`Có thể đã xảy ra lỗi, vui lòng kiểm tra đèn báo trên bộ Broadlink:
+- Nếu đèn báo tắt, chọn "TIẾP TỤC" để thực hiện bước tiếp theo.
+- Nếu đèn báo vẫn nhấp nháy, tiến hành "RESET LẠI" thiết bị Broadlink (vào chế độ đèn nháy chậm) và chọn "THỰC HIỆN LẠI" để tiến hành kết nối lại thiết bị`);
+                $('#pair').hide();
+                $('#pending').hide();
+                $('#again').show();
+                $('#next').show();
+            }
+        });
+    }
+
+</script>

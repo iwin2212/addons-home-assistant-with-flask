@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Mã code để kết nối Home Kit</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./static/css/style.css" />
+    <link rel="stylesheet" href="./static/css/style_qrcode.css" />
+    <script src="./static/js/jquery.min.js"></script>
+    <script src="./static/js/popper.min.js"></script>
+    <script src="./static/js/bootstrap.min.js"></script>
+    <script src="./static/js/qrcode.js"></script>
+  </head>
+
+  <body>
+    {%include 'head_foot/header.html'%}
+    <section id="main">
+      <div class="container text-center" id="menu-item">
+        <div class="col-md-12 col-12">
+          <h3 id="title">Mã code để kết nối vào ứng dụng Home của Apple</h3>
+          <br />
+          {% if pin_code == "" %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>{{info}}</strong><br><br>Nếu không nhìn thấy mã QRcode, bạn vui lòng khởi động lại hệ thống
+            tại
+            <a href="./homeassistant">đây</a>.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          {% else %}
+          <div id="pin_code" style="display: inline-block; font-size: 32px;">
+            {{pin_code}}
+          </div>
+          <br />
+          <img src="{{qrcode}}" alt="{{url}}" />
+          <p style="margin-top: 5%;">
+            Truy cập ứng dụng Home trên thiết bị iOS và quét mã QR.
+            <a href="#">Hướng dẫn chi tiết</a>
+          </p>
+
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    {%block content%} {%include 'head_foot/footer.html' %} {%endblock%}
+  </body>
+
+</html>

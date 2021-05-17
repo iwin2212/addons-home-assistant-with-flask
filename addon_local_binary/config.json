@@ -1,0 +1,32 @@
+{
+    "name": "Javis HC tool",
+    "version": "1.0.7",
+    "slug": "javis_hc",
+    "url": "https://javishome.vn",
+    "description": "Javis HC tool",
+    "arch": [
+        "armv7",
+        "aarch64"    
+    ],
+    "map": [
+        "backup:rw",
+        "config:rw",
+        "media:rw",
+        "share:rw",
+        "ssl:rw"
+    ],
+    "homeassistant_api": true,
+    "ingress_port": 2021,
+    "ingress": true,
+    "host_network": true,
+    "host_dbus": true,
+    "panel_icon": "mdi:home",
+    "panel_title": "Javis HC Tool",
+    "startup": "application",
+    "boot": "auto",
+    "options": {},
+    "schema": {},
+    "ports": {
+        "2021/tcp": 2021
+    }
+}

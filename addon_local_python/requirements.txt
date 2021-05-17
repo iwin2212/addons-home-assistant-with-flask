@@ -1,0 +1,8 @@
+websocket_client
+Flask
+PyYAML
+requests
+broadlink
+flask_cors
+paho-mqtt
+websockets

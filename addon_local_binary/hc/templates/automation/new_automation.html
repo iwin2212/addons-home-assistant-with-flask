@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Automation</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+        <script src="./static/js/automation.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thiết lập tự động</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://automationtongquat.javisco.vn"
+                    style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <form action='./new_automation' method='POST'>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td colspan="2">
+                                <table class='container-fluid table-borderless'>
+                                    <tr>
+                                        <td width="30%"><strong>Tên tự động</strong></td>
+                                        <td width="70%"><input type='text' name='ten' id='ten' class='form-control'
+                                                onchange=" specialcharecter()" placeholder="ví dụ: mở cửa bật đèn"
+                                                required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Loại tự động</strong></td>
+                                        <td>
+                                            <select name='type' class='form-control'>
+                                                <!-- <option>Thỏa mãn một trong các điều kiện</option> -->
+                                                <option>Thực hiện với một trong các trigger và phải thoả mãn tất cả
+                                                    condition đề kích hoạt kịch bản
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan='2'><strong>Thời gian hiệu lực</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Từ (giờ:phút)</td>
+                                        <td><input type='text' autocomplete="off" placeholder='Ví dụ 17:00' name='after'
+                                                class='hourPicker form-control' value=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Đến (giờ:phút)</td>
+                                        <td><input type='text' autocomplete="off" placeholder='Ví dụ 20:00'
+                                                name='before' class='hourPicker form-control' value=""></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Thiết bị kích hoạt
+                                    (trigger)</strong>
+                            </td>
+                        </tr>
+                        <tr class="add_trigger"></tr>
+                        <tr>
+                            <td><button type="button" target="blank" class="btn" style="background-color: #e0dbcd"
+                                    onclick="addTrigger()">Thêm thiết bị</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Điều kiện xảy ra
+                                    (conditions)</strong></td>
+                        </tr>
+                        <tr class="add_condition"></tr>
+                        <tr>
+                            <td><button type="button" class="btn" style="background-color: #e0dbcd"
+                                    onclick="addCondition()">Thêm điều kiện</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Thực hiện hành động
+                                    (actions)</strong>
+                            </td>
+                        </tr>
+                        <tr class="add_action"></tr>
+                        <tr>
+                            <td> <button type="button" class="btn" style="background-color: #e0dbcd"
+                                    onclick="addAction()">Thêm hành động</button></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <input id='del_act' type="text" name='del_act' value='' style="display: none;">
+                    <input type='submit' value='Lưu' class="btn btn-primary">
+                </form>
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+<script>
+    function specialcharecter() {
+        var iChars = "!`@#$%^&*()+=-[]\\\';,./{}|\":<>?~_";
+        var iNums = "0123456789";
+        var data = document.getElementById("ten").value;
+        for (var i = 0; i < data.length; i++) {
+            if (i == 0) {
+                if (iNums.indexOf(data.charAt(i)) != -1) {
+                    alert("Tên mà bạn nhập không được bắt đầu bằng số. \nHãy nhập lại.");
+                    document.getElementById("ten").value = "";
+                    return false;
+                }
+            }
+            if (iChars.indexOf(data.charAt(i)) != -1) {
+                alert("Tên mà bạn nhập không được chứa ký tự đặc biệt. \nHãy nhập lại.");
+                document.getElementById("ten").value = "";
+                return false;
+            }
+        }
+        // for (var i = 0; i < list_name_used.length; i++) {
+        //     if (data == list_name_used[i]) {
+        //         alert("Tên mà bạn được từng được sử dụng. \nHãy nhập lại.");
+        //         document.getElementById("ten").value = "";
+        //         return false;
+        //     }
+        // }
+    }
+
+    list_entitys = {{ list_entity_id | tojson }};
+    list_entity_name = {{ list_entity_name | tojson }};
+    count_trigger_row = 0
+    count_condition_rows = 0
+    let dem = 0;
+    function addTrigger() {
+        count_trigger_row += 1;
+        string = add_trigger_automation_tongquat(dem);
+        $('.add_trigger').replaceWith(string);
+        dem++;
+        $(function () {
+            $('.selectpicker').selectpicker();
+        });
+    }
+
+    function loadTriggerContent(dem) {
+        $(function () {
+            $('.selectpicker').selectpicker();
+        });
+        entity_id = $('#trigger_' + dem).val();
+        entity_id = entity_id.split("(")[1].replace(")", "");
+        string = load_entity_id_type_automation(dem);
+        $('.trigger_content_' + dem).remove();
+        $(`#tr_content_${dem}`).replaceWith(string);
+        formatTime();
+    }
+
+    function deleteTrigger(dem) {
+        delete_trigger_automation(dem);
+    }
+
+    let dem_condition = 0;
+    let dem_action = 0;
+    var max_action = 0;
+    function addAction() {
+        string = add_action_type_automation(dem_action);
+        dem_action++;
+        max_action++;
+        $(".add_action").replaceWith(string);
+        formatTime();
+        $(function () {
+            $('.selectpicker').selectpicker();
+        });
+    }
+    function show_change_pos_btn(dem_action) {
+        position = $('#entity_action_id_' + dem_action).index();
+        position = position - count_trigger_row - count_condition_rows - 7;
+        show_action_pos(position, dem_action);
+    }
+
+    function addActionContent(dem_action, text_of_option) {
+        $('#block_action_' + dem_action).show();
+        hanhdong = document.getElementById('hanhdong_' + dem_action);
+        var idx_action = 'entity_action_id_' + dem_action;
+        var action_selected = hanhdong.value.split('.')[0];
+        var exec_selected = hanhdong.value.split('.')[1];
+        var select_section = document.getElementById('action_' + dem_action);
+        $('#action_' + (dem_action))
+            .find('option')
+            .remove()
+            .end()
+            .append('<option disabled selected value="whatever"> -- Chọn 1 thiết bị -- </option>')
+            .val('whatever')
+            ;
+        var entities = [];
+        addActionContent_hanhdongValue_typeAutomation(dem_action, text_of_option);
+        entities = addActionContent_option_typeAutomation(entities, action_selected, select_section, exec_selected);
+
+        for (var i = 0; i < entities.length; i++) {
+            var custom_option = document.createElement("option");
+            var t = document.createTextNode(entities[i]);
+            custom_option.appendChild(t);
+            select_section.appendChild(custom_option);
+            $(select_section).selectpicker("refresh");
+        }
+    }
+    function deleteAction(dem_action) {
+        delete_action(dem_action);
+        max_action--;
+    }
+
+    $(document).ready(function () {
+        $('.datepicker').timepicker({
+            controlType: 'select',
+            oneLine: true,
+            timeFormat: 'HH:mm:ss'
+        });
+        $('.hourPicker').timepicker({
+            controlType: 'select',
+            oneLine: true,
+            timeFormat: 'HH:mm'
+        });
+    });
+    function formatTime() {
+        $('.datepicker').timepicker({
+            controlType: 'select',
+            oneLine: true,
+            timeFormat: 'HH:mm:ss'
+        });
+    }
+
+</script>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Server Manager</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <link rel="stylesheet" href="./static/css/popup.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id="main">
+            <div class="container">
+                <h3 id='title'>Thiết lập cấu hình chung cho JAVIS HC</h3><br>
+                <div class="row">
+                    <div class="col-md-12 col-12">
+                        <div class="border container" style='padding:1%'>
+                            <h4 class="text-primary">Kiểm tra bản cập nhật JAVIS HC</h4>
+                            <div id='update_hc_state' class='text-info' style="display: none;"><br>
+                            </div>
+                            <div id='update_mqtt_state' class='text-info' style="display: none;"><br>
+                            </div>
+                            <div id='error_notify' class='text-info' style="display: none;"><br>
+                            </div>
+                            <div style="display: none; margin: 2%;" id='pending' class="spinner-border text-primary">
+                            </div>
+                            <input type="button" value="KIỂM TRA" id="check_update" onclick="check_update()"
+                                class="btn btn-warning" style="margin-top: 2%;">
+                            <input type="button" value="Cập nhật" id="update" onclick="update()" class="btn btn-danger"
+                                style="margin-top: 2%; display: none;">
+                        </div>
+                        <div class="border" style='padding:1%'>
+                            <h4 class="text-primary">Kiểm tra thông tin cấu hình của JAVIS HC</h4>
+                            <span>Kiểm tra file cấu hình trước khi khởi động lại dịch vụ của JAVIS HC Để không xảy ra
+                                lỗi. Chỉ khởi động lại dịch vụ Javis HC khi file cấu hình không có lỗi.</span><br><br>
+                            {%if config_result == 'invalid'%}
+                            <div class='text-danger'>File cấu hình có lỗi sau: <br>{{config_err}}
+                            </div>
+                            {%endif%}
+                            {%if config_result == 'valid'%}
+                            <div class='text-success'>File cấu hình không có lỗi. Bạn có thể khởi động lại dịch vụ của
+                                JAVIS
+                                HC.
+                            </div>
+                            {%endif%}
+                            <form action='./check_config' method='POST'>
+                                <input type="submit" value="KIỂM TRA" class="btn btn-primary">
+                            </form>
+                        </div>
+                        <br>
+                        <div class="border" style='padding:1%'>
+                            <h4 class="text-primary">Khởi động lại dịch vụ JAVIS HC</h4>
+                            <span>Một số phần trong JAVIS HC có thể khởi động lại riêng mà không cần khởi động lại tất
+                                cả
+                                các dịch vụ.
+                                Có thể click vào những button dưới đây để tải lại những dịch vụ tương ứng.
+                            </span><br><br>
+
+                            <div>
+                                <form action='./reload_core' method='POST' style="display: inline;">
+                                    <input type="submit" value="RELOAD CORE" class="btn btn-primary">
+                                </form>
+                                <form action='./reload_groups' method='POST' style="display: inline;">
+                                    <input type="submit" value="RELOAD GROUPS" class="btn btn-primary">
+                                </form>
+                                <form action='./reload_automations' method='POST' style="display: inline;">
+                                    <input type="submit" value="RELOAD AUTOMATIONS" class="btn btn-primary">
+                                </form>
+                                <form action='./reload_scripts' method='POST' style="display: inline;">
+                                    <input type="submit" value="RELOAD SCRIPTS" class="btn btn-primary">
+                                </form>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="border" style='padding:1%'>
+                            <h4 class="text-primar">
+                                Quản lý dịch vụ
+                            </h4>
+                            {%if info != ''%}
+                            <div class='alert alert-info alert-dismissible'>
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                {{info}}
+                            </div>
+                            {%endif%}
+                            <span>
+                                Khởi động lại hoặc dừng dịch vụ của JAVIS HC
+                            </span><br><br>
+                            <div class="button-group button-group-lg">
+                                <form action='./restart_server' method='POST' style="display: inline;">
+                                    <input type='submit' value='RESTART' class="btn btn-danger">
+                                </form>
+                                <form action='./stop_server' method='POST' style="display: inline;">
+                                    <input type='submit' value='STOP' class="btn btn-danger">
+                                </form>
+                            </div>
+                        </div>
+                        <div class="border" style='padding:1%'>
+                            <h4 class="text-primar">
+                                Sao lưu và Khôi phục
+                            </h4>
+                            <span>
+                                Sao lưu dữ liệu của JAVIS HC hoặc khôi phục lại bản sao lưu trước đó. Lưu ý chỉ hỗ
+                                trợ sao lưu và phục hồi các cấu hình cơ bản về thiết bị, kịch bản, tự động hóa, không hỗ
+                                trợ sao lưu và phục hồi dữ liệu lịch sử thiết bị.
+                            </span><br><br>
+                            <div class="button-group button-group-lg">
+                                <form action="./javis-backup" method='POST'>
+                                    <input type='submit' class='btn active' value='Backup'>
+                                </form>
+
+                                <button class="btn active"><a href='./restore'>Restore</a></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div id="asking_update" class="modal fade" tabindex="-1" role="dialog" style="margin-top: 10%;"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Đã tìm thấy bản cập nhật mới</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Bạn có muốn cập nhật phiên bản mới?</p>
+                                <p>Quá trình cập nhật có thể mất vài phút tùy theo tốc độ mạng.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="hide_popup()">Bỏ
+                                    qua</button>
+                                <button type="button" class="btn btn-primary" onclick="update()">Đồng ý</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+    <script>
+        function loading() {
+            $('#update_hc_state').hide();
+            $('#update_mqtt_state').hide();
+            $('#pending').show();
+            $('#update').hide();
+            $('#check_update').hide();
+        }
+
+        function stop_loading() {
+            $('#pending').hide();
+            $('#check_update').show();
+        }
+
+        function show_update() {
+            $('#check_update').hide();
+            $('#update').show();
+        }
+
+        function notify_updated() {
+            document.getElementById('update_hc_state').innerHTML = 'Bạn đã cài đặt phiên bản HA tool mới nhất.';
+            $('#update_hc_state').show();
+        }
+
+        function notify_update() {
+            document.getElementById('update_mqtt_state').innerHTML = "Đang cập nhật...";
+            $('#update_mqtt_state').show();
+        }
+
+        function check_update() {
+            $('#error_notify').hide();
+            loading();
+            $.post('http://' + location.hostname + ':1234/check_update?services=hatool', function (data, status) {
+                stop_loading();
+                if (data.error == false) {
+                    notify_updated();
+                }
+                else {
+                    // show_update();
+                    show_popup();
+                }
+            });
+        }
+
+        function update() {
+            loading();
+            $('#asking_update').modal('hide');
+            notify_update();
+            $.post('http://' + location.hostname + ':1234/update?services=hatool', function (data, status) {
+                stop_loading();
+                hide_popup();
+                $('#update_mqtt_state').hide();
+                if (data.error == true) {
+                    document.getElementById('error_notify').innerHTML = "Đã có lỗi xảy ra. Vui lòng thử lại.";
+                }
+                else {
+                    document.getElementById('error_notify').innerHTML = "Cập nhật Thành công";
+                }
+                $('#error_notify').show();
+            });
+        }
+
+
+        // Get the modal
+        var modal = document.getElementById("asking_update");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal 
+        function show_popup() {
+            $('#asking_update').modal('show');
+        }
+        function hide_popup() {
+            $('#asking_update').modal('hide');
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</html>

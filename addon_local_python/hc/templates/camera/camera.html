@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>CAMERA</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            {% if list_camera | length == 0%}
+            <div class="container">
+                <div class="row">
+
+                    <div id="no_broad" class="col-md-12">
+                        <h4>Chưa thiết lập camera nào </h4>
+                        <a href="./add_camera" class="btn btn-primary" role="button">Thêm Camera</a>
+                        <br />
+                    </div>
+
+                </div>
+
+            </div>
+
+            {%else%}
+            <div class="container">
+                <h3 id='title'>Danh sách Camera</h3>
+                {%if info!=none %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{info}}</strong>Bạn vui lòng check config và khởi động lại hệ thống tại <a href="./homeassistant">đây</a>.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {%endif%}
+                <div class="row submit-button" style='margin-top: 5%;'>
+                    <div>
+                        <a class="btn btn-primary submit-button2 " href="./add_camera">Thêm thiết bị
+                            Camera</a>
+                    </div>
+                    <div>
+                        <a class="btn btn-primary submit-button2 " href="./show_video">Xem danh sách bản ghi</a>
+                    </div>
+                </div>
+                <div class="row" id="table-item" style='margin-top: 1%;'>
+                    <table class='table table-bordered col-md-12 col-12'>
+                        <tr>
+                            <th>STT</th>
+                            <th>Danh sách Camera</th>
+                            <th>Hành động</th>
+                        </tr>
+                        {%for camera in list_camera%}
+                        <tr>
+                            <td width="10%">{{loop.index}}</td>
+                            <td width="50%">
+                                <ul>
+                                    <li><strong>Name: </strong> {{camera['name']}}</li>
+                                    <li><strong>Platfrom: </strong> {{camera['platform']}}</li>
+                                    <li><strong>Still_image_url: </strong> {{camera['still_image_url']}}</li>
+                                    <li><strong>Stream_source: </strong> {{camera['ip']}}</li>
+                                </ul>
+                            </td>
+                            <td width="15%">
+                                <form action='./delete_camera?name={{camera["name"]}}' method='POST'>
+                                    <input type='submit' onclick='return confirm("Bạn chăc chắn muốn xóa ?")' value='Xoá' class="btn btn-danger">
+                                </form>
+                            </td>
+                        </tr>
+                        {%endfor%}
+
+                    </table>
+                    {%endif%}
+                </div>
+
+            </div>
+
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>

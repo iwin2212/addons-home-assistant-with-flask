@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add lock</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+        <script src="./static/js/automation.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    </head>
+
+    <body onload="get_lock()">
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thiết lập tự động khoá cửa</h3>
+                <form action='./edit_lock?iden={{iden}}' method='POST'>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td colspan="2">
+                                <table class='container-fluid table-borderless'>
+                                    <tr>
+                                        <td width="30%"><strong>Tên tự động</strong></td>
+                                        <td width="70%"><input type='text' name='ten' id='ten' class='form-control'
+                                                onchange=" specialcharecter()" placeholder="ví dụ: mở cửa bật đèn"
+                                                value="{{lock_automation['alias']}}" required>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Thiết bị kích hoạt
+                                    (trigger)</strong>
+                            </td>
+                        </tr>
+                        <tr id='entity_trigger_'>
+                            <td colspan='2'>
+                                <table class='container-fluid table-borderless'>
+                                    <tr id='selection_trigger'>
+                                        <td width="30%">Chọn loại thiết bị</td>
+                                        <td width="70%"><select class='form-control selectpicker'
+                                                data-dropup-auto="false" data-size="7" data-live-search="true"
+                                                id="device_">
+                                                <option value='lock'>Khoá</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr id='block_trigger_'>
+                                        <td id="trigger_id_">Chọn thiết bị kích hoạt</td>
+                                        <td>
+                                            <select name='trigger' class='form-control selectpicker'
+                                                data-dropup-auto="false" data-size="7" data-live-search="true"
+                                                id="trigger_" required>
+                                                <option disabled value> -- Chọn 1 thiết bị -- </option>
+                                                {% for i in range(list_entity_id|length) %}
+                                                {% if list_entity_id[i].find('_lock') != -1 or
+                                                list_entity_id[i].find('_action') != -1 %}
+                                                <option {% if
+                                                    lock_automation['trigger'][0]['topic'].split('zigbee2mqtt/')[1] in
+                                                    list_entity_id[i] %} selected {% endif %}>
+                                                    {{list_entity_name[i]}}({{list_entity_id[i]}})
+                                                </option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Điều kiện xảy ra
+                                    (conditions)</strong></td>
+                        </tr>
+                        <tr id='entity_condition_'>
+                            <td colspan='2'>
+                                <table class='container-fluid table-borderless'>
+                                    <tr class="condition_content_">
+                                        <td width="30%">Mã vân tay</td>
+                                        <td width="70%">
+                                            <input name='touch_lock' id='touch_lock' class='form-control' type='text'
+                                                placeholder=''>
+                                        </td>
+                                    </tr>
+                                    <tr class="condition_content_">
+                                        <td>Mã thẻ từ</td>
+                                        <td>
+                                            <input name='rfid_lock' id='rfid_lock' class='form-control' type='text'
+                                                placeholder=''>
+                                        </td>
+                                    </tr>
+                                    <tr class="condition_content_">
+                                        <td>Passcode</td>
+                                        <td>
+                                            <input name='passcode_lock' id='passcode_lock' class='form-control'
+                                                type='text' placeholder=''>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Thực hiện hành động
+                                    (actions)</strong>
+                            </td>
+                        </tr>
+                        <!-- action -->
+                        {%for device in list_action %}
+                        <tr id="entity_action_id_{{loop.index-1}}" onmouseenter="show_change_pos_btn({{loop.index-1}})"
+                            onmouseleave="hide_change_pos_btn({{loop.index-1}})">
+                            <td colspan='2'>
+                                <table class='container-fluid table-borderless'>
+                                    <tr id="block_action_{{loop.index}}">
+                                        <td>
+                                            Độ trễ (giờ:phút:giây)
+                                        </td>
+                                        <td>
+                                            <input type="text" value="{{delay[loop.index-1]}}" name="delay"
+                                                class="datepicker form-control" autocomplete="off">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30%">Chọn hành động</td>
+                                        <td width="70%">
+                                            <select name='action' class='form-control selectpicker'
+                                                data-dropup-auto="false" data-size="7" data-live-search="true"
+                                                onchange='changeActionContent({{loop.index-1}}, this)'
+                                                id="hanhdong_{{loop.index-1}}">
+                                                <option value='alarm_control_panel.alarm_arm_away' {% if
+                                                    device['service']=='alarm_control_panel.alarm_arm_away' %} selected
+                                                    {% endif %}>An ninh: Chế độ Vắng nhà</option>
+                                                <option value='alarm_control_panel.alarm_arm_home' {% if
+                                                    device['service']=='alarm_control_panel.alarm_arm_home' %} selected
+                                                    {% endif %}>An ninh: Chế độ Ở nhà</option>
+                                                <option value='alarm_control_panel.alarm_arm_night' {% if
+                                                    device['service']=='alarm_control_panel.alarm_arm_night' %} selected
+                                                    {% endif %}>An ninh: Chế độ Ban đêm</option>
+                                                <option value='alarm_control_panel.alarm_disarm' {% if
+                                                    device['service']=='alarm_control_panel.alarm_disarm' %} selected {%
+                                                    endif %}>An ninh: Tắt</option>
+                                                <option value='camera.snapshot' {% if
+                                                    device['service']=='camera.snapshot' %} selected {% endif %}>Camera:
+                                                    Chụp ảnh</option>
+                                                <option value='camera.record' {% if device['service']=='camera.record'
+                                                    %} selected {% endif %}>
+                                                    Camera: Quay video</option>
+                                                <option value='switch.turn_on' {% if device['service']=='switch.turn_on'
+                                                    %} selected {% endif %}>
+                                                    Công tắc: Bật</option>
+                                                <option value='switch.turn_off' {% if
+                                                    device['service']=='switch.turn_off' %} selected {% endif %}>Công
+                                                    tắc: Tắt</option>
+                                                <option value='climate.turn_off' {% if
+                                                    device['service']=='climate.turn_off' %} selected {% endif %}>Điều
+                                                    hoà: Tắt điều hoà</option>
+                                                <option value='climate.set_temperature' {% if
+                                                    device['service']=='climate.set_temperature' %} selected {% endif
+                                                    %}>
+                                                    Điều
+                                                    hoà: Bật nhiệt độ</option>
+                                                <option value='climate.set_fan_mode' {% if
+                                                    device['service']=='climate.set_fan_mode' %} selected {% endif %}>
+                                                    Điều
+                                                    hoà: Bật chế độ gió</option>
+                                                <option value='media_player.media_play_pause' {% if
+                                                    device['service']=='media_player.media_play_pause' %} selected {%
+                                                    endif %}>
+                                                    Điều khiển nhạc: Tạm dừng</option>
+                                                <option value='media_player.media_play' {% if
+                                                    device['service']=='media_player.media_play' %} selected {% endif
+                                                    %}>
+                                                    Điều
+                                                    khiển nhạc: Tiếp tục</option>
+                                                <option value='media_player.media_stop' {% if
+                                                    device['service']=='media_player.media_stop' %} selected {% endif
+                                                    %}>
+                                                    Điều
+                                                    khiển nhạc: Dừng</option>
+                                                <option value='media_player.media_pause' {% if
+                                                    device['service']=='media_player.media_pause' %} selected {% endif
+                                                    %}>
+                                                    Điều
+                                                    khiển nhạc: Chơi tiếp</option>
+                                                <option value='media_player.volume_mute' {% if
+                                                    device['service']=='media_player.volume_mute' %} selected {% endif
+                                                    %}>
+                                                    Điều
+                                                    khiển nhạc: Tắt tiếng</option>
+                                                <option value='media_player.volume_set' {% if
+                                                    device['service']=='media_player.volume_set' %} selected {% endif
+                                                    %}>
+                                                    Điều
+                                                    khiển nhạc: Thiết lập âm lượng</option>
+                                                <option value='media_player.volume_up' {% if
+                                                    device['service']=='media_player.volume_up' %} selected {% endif %}>
+                                                    Điều
+                                                    khiển nhạc: Tăng âm lượng</option>
+                                                <option value='media_player.volume_down' {% if
+                                                    device['service']=='media_player.volume_down' %} selected {% endif
+                                                    %}>
+                                                    Điều
+                                                    khiển nhạc: Giảm âm lượng</option>
+                                                <option value='light.turn_on' {% if device.get('data') !=None %} {% if
+                                                    device['service']=='light.turn_on' %} selected {% endif %} {% endif
+                                                    %}>
+                                                    Đèn:
+                                                    Bật</option>
+                                                <option value='light.turn_off' {% if device['service']=='light.turn_off'
+                                                    %} selected {% endif %}>
+                                                    Đèn: Tắt</option>
+                                                <option value='light.turn_on' {% if device.get('data') !=None %} {% if
+                                                    device['data'].get('brightness_pct') !=None %} selected {% endif %}
+                                                    {% endif %}>Đèn: Thiết lập độ sáng</option>
+                                                <option value='light.turn_on' {% if device.get('data') !=None %} {% if
+                                                    device['data'].get('color_name') !=None %} selected {% endif %} {%
+                                                    endif %}>
+                                                    Đèn: Thiết lập màu</option>
+                                                <option value='light.turn_on' {% if device.get('data') !=None %} {% if
+                                                    device['data'].get('profile') !=None %} selected {% endif %} {%
+                                                    endif %}>
+                                                    Đèn:
+                                                    Thiết lập chế độ</option>
+                                                <option value='lock.unlock' {% if device['service']=='lock.unlock' %}
+                                                    selected {% endif %}>Khoá: Mở</option>
+                                                <option value='lock.lock' {% if device['service']=='lock.lock' %}
+                                                    selected {% endif %}>
+                                                    Khoá: Đóng</option>
+                                                <option value='script.turn_on' {% if device['service']=='script.turn_on'
+                                                    %} selected {% endif %}>
+                                                    Kịch bản: kích hoạt</option>
+                                                <option value='media_player.speak' {% if
+                                                    device['service']=='tts.google_translate_say' %} selected {% endif
+                                                    %}>
+                                                    Phát
+                                                    giọng nói: Nhập nội dung Tiếng Việt</option>
+                                                <option value='fan.turn_on' {% if device['service']=='fan.turn_on' %}
+                                                    selected {% endif %}>Quạt: Bật</option>
+                                                <option value='fan.turn_off' {% if device['service']=='fan.turn_off' %}
+                                                    selected {% endif %}>
+                                                    Quạt: Tắt</option>
+                                                <option value='cover.open_cover' {% if
+                                                    device['service']=='cover.open_cover' %} selected {% endif %}>Rèm:
+                                                    Mở</option>
+                                                <option value='cover.close_cover' {% if
+                                                    device['service']=='cover.close_cover' %} selected {% endif %}>Rèm:
+                                                    Đóng</option>
+                                                <option value='cover.set_cover_position' {% if
+                                                    device['service']=='cover.set_cover_position' %} selected {% endif
+                                                    %}>
+                                                    Rèm: Mở
+                                                    một phần</option>
+                                                <option value='cover.stop_cover' {% if
+                                                    device['service']=='cover.stop_cover' %} selected {% endif %}>Rèm:
+                                                    Tạm dừng</option>
+                                                <option value='media_player.turn_on' {% if
+                                                    device['service']=='media_player.turn_on' %} selected {% endif %}>
+                                                    TV:
+                                                    Bật</option>
+                                                <option value='media_player.turn_off' {% if
+                                                    device['service']=='media_player.turn_off' %} selected {% endif %}>
+                                                    TV:
+                                                    Tắt
+                                                </option>
+                                                <option value='media_player.select_source' {% if
+                                                    device['service']=='media_player.select_source' %} selected {% endif
+                                                    %}>
+                                                    TV:
+                                                    Chọn đầu vào</option>
+                                                <option value='delay' {% if device.get('delay') !=None %} selected {%
+                                                    endif %}>Thời
+                                                    gian chờ</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    {% if device['service'] == 'alarm_control_panel.alarm_arm_away' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Mã code</td>
+                                        <td><input type="text" class='form-control' value="{{device['data']['code']}}"
+                                                name='alarm_code' placeholder="Ví dụ: 1234" requied></td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'alarm_control_panel.alarm_arm_home' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Mã code</td>
+                                        <td><input type="text" class='form-control' value="{{device['data']['code']}}"
+                                                name='alarm_code' placeholder="Ví dụ: 1234" requied></td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'alarm_control_panel.alarm_arm_night' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Mã code</td>
+                                        <td><input type="text" class='form-control' value="{{device['data']['code']}}"
+                                                name='alarm_code' placeholder="Ví dụ: 1234" requied></td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'alarm_control_panel.alarm_disarm' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Mã code</td>
+                                        <td><input type="text" class='form-control' value="{{device['data']['code']}}"
+                                                name='alarm_code' placeholder="Ví dụ: 1234" requied></td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'camera.record' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Thời lượng (giây)</td>
+                                        <td>
+                                            <input type="text" class='form-control'
+                                                value="{{device['data']['duration']}}" name='record_duration'
+                                                placeholder="Ví dụ: 15" requied>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'climate.set_temperature' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td></td>
+                                        <td>
+                                            <table class='container-fluid '>
+                                                <tr>
+                                                    <td>Mức gió</td>
+                                                    <td name="mode"><select name="mode" class='form-control'>
+                                                            <option {% if device['data']['hvac_mode']=='cool' %}
+                                                                selected {% endif %}>
+                                                                cool</option>
+                                                            <option {% if device['data']['hvac_mode']=='heat' %}
+                                                                selected {% endif %}>
+                                                                heat</option>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Nhiệt độ</td>
+                                                    <td name="temperature">
+                                                        <select name="temperature" class='form-control'>
+                                                            <option {% if device['data']['temperature']==18 %} selected
+                                                                {% endif %}>
+                                                                18</option>
+                                                            <option {% if device['data']['temperature']==19 %} selected
+                                                                {% endif %}>
+                                                                19</option>
+                                                            <option {% if device['data']['temperature']==20 %} selected
+                                                                {% endif %}>
+                                                                20</option>
+                                                            <option {% if device['data']['temperature']==21 %} selected
+                                                                {% endif %}>
+                                                                21</option>
+                                                            <option {% if device['data']['temperature']==22 %} selected
+                                                                {% endif %}>
+                                                                22</option>
+                                                            <option {% if device['data']['temperature']==23 %} selected
+                                                                {% endif %}>
+                                                                23</option>
+                                                            <option {% if device['data']['temperature']==24 %} selected
+                                                                {% endif %}>
+                                                                24</option>
+                                                            <option {% if device['data']['temperature']==25 %} selected
+                                                                {% endif %}>
+                                                                25</option>
+                                                            <option {% if device['data']['temperature']==26 %} selected
+                                                                {% endif %}>
+                                                                26</option>
+                                                            <option {% if device['data']['temperature']==27 %} selected
+                                                                {% endif %}>
+                                                                27</option>
+                                                            <option {% if device['data']['temperature']==28 %} selected
+                                                                {% endif %}>
+                                                                28</option>
+                                                            <option {% if device['data']['temperature']==29 %} selected
+                                                                {% endif %}>
+                                                                29</option>
+                                                            <option {% if device['data']['temperature']==30 %} selected
+                                                                {% endif %}>
+                                                                30</option>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'climate.set_fan_mode' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Chế độ</td>
+                                        <td name="fan_mode">
+                                            <select name="fan_mode" class='form-control'>
+                                                <option {% if device['data']['fan_mode']=='low' %} selected {% endif %}>
+                                                    low
+                                                </option>
+                                                <option {% if device['data']['fan_mode']=='medium' %} selected {% endif
+                                                    %}>medium
+                                                </option>
+                                                <option {% if device['data']['fan_mode']=='high' %} selected {% endif
+                                                    %}>high
+                                                </option>
+                                                <option {% if device['data']['fan_mode']=='auto' %} selected {% endif
+                                                    %}>auto
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'media_player.select_source' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Tên kênh</td>
+                                        <td><input type="text" class='form-control' value="{{device['data']['source']}}"
+                                                name='source' value="" placeholder="Ví dụ: VTV1" requied></td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'tts.google_translate_say' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Lời nói</td>
+                                        <td>
+                                            <input type="text" name="message" value="{{device['data']['message']}}"
+                                                id="speak_{{loop.index-1}}" class="form-control" required />
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'media_player.volume_set' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Chọn mức âm lượng</td>
+                                        <td>
+                                            <input type="number" name="volume"
+                                                value="{{device['data']['volume_level']}}" id="volume" min="0" max="100"
+                                                placeholder='ví dụ: 50' class="form-control" />
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'lock.lock' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Mật khẩu</td>
+                                        <td><input type="text" class='form-control' value="{{device['data']['code']}}"
+                                                name='lock_code' placeholder="Ví dụ: 1234" requied></td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'lock.unlock' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Mật khẩu</td>
+                                        <td><input type="text" class='form-control' value="{{device['data']['code']}}"
+                                                name='lock_code' placeholder="Ví dụ: 1234" requied></td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['service'] == 'cover.set_cover_position' %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Chọn % mở</td>
+                                        <td>
+                                            <input type="number" name="pct_open" value="{{device['data']['position']}}"
+                                                id="pct_open" min="0" max="100" placeholder='ví dụ: 50'
+                                                class="form-control" />
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device.get('delay') != None %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Chọn khoảng thời gian</td>
+                                        <td>
+                                            <input type="text" value="{{device['delay']}}" name="delay"
+                                                class="datepicker form-control" autocomplete="off">
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device.get('data') != None %}
+                                    {% if device['data'].get('brightness_pct') != None %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Chọn độ sáng (%)</td>
+                                        <td>
+                                            <input type="number" name="brightness_pct"
+                                                value="{{device['data']['brightness_pct']}}" min="0" max="100"
+                                                placeholder="ví dụ: 35" id="brightness_pct" class="form-control" />
+                                        </td>
+                                        <td><input name="brightness_pct_order" value='{{loop.index-1}}'
+                                                style="display: none;" />
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if device['data'].get('color_name') != None %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Chọn độ sáng (%)</td>
+                                        <td>
+                                            <select name="color" class="form-control">
+                                                <option value='white' {% if device['data']['color_name']=='white' %}
+                                                    selected {% endif %}>Màu trắng</option>
+                                                <option value='red' {% if device['data']['color_name']=='red' %}
+                                                    selected {% endif %}>
+                                                    Màu đỏ</option>
+                                                <option value='purple' {% if device['data']['color_name']=='purple' %}
+                                                    selected {% endif %}>Màu tím</option>
+                                                <option value='green' {% if device['data']['color_name']=='green' %}
+                                                    selected {% endif %}>Màu xanh lá cây</option>
+                                                <option value='yellow' {% if device['data']['color_name']=='yellow' %}
+                                                    selected {% endif %}>Màu vàng</option>
+                                                <option value='blue' {% if device['data']['color_name']=='blue' %}
+                                                    selected {% endif %}>Màu xanh dương</option>
+                                                <option value='aqua' {% if device['data']['color_name']=='aqua' %}
+                                                    selected {% endif %}>Màu xanh nước biển</option>
+                                            </select>
+                                        </td>
+                                        <td><input name="color_order" value='{{loop.index-1}}' style="display: none;" />
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if device['data'].get('profile') != None %}
+                                    <tr id='action{{loop.index-1}}'>
+                                        <td>Chọn độ sáng (%)</td>
+                                        <td>
+                                            <select name="profile" class="form-control">
+                                                <option value='energize' {% if device['data']['profile']=='energize' %}
+                                                    selected {% endif %}>Chế độ sinh nhật</option>
+                                                <option value='relax' {% if device['data']['profile']=='relax' %}
+                                                    selected {% endif %}>
+                                                    Chế độ nghỉ ngơi</option>
+                                                <option value='reading' {% if device['data']['profile']=='reading' %}
+                                                    selected {% endif %}>Chế độ nghe nhạc</option>
+                                                <option value='concentrate' {% if
+                                                    device['data']['profile']=='concentrate' %} selected {% endif %}>Chế
+                                                    độ vui nhộn</option>
+                                            </select>
+                                        </td>
+                                        <td><input name="profile_order" value='{{loop.index-1}}'
+                                                style="display: none;" /></td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endif %}
+
+                                    {% if device.get('data')|length == 1 %}
+                                    <tr class="action{{loop.index-1}}"></tr>
+                                    {% endif %}
+
+                                    {% if device.get('delay') == None %}
+                                    <tr id="block_action_{{loop.index-1}}">
+                                        <td width="25%" id='action_id_{{loop.index-1}}'>Chọn thiết bị thực hiện</td>
+                                        <td width="70%">
+                                            <select name='entity' class='form-control' id='action_{{loop.index-1}}'
+                                                onfocus="change_device({{loop.index-1}})" required>
+                                                <option selected>{{device['data']['entity_id']}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </table>
+                            </td>
+                            <td id='func_{{loop.index-1}}'>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <button id='delete_action_{{loop.index-1}}' type="button" value="Xóa"
+                                                class="btn btn-primary active"
+                                                onclick="deleteAction({{loop.index-1}})">Xoá</button>
+                                        </td>
+                                    </tr>
+                                    <tr id='add_change_pos_btn{{loop.index-1}}'></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                        <tr class="add_action"></tr>
+                        <tr>
+                            <td> <button type="button" class="btn" style="background-color: #e0dbcd"
+                                    onclick="addAction()">Thêm hành động</button></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <input id='del_act' type="text" name='del_act' value='' style="display: none;">
+                    <input type='submit' value='Lưu' class="btn btn-primary">
+                </form>
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+<script>
+    function specialcharecter() {
+        var iChars = "!`@#$%^&*()+=-[]\\\';,./{}|\":<>?~_";
+        var iNums = "0123456789";
+        var data = document.getElementById("ten").value;
+        for (var i = 0; i < data.length; i++) {
+            if (i == 0) {
+                if (iNums.indexOf(data.charAt(i)) != -1) {
+                    alert("Tên mà bạn nhập không được bắt đầu bằng số. \nHãy nhập lại.");
+                    document.getElementById("ten").value = "";
+                    return false;
+                }
+            }
+            if (iChars.indexOf(data.charAt(i)) != -1) {
+                alert("Tên mà bạn nhập không được chứa ký tự đặc biệt. \nHãy nhập lại.");
+                document.getElementById("ten").value = "";
+                return false;
+            }
+        }
+        // for (var i = 0; i < list_name_used.length; i++) {
+        //     if (data == list_name_used[i]) {
+        //         alert("Tên mà bạn được từng được sử dụng. \nHãy nhập lại.");
+        //         document.getElementById("ten").value = "";
+        //         return false;
+        //     }
+        // }
+    }
+    list_entitys = {{ list_entity_id | tojson }};
+    list_entity_name = {{ list_entity_name | tojson }};
+    lock_list = {{ lock_automation['condition'][0]['value_template'] | tojson }};
+
+    function get_lock() {
+        access_list = lock_list.split(' or ')
+        for (i of access_list) {
+            x = i.split('trigger.payload_json["action_user"] == ')[1].split('))')[0];
+            if (i.search("touch_unlock") != -1) {
+                document.getElementById('touch_lock').value = x;
+            }
+            else if (i.search("rfid_card_unlock") != -1) {
+                document.getElementById('rfid_lock').value = x;
+            }
+            else if (i.search("keypad") != -1) {
+                document.getElementById('passcode_lock').value = x;
+            }
+        }
+    }
+
+    let dem_action = {{ len_dict| tojson}};
+    var max_action = {{ len_dict| tojson}};
+    function addAction() {
+        string = add_action_type_automation(dem_action);
+        dem_action++;
+        max_action++;
+        $(".add_action").replaceWith(string);
+        formatTime();
+        $(function () {
+            $('.selectpicker').selectpicker();
+        });
+    }
+    function show_change_pos_btn(dem_action) {
+        position = $('#entity_action_id_' + dem_action).index();
+        position = position - 5;
+        show_action_pos(position);
+    }
+
+    function addActionContent(dem_action, text_of_option) {
+        $('#block_action_' + dem_action).show();
+        hanhdong = document.getElementById('hanhdong_' + dem_action);
+        var idx_action = 'entity_action_id_' + dem_action;
+        var action_selected = hanhdong.value.split('.')[0];
+        var exec_selected = hanhdong.value.split('.')[1];
+        var select_section = document.getElementById('action_' + dem_action);
+        $('#action_' + (dem_action))
+            .find('option')
+            .remove()
+            .end()
+            .append('<option disabled selected value="whatever"> -- Chọn 1 thiết bị -- </option>')
+            .val('whatever')
+            ;
+        var entities = [];
+        addActionContent_hanhdongValue_typeAutomation(dem_action, text_of_option);
+        entities = addActionContent_option_typeAutomation(entities, action_selected, select_section, exec_selected);
+        for (var i = 0; i < entities.length; i++) {
+            var custom_option = document.createElement("option");
+            var t = document.createTextNode(entities[i]);
+            custom_option.appendChild(t);
+            select_section.appendChild(custom_option);
+            $(select_section).selectpicker("refresh");
+        }
+    }
+    function deleteAction(dem_action) {
+        delete_action(dem_action);
+        max_action--;
+    }
+
+    $(document).ready(function () {
+        $('.datepicker').timepicker({
+            controlType: 'select',
+            oneLine: true,
+            timeFormat: 'HH:mm:ss'
+        });
+        $('.hourPicker').timepicker({
+            controlType: 'select',
+            oneLine: true,
+            timeFormat: 'HH:mm'
+        });
+    });
+    function formatTime() {
+        $('.datepicker').timepicker({
+            controlType: 'select',
+            oneLine: true,
+            timeFormat: 'HH:mm:ss'
+        });
+    }
+
+</script>

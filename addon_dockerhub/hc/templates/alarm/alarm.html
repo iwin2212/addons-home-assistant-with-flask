@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>JAVIS HC TOOL</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class='container'>
+                {%if list_alarm | length == 0%}
+                <h3 id='title'>Danh sách Thiết bị An ninh</h3>
+                {%if info!=none %}
+
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{info}}</strong>Bạn vui lòng check config và khởi động lại hệ thống tại <a href="./homeassistant">đây</a>.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {%endif%}
+                <a class="btn btn-info" id="alarm1" role="button" href="./add_alarm">Thêm thiết bị an ninh</a>
+                <div style="margin-top: 8%;">
+                    <div class="div_alarm">
+                        <a class="btn btn-info" style="display: none;" id="alarm2" role="button" href="./alarm_automation">Thêm kịch bản
+                            Alarm</a>
+                        <a class="btn btn-info" style="display: none;" id="alarm3" role="button" href="./add_alarm_notify">Thêm kịch bản báo
+                            động khi alarm thay
+                            đổi trạng thái</a>
+                    </div>
+                    <div id='no_scripts'>
+                        <h4>Không tìm thấy Thiết bị an ninh </h4>
+
+                    </div>
+                </div>
+                {%else%}
+                <div class="container row">
+                    {% for device in list_alarm %}
+                    <h3 id='title'>Danh sách Thiết bị An ninh: {{device['name']}}</h3>
+                    {%endfor%}
+                    <br>
+                    <table class='container table table-hover' style="margin-top: 5%;">
+                        <tr>
+                            <th width="20%">Thứ tự</th>
+                            <th width="60%">TRẠNG THÁI</th>
+                            <th style="display: none;">THÔNG TIN</th>
+                            <th width="20%">THAO TÁC</th>
+                        </tr>
+
+                        <tr>
+                            <td>1</td>
+                            <td><strong>Ở nhà </strong>(armed home)</td>
+                            <td style="display: none;"></td>
+                            <td>
+                                <form action='./alarm_automation?name=armed_home' method='POST'>
+                                    <input type='submit' value='Sửa' class="btn btn-primary">
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><strong>Vắng nhà </strong>(armed away)</td>
+                            <td style="display: none;"></td>
+                            <td>
+                                <form action='./alarm_automation?name=armed_away' method='POST'>
+                                    <input type='submit' value='Sửa' class="btn btn-primary">
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><strong>Tắt cảnh báo </strong>(disarmed)</td>
+                            <td style="display: none;"></td>
+                            <td>
+                                <form action='./alarm_automation?name=disarmed' method='POST'>
+                                    <input type='submit' value='Sửa' class="btn btn-primary">
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><strong>Kích hoạt </strong>(triggered)</td>
+                            <td style="display: none;">{{list_automation}}</td>
+                            <td>
+                                <form action='./alarm_automation?name=triggered' method='POST'>
+                                    <input type='submit' value='Sửa' class="btn btn-primary">
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <form action='./edit_alarm' method='POST'>
+                    <input type='submit' value='Sửa thông tin chung' class="btn btn-primary">
+                </form>
+                {%endif%}
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+<style>
+    .linkButton {
+        background: none;
+        border: none;
+        color: #0066ff;
+        cursor: pointer;
+    }
+</style>

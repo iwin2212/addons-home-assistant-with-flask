@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Automation</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+    </head>
+    <div class="container">
+        <ul class='nav justify-content-end'>
+            <li class='nav-item'>
+                <a class='nav-link' href="./">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+                <a href='./automation' class='nav-link'>Danh sách kịch bản</a>
+            </li>
+        </ul>
+        <h3 class='text-primary'>Thêm kịch bản kiểm tra kết nối</h3>
+        <form action='./add_tracker_automation' method='POST'>
+            <table class="table">
+                <tr>
+                    <td><strong>Tên kịch bản</strong></td>
+                    <td><input type='text' name='ten' class='form-control' placeholder="ví dụ: kịch bản đi ngủ" required></td>
+                </tr>
+                <td colspan="2" style="background-color: #a1d3f7;"><strong>TRIGGER (Thiết bị kích hoạt)</strong></td>
+                </tr>
+                <tr>
+                    <td>Định danh thiết bị</td>
+                    <td>
+                        <select name='entity_id' class='form-control'>
+                            <option disabled selected value> -- Chọn 1 thiết bị -- </option>
+                            {%for i in list_entity_id%}
+                            {%if i.split(".")[0] == "device_tracker"%}
+                            <option>{{i}}</option>
+                            {%endif%}
+                            {%endfor%}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Từ trạng thái</td>
+                    <td>
+                        <select name='fromstate' class='form-control'>
+                            <option disabled selected value> -- Chọn trạng thái --</option>
+                            <option>home</option>
+                            <option>not_home</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Đến trạng thái</td>
+                    <td>
+                        <select name='tostate' class='form-control'>
+                            <option disabled selected value> -- Chọn trạng thái --</option>
+                            <option>home</option>
+                            <option>not_home</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Thời gian chờ tối thiểu</td>
+                    <td>
+                        <input type='text' name='time' class='form-control'>
+                    </td>
+                </tr>
+            </table>
+            <input type='submit' value='Lưu' class="btn btn-primary">
+        </form>
+        {%block content%}
+        {%include 'footer.html' %}
+        {%endblock%}
+    </div>
+    <script>
+        let dem = 0;
+        function addTrigger() {
+            string = `
+        <tr>
+            <td id = "trigger_id_${ dem }">Định danh thiết bị</td>
+            <td>
+                <select name = 'trigger' class = 'form-control' id="trigger_${ dem }" onchange = "loadTriggerContent(${ dem })">
+                    <option disabled selected value> -- Chọn 1 thiết bị -- </option>
+                    {%for i in list_entity_id%}
+                            <option>{{i}}</option>
+                    {%endfor%}
+                </select>
+            </td>
+            <td><button id = 'delete_${ dem }' type = "button" value = "Delete" class = "btn btn-primary active" onclick = "deleteTrigger(${ dem })">Delete</button></td>
+        </tr>
+        <tr id = 'tr_content_${ dem }' class = "trigger"></tr>
+        `;
+            $("tr[class = 'trigger'").replaceWith(string);
+            dem++;
+        }
+
+        function loadTriggerContent(dem) {
+            entityID = $('#trigger_' + dem).val();
+            if (entityID.split(".")[0] == "sensor") {
+                string = `
+                        <tr class = "trigger_content_${ dem }">
+                            <td>Lớn hơn</td>
+                            <td>
+                                <input type = "number" class = "form-control" name = 'trigger_above'>
+                            </td>
+
+                        </tr>
+                        <tr  class = "trigger_content_${ dem }">
+                            <td>Nhỏ hơn</td>
+                            <td>
+                                <input type = "number" class = "form-control" name = 'trigger_below'>
+                            </td>
+
+                        </tr>
+                        <tr  class = "trigger_content_${ dem }">
+                            <td>Thời gian chờ</td>
+                            <td><input type = "text" name = "trigger_time" class = "form-control" placeholder="số nguyên (phút)"></td>
+                        </tr>
+                        <tr class = "trigger"></tr>
+                    `;
+            } else {
+                string = `<tr  class = "trigger_content_${ dem }">
+                        <td>Từ trạng thái</td>
+                        <td>
+                                <select name = 'trigger_fromstate' class = 'form-control'>
+                                    <option disabled selected value> -- Chọn trạng thái -- </option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
+                        </td>
+
+                    </tr >
+                    <tr  class = "trigger_content_${ dem }">
+                        <td>Đến trạng thái</td>
+                        <td>
+                            <select name = 'trigger_tostate' class = 'form-control'>
+                                <option disabled selected value> -- Chọn trạng thái -- </option>
+                                <option>On</option>
+                                <option>Off</option>
+                            </select>
+                        </td>    
+                    </tr>
+                    <tr  class = "trigger_content_${ dem }">
+                        <td>Thời gian chờ</td>
+                        <td><input type = "text" name = "trigger_time" class = "form-control" placeholder="số nguyên (phút)"></td>
+                    </tr>
+                    <tr class = "trigger"></tr>`
+            }
+            $(`tr[class = "trigger_content_${ dem }"]`).remove();
+            $(`tr[class = "trigger"]`).replaceWith(`<tr id = 'tr_content_` + dem + `'></tr>`);
+            $(`tr[id = 'tr_content_${ dem }'`).replaceWith(string);
+
+        }
+
+        function deleteTrigger(dem) {
+            $('#trigger_' + dem).remove();
+            $(`tr[class = 'trigger_content_${ dem }']`).remove();
+            $(`#trigger_id_` + dem).remove();
+            $('#delete_' + dem).remove();
+        }
+
+        let dem_condition = 0;
+        function addCondition() {
+            string = `
+        <tr>
+            <td id = "condition_id_${ dem_condition }" >Định danh thiết bị</td>
+            <td>
+                <select name = 'condition' class = 'form-control' id = 'condition_${ dem_condition }' onchange = 'loadConditionContent(${ dem_condition })'>
+                    <option disabled selected value> -- Chọn 1 thiết bị -- </option>
+                    {%for i in list_entity_id%}
+                            <option>{{i}}</option>
+                    {%endfor%}
+                </select>
+            </td>
+            <td><button id = 'delete_condition_${ dem_condition }' type = "button" value = "Delete" class = "btn btn-primary active" onclick = "deleteCondition(${ dem_condition })">Delete</button></td>
+        </tr>
+        <tr id = "co_content_${ dem_condition }" class = "condition"></tr>`
+            $('tr[class = "condition"]').replaceWith(string);
+            dem_condition++;
+        }
+
+        function loadConditionContent(dem_condition) {
+            entity_id = $('#condition_' + dem_condition).val();
+            if (entity_id.split(".")[0] !== 'sensor') {
+                string = `<tr class = "condition_content_${ dem_condition }">
+                        <td>Trạng thái</td>
+                            <td>
+                                <select name = 'condition_state' class = 'form-control'>
+                                    <option disabled selected value> -- Chọn trạng thái -- </option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
+                            </td>    
+                            </tr>
+                    <tr class = "condition"></tr>`;
+            } else {
+                string = `<tr class = "condition_content_${ dem_condition }">
+                        <td>Lớn hơn</td>
+                        <td>
+                            <input type = "number" class = "form-control" name = 'above_condition'>
+                        </td>
+
+                    </tr>
+                    <tr  class = "condition_content_${ dem_condition }">
+                        <td>Nhỏ hơn</td>
+                        <td>
+                            <input type = "number" class = "form-control" name = 'below_condition'>
+                        </td>
+                    </tr>
+                    <tr class = "condition"></tr>`;
+
+            }
+            $(`tr[class = "condition_content_${ dem_condition }"]`).remove();
+            $(`tr[class = "condition"]`).replaceWith(`<tr id = 'co_content_` + dem_condition + `'></tr>`);
+            $(`tr[id = 'co_content_${ dem_condition }'`).replaceWith(string);
+        }
+
+
+        function deleteCondition(dem_condition) {
+            $('#condition_' + dem_condition).remove();
+            $(`tr[class = 'condition_content_${ dem_condition }']`).remove();
+            $(`#condition_id_` + dem_condition).remove();
+            $('#delete_condition_' + dem_condition).remove();
+        }
+
+
+
+        function addAction() {
+            string = `
+        <tr>
+            <td>Định danh</td>
+            <td>
+                <select name = 'entity2' class = 'form-control'>
+                    <option disabled selected value> -- Chọn 1 thiết bị -- </option>
+                    {%for i in list_entity_id%}
+                        {% if i.split(".")[0] in ["switch", "climate", "media_player", "yeelight", "curtain", "light", "vacuum", "fan"]%}
+                            <option>{{i}}</option>
+                        {%endif%}
+                    {%endfor%}
+                </select>
+            </td>
+        </tr>
+        <tr class = "entity_action">
+            <td>Hành động</td>
+            <td>
+                <select name = 'action' class='form-control'>
+                    <option disabled selected value> -- Chọn hành động -- </option>
+                    <option>Bật</option>
+                    <option>Tắt</option>
+                </select>
+            </td>
+        </tr>
+        <tr><td></td><td></td></tr><tr class = "action"></tr>`;
+            $("tr[class = 'action']").replaceWith(string);
+        }
+
+    </script>

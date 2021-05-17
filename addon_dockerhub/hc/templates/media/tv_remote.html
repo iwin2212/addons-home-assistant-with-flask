@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>REMOTE LEARNING</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body onload="gatewayFunc();">
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 class='text-primary'>Học lại lệnh điều khiển TV</h3>
+                <form style="margin-top: 5%;" action='./TV_remote?tv={{tv}}&model={{model}}' method='POST' id='form1'></form>
+                <div id='turn_on'>
+                    <form action='./learn_command' method='POST' id='form12'></form>
+                </div>
+                <div id='turn_off'>
+                    <form action='./learn_command' method='POST' id='form13'></form>
+                </div>
+                <div id='previous_channel'>
+                    <form action='./learn_command' method='POST' id='form14'></form>
+                </div>
+                <div id='next_channel'>
+                    <form action='./learn_command' method='POST' id='form15'></form>
+                </div>
+                <div id='volume_up'>
+                    <form action='./learn_command' method='POST' id='form16'></form>
+                </div>
+                <div id='volume_down'>
+                    <form action='./learn_command' method='POST' id='form17'></form>
+                </div>
+                <div id='mute'>
+                    <form action='./learn_command' method='POST' id='form18'></form>
+                </div>
+                <div id='channel0'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel1'>
+                    <form action='./learn_command' method='POST' id='form3'></form>
+                </div>
+                <div id='channel2'>
+                    <form action='./learn_command' method='POST' id='form4'></form>
+                </div>
+                <div id='channel3'>
+                    <form action='./learn_command' method='POST' id='form5'></form>
+                </div>
+                <div id='channel4'>
+                    <form action='./learn_command' method='POST' id='form6'></form>
+                </div>
+                <div id='channel5'>
+                    <form action='./learn_command' method='POST' id='form7'></form>
+                </div>
+                <div id='channel6'>
+                    <form action='./learn_command' method='POST' id='form8'></form>
+                </div>
+                <div id='channel7'>
+                    <form action='./learn_command' method='POST' id='form9'></form>
+                </div>
+                <div id='channel8'>
+                    <form action='./learn_command' method='POST' id='form10'></form>
+                </div>
+                <div id='channel9'>
+                    <form action='./learn_command' method='POST' id='form11'></form>
+                </div>
+
+                <table class="table">
+                    <tr>
+                        <td>Chọn Gateway</td>
+                        <td>
+                            <select name='gateway' class='form-control' onchange="gatewayFunc()" id="gateway" required>
+                                <option disabled selected value>-- Chọn 1 bộ broadlink --</option>
+                                {%for broadlink in list_broadlink%}
+                                <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}">
+                                    {{broadlink['entity_id']}}
+                                </option>
+                                {%endfor%}
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr id='model_name'>
+                        <td>Code File</td>
+                        <td>
+                            <input type='text' id='model' class="form-control" form='form1' name='model' list='list_model' value='{{model}}' disabled>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>TURN_ON</td>
+                        <td>
+                            <div id="countdown11" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='turn_on' class='form-control' form='form1' id='turn_on_res' value='{{list_channel["on"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form12' class='btn btn-primary' id='cmd_turn_on'>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>TURN_OFF</td>
+                        <td>
+                            <div id="countdown12" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='turn_off' class='form-control' form='form1' id='turn_off_res' value='{{list_channel["off"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form13' class='btn btn-primary' id='cmd_turn_off'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PREVIOUS_CHANNEL</td>
+                        <td>
+                            <div id="countdown13" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='previous_channel' class='form-control' form='form1' id='previous_channel_res' value='{{list_channel["previousChannel"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form14' class='btn btn-primary' id='cmd_previous_channel'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>NEXT_CHANNEL</td>
+                        <td>
+                            <div id="countdown14" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='next_channel' class='form-control' form='form1' id='next_channel_res' value='{{list_channel["nextChannel"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form15' class='btn btn-primary' id='cmd_next_channel'></td>
+                    </tr>
+                    <tr>
+                        <td>VOLUME_UP</td>
+                        <td>
+                            <div id="countdown15" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='volume_up' class='form-control' form='form1' id='volume_up_res' value='{{list_channel["volumeUp"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form16' class='btn btn-primary' id='cmd_volumn_up'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>VOLUME_DOWN</td>
+                        <td>
+                            <div id="countdown16" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='volume_down' class='form-control' form='form1' id='volume_down_res' value='{{list_channel["volumeDown"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form17' class='btn btn-primary' id='cmd_volume_down'></td>
+                    </tr>
+                    <tr>
+                        <td>MUTE</td>
+                        <td>
+                            <div id="countdown17" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='mute' class='form-control' form='form1' id='mute_res' value='{{list_channel["mute"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form18' class='btn btn-primary' id='cmd_mute'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 0</td>
+                        <td>
+                            <div id="countdown1" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel0' class='form-control' form='form1' id='channel0_res' value='{{list_channel["sources"]["Channel 0"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form2' class='btn btn-primary' id='cmd_channel0'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 1</td>
+                        <td>
+                            <div id="countdown2" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel1' class='form-control' form='form1' id='channel1_res' value='{{list_channel["sources"]["Channel 1"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form3' class='btn btn-primary' id='cmd_channel1'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 2</td>
+                        <td>
+                            <div id="countdown3" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel2' class='form-control' form='form1' id='channel2_res' value='{{list_channel["sources"]["Channel 2"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form4' class='btn btn-primary' id='cmd_channel2'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 3</td>
+                        <td>
+                            <div id="countdown4" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel3' class='form-control' form='form1' id='channel3_res' value='{{list_channel["sources"]["Channel 3"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form5' class='btn btn-primary' id='cmd_channel3'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 4</td>
+                        <td>
+                            <div id="countdown5" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel4' class='form-control' form='form1' id='channel4_res' value='{{list_channel["sources"]["Channel 4"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form6' class='btn btn-primary' id='cmd_channel4'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 5</td>
+                        <td>
+                            <div id="countdown6" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel5' class='form-control' form='form1' id='channel5_res' value='{{list_channel["sources"]["Channel 5"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form7' class='btn btn-primary' id='cmd_channel5'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 6</td>
+                        <td>
+                            <div id="countdown7" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel6' class='form-control' form='form1' id='channel6_res' value='{{list_channel["sources"]["Channel 6"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form8' class='btn btn-primary' id='cmd_channel6'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 7</td>
+                        <td>
+                            <div id="countdown8" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel7' class='form-control' form='form1' id='channel7_res' value='{{list_channel["sources"]["Channel 7"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form9' class='btn btn-primary' id='cmd_channel7'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 8</td>
+                        <td>
+                            <div id="countdown9" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel8' class='form-control' form='form1' id='channel8_res' value='{{list_channel["sources"]["Channel 8"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form10' class='btn btn-primary' id='cmd_channel8'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CHANNEL 9</td>
+                        <td>
+                            <div id="countdown10" style="background-color: pink; align-content: center"></div>
+                            <input type='text' name='channel9' class='form-control' form='form1' id='channel9_res' value='{{list_channel["sources"]["Channel 9"]}}'>
+                        </td>
+                        <td><input type='submit' value='Học lệnh' form='form11' class='btn btn-primary' id='cmd_channel9'>
+                        </td>
+                    </tr>
+                </table>
+                <input type='submit' value='Lưu' class="btn btn-primary" form='form1' class='form-control'>
+                </form>
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+
+    </body>
+
+    <script>
+        function gatewayFunc() {
+            gateway = document.getElementById('gateway').value;
+
+            document.getElementById('channel0').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form2'></form>";
+            document.getElementById('channel1').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form3'></form>";
+            document.getElementById('channel2').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form4'></form>";
+            document.getElementById('channel3').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form5'></form>";
+            document.getElementById('channel4').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form6'></form>";
+            document.getElementById('channel5').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form7'></form>";
+            document.getElementById('channel6').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form8'></form>";
+            document.getElementById('channel7').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form9'></form>";
+            document.getElementById('channel8').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form10'></form>";
+            document.getElementById('channel9').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form11'></form>";
+            document.getElementById('turn_on').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form12'></form>";
+            document.getElementById('turn_off').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form13'></form>";
+            document.getElementById('previous_channel').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form14'></form>";
+            document.getElementById('next_channel').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form15'></form>";
+            document.getElementById('volume_up').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form16'></form>";
+            document.getElementById('volume_down').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form17'></form>";
+            document.getElementById('mute').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form18'></form>";
+
+            $(function () {
+
+                //channel 0
+                $('#cmd_channel0').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#channel0_res').val(data['result']);
+                        $('#cmd_channel0').prop('disabled', false);
+                        document.getElementById("countdown1").innerHTML = "";
+                    });
+
+                });
+
+                //channel 1
+                $('#cmd_channel1').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#channel1_res').val(data['result']);
+                        $('#cmd_channel1').prop('disabled', false);
+                        document.getElementById("countdown2").innerHTML = "";
+                    });
+
+                });
+
+                //channel 2
+                $('#cmd_channel2').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#channel2_res').val(data['result']);
+                        $('#cmd_channel2').prop('disabled', false);
+                        document.getElementById("countdown3").innerHTML = "";
+                    });
+
+                });
+
+                //channel 3 
+                $('#cmd_channel3').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#channel3_res').val(data['result']);
+                        $('#cmd_channel3').prop('disabled', false);
+                        document.getElementById("countdown4").innerHTML = "";
+                    });
+
+                });
+
+                //channel 4 
+                $('#cmd_channel4').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#channel4_res').val(data['result']);
+                        $('#cmd_channel4').prop('disabled', false);
+                        document.getElementById("countdown5").innerHTML = "";
+                    });
+
+                });
+
+                //channel 5 
+                $('#cmd_channel5').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#channel5_res').val(data['result']);
+                        $('#cmd_channel5').prop('disabled', false);
+                        document.getElementById("countdown6").innerHTML = "";
+                    });
+
+                });
+
+                //channel 6 
+                $('#cmd_channel6').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#channel6_res').val(data['result']);
+                        $('#cmd_channel6').prop('disabled', false);
+                        document.getElementById("countdown7").innerHTML = "";
+                    });
+
+                });
+
+                //channel 7 
+                $('#cmd_channel7').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#channel7_res').val(data['result']);
+                        $('#cmd_channel7').prop('disabled', false);
+                        document.getElementById("countdown8").innerHTML = "";
+                    });
+
+                });
+
+                //channel 8 
+                $('#cmd_channel8').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#channel8_res').val(data['result']);
+                        $('#cmd_channel8').prop('disabled', false);
+                        document.getElementById("countdown9").innerHTML = "";
+                    });
+
+                });
+
+                //channel 9 
+                $('#cmd_channel9').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#channel9_res').val(data['result']);
+                        $('#cmd_channel9').prop('disabled', false);
+                        document.getElementById("countdown10").innerHTML = "";
+                    });
+
+                });
+
+                //channel turn on 
+                $('#cmd_turn_on').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#turn_on_res').val(data['result']);
+                        $('#cmd_turn_on').prop('disabled', false);
+                        document.getElementById("countdown11").innerHTML = "";
+                    });
+
+                });
+
+                //turn off 
+                $('#cmd_turn_off').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#turn_off_res').val(data['result']);
+                        $('#cmd_turn_off').prop('disabled', false);
+                        document.getElementById("countdown12").innerHTML = "";
+                    });
+
+                });
+
+                //previous channel
+                $('#cmd_previous_channel').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#previous_channel_res').val(data['result']);
+                        $('#previous_channel_channel9').prop('disabled', false);
+                        document.getElementById("countdown13").innerHTML = "";
+                    });
+
+                });
+
+                //next channel
+                $('#cmd_next_channel').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#next_channel_res').val(data['result']);
+                        $('#cmd_next_channel').prop('disabled', false);
+                        document.getElementById("countdown14").innerHTML = "";
+                    });
+
+                });
+
+                $('#cmd_volume_up').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#volume_up_res').val(data['result']);
+                        $('#cmd_volume_up').prop('disabled', false);
+                        document.getElementById("countdown15").innerHTML = "";
+                    });
+
+                });
+
+                $('#cmd_volume_down').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#volume_down_res').val(data['result']);
+                        $('#cmd_volume_down').prop('disabled', false);
+                        document.getElementById("countdown16").innerHTML = "";
+                    });
+
+                });
+
+                //mute
+                $('#cmd_mute').bind('click', function () {
+                    $.post('./learn_command?' + gateway, function (data, status) {
+                        $('#mute_res').val(data['result']);
+                        $('#cmd_mute').prop('disabled', false);
+                        document.getElementById("countdown17").innerHTML = "";
+                    });
+
+                });
+            });
+        }
+
+
+
+    </script>

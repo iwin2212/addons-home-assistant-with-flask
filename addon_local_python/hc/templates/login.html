@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>JAVIS HC TOOL</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./static/css/style.css">
+  <script src="./static/js/jquery.min.js"></script>
+  <script src="./static/js/popper.min.js"></script>
+  <script src="./static/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+  <head></head>
+  <section style="margin-top: 6%" id='main'>
+    <div class='container'>
+
+      <h3 class='text-primary'>Đăng nhập vào JAVIS HC Tool</h3>
+      {%if error != ''%}
+      <div class='alert alert-danger alert-dismissible'>
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{error}}
+      </div>
+      {%endif%}
+      <form style="margin-top: 5%;" action='./login' method='POST'>
+        <div class='form-group'>
+          <label>Nhập mật khẩu vào ô dưới đây:</label>
+          <input type='password' name='password' class='form-control'>
+          <br>
+          <input type='submit' value='Đăng nhập' class='btn btn-primary'>
+        </div>
+
+      </form>
+
+    </div>
+  </section>
+  {%block content%}
+  {%include 'head_foot/footer.html' %}
+  {%endblock%}
+</body>
+
+</html>

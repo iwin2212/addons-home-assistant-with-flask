@@ -1,0 +1,4 @@
+{
+    "climate":["name", "host", "mac", "models", "timeout"],
+    "media_player": ["name", "host", "mac", "models"]
+}

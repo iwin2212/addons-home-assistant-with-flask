@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Electric Measure</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thêm Bộ đo điện</h3>
+                <div id='error_log' class='alert alert-danger alert-dismissible' style="display: none;">
+                </div>
+                <a target="_blank" rel="noopener noreferrer" href=" http://bododien.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                {% if err != null%}
+                <div class='alert alert-danger alert-dismissible'>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+                {{err}}
+                {%endif%}
+                {% if success != null %}
+                <div class='alert alert-success alert-dismissible'>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{success}}
+                </div>
+                {%endif%}
+                <form style="margin-top: 5%;" action='./add_e_measure' method='POST'>
+                    <table class="table">
+                        <tr style="display: none;">
+                            <td width="40%">Platform</td>
+                            <td><input type='text' id='platform' name='platform' value='mqtt' class="form-control" disabled>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="40%">Địa chỉ IP nội mạng của Bộ đo điện</td>
+                            <td><input type='text' id='ip' name='ip' class='form-control' placeholder="Ví dụ: 192.168.1.10, sau đó bấm Connect" required></td>
+                        </tr>
+                    </table>
+                    <input id="save" type="button" value="Connect" class="btn btn-primary">
+                    <!-- <button class="btn btn-primary" id type="submit">Connect</button> -->
+                    <div id="a"></div>
+                </form>
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+<script>
+    $(document).ready(function () {
+        $('form').bind("keypress", function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        $("#save").on('click', function () {
+            setTimeout(function () {
+                $('#error_log').hide();
+                var x = $("#ip").val();
+                $.ajax({
+                    url: "./get_mqtt_info?ip=" + x,
+                    type: "GET",
+                    success: function (data) {
+                        try {
+                            res = JSON.parse(data);
+                            if (res.model == 'JEW') {
+                                data = `
+                                <tr>
+                                        <td>Tên bộ đo điện</td>
+                                        <td>
+                                            <input id="iden" name="iden" placeholder="Bộ đo điện" value="Bộ đo điện " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Điện áp</td>
+                                        <td>
+                                            <input id="Voltage" name="Voltage" placeholder="Điện áp tổng" value="Điện áp " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Công suất</td>
+                                        <td>
+                                            <input id="Power" name="Power" placeholder="Công suất tổng" value="Công suất " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dòng điện</td>
+                                        <td>
+                                            <input id="Current" name="Current" placeholder="Dòng điện tổng" value="Dòng điện " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Công suất hôm nay</td>
+                                        <td>
+                                            <input id="Today" name="Today" placeholder="Công suất hôm nay tổng" value="Công suất hôm nay " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Công suất hôm qua</td>
+                                        <td>
+                                            <input id="Yesterday" name="Yesterday" placeholder="Công suất hôm qua tổng" value="Công suất hôm qua " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Công suất tháng này</td>
+                                        <td>
+                                            <input id="Thismonth" name="Thismonth" placeholder="Công suất tháng này tổng" value="Công suất tháng này " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Công suất tháng trước</td>
+                                        <td>
+                                            <input id="Lastmonth" name="Lastmonth" placeholder="Công suất tháng trước tổng" value="Công suất tháng trước " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr style="display: none;">
+                                        <td>
+                                            <input id="type" name="type" value="jew" class = "form-control" >
+                                        </td>
+                                    </tr>
+                                `;
+                            }
+                            else {
+                                data = `
+                                    <tr>
+                                        <td>Tên bộ đo điện</td>
+                                        <td>
+                                            <input id="iden" name="iden" placeholder="Bộ đo điện" value="Bộ đo điện " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Điện áp</td>
+                                        <td>
+                                            <input id="Voltage" name="Voltage" placeholder="Điện áp tổng" value="Điện áp " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Công suất</td>
+                                        <td>
+                                            <input id="Power" name="Power" placeholder="Công suất tổng" value="Công suất " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dòng điện</td>
+                                        <td>
+                                            <input id="Current" name="Current" placeholder="Dòng điện tổng" value="Dòng điện " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tần số</td>
+                                        <td>
+                                            <input id="Frequency" name="Frequency" placeholder="Tần số tổng" value="Tần số " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hệ số cos phi</td>
+                                        <td>
+                                            <input id="Factor" name="Factor" placeholder="Hệ số cos phi tổng" value="Hệ số cos phi " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Công suất hôm nay</td>
+                                        <td>
+                                            <input id="Today" name="Today" placeholder="Công suất hôm nay tổng" value="Công suất hôm nay " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Công suất hôm qua</td>
+                                        <td>
+                                            <input id="Yesterday" name="Yesterday" placeholder="Công suất hôm qua tổng" value="Công suất hôm qua " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Công suất tháng này</td>
+                                        <td>
+                                            <input id="Thismonth" name="Thismonth" placeholder="Công suất tháng này tổng" value="Công suất tháng này " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Công suất tháng trước</td>
+                                        <td>
+                                            <input id="Lastmonth" name="Lastmonth" placeholder="Công suất tháng trước tổng" value="Công suất tháng trước " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tiền điện tháng này</td>
+                                        <td>
+                                            <input id="Paymonth" name="Paymonth" placeholder="Tiền điện tháng này tổng" value="Tiền điện tháng này " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tiền điện tháng trước</td>
+                                        <td>
+                                            <input id="PayLastmonth" name="PayLastmonth" placeholder="Tiền điện tháng trước tổng" value="Tiền điện tháng trước " class = "form-control" >
+                                        </td>
+                                    </tr>
+                                    `;
+                            }
+                            $("table").append(data);
+                            $('#save').replaceWith(`<input id = "save" type = 'submit' value = "Lưu" class = "btn btn-primary" >`)
+                        } catch (error) {
+                            document.getElementById('error_log').innerHTML = data;
+                            $('#error_log').show();
+                        }
+                    }
+                });
+            }, 500);
+        });
+    })
+</script>

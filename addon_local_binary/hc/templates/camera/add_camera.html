@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>CAMERA</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+    </head>
+
+    <body onload="">
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thêm mới Camera</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://camera.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <form action='./add_camera' method='POST' id='form'></form>
+                <table class="table">
+
+                    <tr id='name'>
+                        <td>Tên</td>
+                        <td>
+                            <input type='text' id='name' class="form-control" form='form'
+                                placeholder="Nhập tên camera, ví dụ Camera cửa chính" name='name' required>
+                        </td>
+                        <td></td>
+                    </tr>
+
+                    <tr id='username'>
+                        <td>Tên tài khoản</td>
+                        <td>
+                            <input type='text' id='username' class='form-control' form='form'
+                                placeholder="tên tài khoản truy cập camera, thường nhập là admin" name='username'
+                                required onchange="removeAccents(this)">
+                        </td>
+                        <td></td>
+                    </tr>
+
+                    <tr id='password'>
+                        <td>Mật khẩu</td>
+                        <td>
+                            <input type='password' id='password' class='form-control' form='form' name='password'
+                                placeholder="dãy số truy cập camera, xem ở mặt sau của camera" name='username' required
+                                required>
+                        </td>
+                        <td></td>
+                    </tr>
+
+                    <tr id='addr'>
+                        <td>Địa chỉ IP</td>
+                        <td>
+                            <input type='text' id='ipaddr' class='form-control'
+                                placeholder="Địa chỉ của camera Ví dụ: 192.168.31.142. Cần cố định trong router."
+                                form='form' name='ipaddr' required onchange="validIP()">
+                        </td>
+                        <td></td>
+                    </tr>
+
+                    <tr id='addr'>
+                        <td>Địa chỉ Cổng</td>
+                        <td>
+                            <input type='number' id='ipaddr' class='form-control'
+                                placeholder="Địa chỉ của cổng Ví dụ: 554" form='form' name='port' required>
+                        </td>
+                        <td></td>
+                    </tr>
+
+                </table>
+                <form>
+                    <input type='submit' value='Lưu' class="btn btn-primary" form='form' class='form-control'>
+                </form>
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+<script>
+    function validIP() {
+        var ipaddr = document.getElementById('ipaddr');
+        var check = validateHost(ipaddr.value);
+        if (check == false) {
+            window.alert("Sai cú pháp địa chỉ IP !!!")
+            ipaddr.value = ''
+        }
+    }
+
+
+    function removeAccents(str) {
+        var AccentsMap = [
+            "aàảãáạăằẳẵắặâầẩẫấậ",
+            "AÀẢÃÁẠĂẰẲẴẮẶÂẦẨẪẤẬ",
+            "dđ", "DĐ",
+            "eèẻẽéẹêềểễếệ",
+            "EÈẺẼÉẸÊỀỂỄẾỆ",
+            "iìỉĩíị",
+            "IÌỈĨÍỊ",
+            "oòỏõóọôồổỗốộơờởỡớợ",
+            "OÒỎÕÓỌÔỒỔỖỐỘƠỜỞỠỚỢ",
+            "uùủũúụưừửữứự",
+            "UÙỦŨÚỤƯỪỬỮỨỰ",
+            "yỳỷỹýỵ",
+            "YỲỶỸÝỴ"
+        ];
+        for (var i = 0; i < AccentsMap.length; i++) {
+            var re = new RegExp('[' + AccentsMap[i].substr(1) + ']', 'g');
+            var char = AccentsMap[i][0];
+            str = str.replace(re, char);
+        }
+        return str;
+    }
+</script>

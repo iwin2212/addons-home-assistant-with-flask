@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Switchbot</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thêm công tắc Switchbot</h3>
+                <div id='error_log' class='alert alert-danger alert-dismissible' style="display: none;">
+                </div>
+
+                <a target="_blank" rel="noopener noreferrer" href=" http://switchbot.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <form id="myform" style="margin-top: 5%;" action='./add_switchbot' method='POST'>
+                    <table class="table">
+                        <tr>
+                            <td width="20%">Địa chỉ Mac</td>
+                            <td width="80%"><input type='text' id='mac' name='mac' placeholder="Ví dụ AA:BB:CC:DD:EE:FF"
+                                    class="form-control" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="20%">Tên công tắc</td>
+                            <td width="80%"><input type='text' id='name' name='name' class='form-control'
+                                    placeholder="Ví dụ: switchbot điều hoà" required></td>
+                        </tr>
+                    </table>
+                    <input id="save" type="button" onclick="check_mac()" value="Lưu" class="btn btn-primary">
+                </form>
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+<script>
+    list_mac = {{ list_mac | tojson }};
+
+    $(document).ready(function () {
+        $('form').bind("keypress", function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    })
+
+    function check_mac() {
+        mac = document.getElementById('mac').value.trim();
+        if (validateMac(mac)) {
+            err = 0;
+            for (i = 0; i < list_mac.length; i++) {
+                if (mac == list_mac[i]) {
+                    err = 1;
+                    document.getElementById('error_log').innerHTML = "Thiết bị đã được thêm vào trong hệ thống.";
+                    $('#error_log').show();
+                }
+            }
+            if (err == 0) {
+                $('form').submit();
+            }
+        }
+        else {
+            document.getElementById('error_log').innerHTML = "Địa chỉ MAC sai cú pháp.";
+            $('#error_log').show();
+            $('#mac').focus();
+        }
+
+    }
+</script>

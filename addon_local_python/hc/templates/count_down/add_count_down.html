@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Quản lý kịch bản</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+    </head>
+
+    <body>
+
+        {%include 'head_foot/header.html' %}
+
+
+        <div class="container">
+            <h3 id="title">Thêm bộ đếm giờ</h3>
+            <form style="margin-top: 5%" method="POST" action='./add_count_down'>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for="tex1">Tên bộ đếm giờ </label>
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" name="name" required=""
+                                    placeholder="Bộ đếm giờ bật đèn">
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="tex1">Thời gian đếm ngược </label>
+                            </td>
+                            <td>
+                                <input class="datepicker form-control" type="text" name="time" required
+                                    autocomplete="off" placeholder="00:00:00">
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="background-color: #a1d3f7;"><strong>TRIGGER (Thiết bị chuyển trạng
+                                    thái)</strong></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="sel1">Thiết bị</label>
+                            </td>
+                            <td>
+                                <select class="form-control sel1" name="entity_trigger">
+                                    {% for en in entitys%}
+                                    <option value="{{en}}">{{en}}</option>
+                                    {%endfor%}
+                                </select>
+                            </td>
+
+                        </tr>
+                        <tr class="trigger_content">
+                            <td>Từ trạng thái</td>
+                            <td>
+                                <select name="trigger_fromstate" class="form-control">
+                                    <option disabled="" selected="" value=""> -- Chọn trạng thái -- </option>
+                                    <option>on</option>
+                                    <option>off</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="trigger_content">
+                            <td>Đến trạng thái</td>
+                            <td>
+                                <select name="trigger_tostate" class="form-control">
+                                    <option disabled="" selected="" value=""> -- Chọn trạng thái -- </option>
+                                    <option>on</option>
+                                    <option>off</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="background-color: #a1d3f7;"><strong>Thiết bị thực hiện hành
+                                    động</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="sel1">Thiết bị</label>
+                            </td>
+                            <td>
+                                <select class="form-control sel1" name="entity_action"
+                                    onchange="setService(this, {{list_service}})">
+                                    {% for en in list_entity%}
+                                    <option value="{{en}}">{{en}}</option>
+                                    {%endfor%}
+                                </select>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="sel2">Hành động</label>
+                            </td>
+                            <td>
+                                <select class="form-control sel2" name="service" onchange="addMess(this)">
+                                    {% for ser in list_service%}
+                                    <option value="{{ser}}">
+                                        {% if ser == 'mqtt.dump' %} MQTT dump
+                                        {% elif ser == 'mqtt.publish' %} MQTT publish
+                                        {% elif ser == 'mqtt.reload' %} MQTT reload
+                                        {% elif ser == 'switch.turn_on' %} Công tắc: Bật
+                                        {% elif ser == 'switch.turn_off' %} Công tắc: Tắt
+                                        {% elif ser == 'switch.toggle' %} Công tắc: Toggle
+                                        {% else %} {{ser}} {% endif%}
+                                    </option>
+                                    {%endfor%}
+                                </select>
+                            </td>
+
+                        </tr>
+                        <!-- <tr id="add_action">
+                        <td><input type="button" onclick="addRow({{list_entity}}, {{list_service}})"
+                                class="add-row btn btn-info" value="Thêm hành động"></td>
+                        <td></td>
+                        <td></td>
+                    </tr> -->
+
+
+                    </tbody>
+                </table>
+                <button style="width: 100px; position: relative; left: 85%;" type="submit"
+                    class="btn btn-primary">Lưu</button>
+            </form>
+
+        </div>
+        <br>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+        </div>
+        <script type="text/javascript">
+            function addRow(list_entity, list_service) {
+                $('#add_action').remove()
+                string = '';
+                string = '<tr><td><label for="sel1">Entity id</label></td><td><select onchange="setService(this, {{list_service}})" name="entity_id" class="form-control sel1"  >'
+                for (i in list_entity) {
+                    string += '<option>' + list_entity[i] + '</option>'
+                }
+                string += '</select></td><td><input  type="button" class="btn btn-danger del_row" onclick="deleteRow(this)" value="Xóa"></td></tr><tr><td><label for="sel2">Dịch vụ</label></td><td><select class="form-control sel2" name="service" >'
+                for (i in list_service) {
+                    string += '<option>' + list_service[i] + '</option>'
+                }
+                string += '</select></td><td></td></tr><tr id="add_action"><td><input type="button" onclick="addRow({{list_entity}}, {{list_service}})" class="add-row btn btn-primary" value="Thêm hành động"></td><td></td><td></td></tr>'
+                $("table").append(string);
+            }
+            function deleteRow(obj) {
+                var isDel = confirm("Bạn chắc chắn muốn xóa ?");
+                if (isDel === true) {
+                    var button = document.getElementsByClassName('del_row')
+                    for (i in button) {
+                        if (button[i] == obj) {
+                            var remember = parseInt(i);
+                            var parent = document.getElementsByTagName('tbody');
+                            var child = document.getElementsByTagName('tr');
+                            parent[0].removeChild(child[(remember + 1) * 2 + 1]);
+                            parent[0].removeChild(child[(remember + 1) * 2 + 1]);
+                        }
+                    }
+
+                }
+            }
+            function setService(obj, list_service) {
+                var chose = obj.value;
+                list_service = list_service.sort()
+                entity = chose.substring(chose.indexOf('(') + 1, chose.indexOf('.'));
+                var service = new Array();
+                var string = '';
+                for (i in list_service) {
+                    if (list_service[i].indexOf(entity) != -1) {
+                        service.push(list_service[i]);
+
+                    }
+                }
+                for (i in service) {
+                    string += '<option value="' + service[i] + '">' + service[i] + '</option>';
+                }
+                if (service.length == 0) {
+                    service = list_service;
+                }
+                else {
+                    var sel = document.getElementsByTagName("select")
+
+                    for (i in sel) {
+                        if (obj == sel[i]) {
+                            var remember = parseInt(i);
+                        }
+                    }
+                    for (j = sel[remember + 1].childNodes.length - 1; j >= 0; j--) {
+                        sel[remember + 1].removeChild(sel[remember + 1].childNodes[j]);
+                    }
+                    sel[remember + 1].innerHTML = string;
+                }
+
+            }
+            function addMess(obj) {
+                var option = obj.value;
+                var button = document.getElementsByClassName('sel2');
+                for (i in button) {
+                    if (button[i] == obj) {
+                    }
+                }
+
+            }
+            $(document).ready(function () {
+                $('.datepicker').timepicker({
+                    controlType: 'select',
+                    oneLine: true,
+                    timeFormat: 'HH:mm:ss',
+                }
+                );
+
+                //$('.datepicker').timepicker("hide");
+                //$('.hourPicker').timepicker({ timeFormat: 'HH:mm' });
+            });
+        </script>
+    </body>
+
+</html>

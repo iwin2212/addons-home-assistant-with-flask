@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>CLIMATE REMOTE LEARNING</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Học lệnh điều khiển điều hòa cho điều khiển mới</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://bodieukhiendieuhoa.javisco.vn"
+                    style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <!-- <div id='off'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel18'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel19'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel20'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel21'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel22'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel23'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel24'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel25'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel26'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel27'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel28'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel29'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div>
+                <div id='channel30'>
+                    <form action='./learn_command' method='POST' id='form2'></form>
+                </div> -->
+
+
+
+                <form style='margin-top:5%;' action='./hoc_lenh_dieu_hoa' method='POST' id='form1'>
+                    {%if success != ''%}
+                    <div class='alert alert-success alert-dismissible'>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        {{success}}
+                    </div>
+                    {%endif%}
+                    <table class="table">
+                        <tr>
+                            <td>Chọn bộ Broadlink RM</td>
+                            <td>
+                                <select id="gateway" class='form-control' form='form1' name='gateway'
+                                    onchange='gatewayFunc()'>
+                                    {%for broadlink in list_broadlink%}
+                                    <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}">
+                                        {{broadlink['entity_id']}}
+                                    </option>
+                                    {%endfor%}
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr id='manufacture'>
+                            <td>Tên hãng sản xuất điều hòa</td>
+                            <td>
+                                <input type='text' id='manifacture' class="form-control" form='form1' name='manufacture'
+                                    list='list_model' required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr id='model_name'>
+                            <td>Nhập model điều hòa</td>
+                            <td>
+                                <input type='text' id='model' class='form-control' form='form1' name='model' required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Chọn chế độ nhiệt</td>
+                            <td>
+                                <select onchange="change_mode();" id="operation_mode" name="operation_mode"
+                                    class="form-control" form="form1" required>
+                                    <option>Cool</option>
+                                    <option>Heat</option>
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Chọn chế độ quạt</td>
+                            <td>
+                                <select onchange="change_mode();" id="fan_mode" name="fan_mode" class="form-control"
+                                    form="form1" required>
+                                    <option>Auto</option>
+                                    <option>Low</option>
+                                    <option>Mid</option>
+                                    <option>High</option>
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tắt</td>
+
+                            <td>
+                                <div id="countdown_off" style="background-color: pink; align-content: center"></div>
+                                <input type='text' name='buttonoff' class='form-control' form='form1' id='off_res'>
+                            </td>
+                            <td><input onclick="get_code(this);" type='submit' value='Học lệnh' form='formoff'
+                                    class='btn btn-primary' id='cmd_off'>
+                            </td>
+                        </tr>
+
+                        {%for i in range(18,31) %}
+                        <tr class="cool_auto">
+                            <td>{{i}} độ C</td>
+
+                            <td>
+                                <div id="countdown_{{i}}" style="background-color: pink; align-content: center"></div>
+                                <input type='text' name='button{{i}}' class='form-control' form='form1' id='{{i}}_res'>
+                            </td>
+                            <td><input onclick="get_code(this);" type='submit' value='Học lệnh' form='form{{i}}'
+                                    class='btn btn-primary' id='cmd_{{i}}'>
+                            </td>
+                        </tr>
+                        {%endfor%}
+
+
+                        {%for i in range(31,44) %}
+                        <tr class="cool_low">
+                            <td>{{i-13}} độ C</td>
+
+                            <td>
+                                <div id="countdown_{{i}}" style="background-color: pink; align-content: center"></div>
+                                <input type='text' name='button{{i}}' class='form-control' form='form1' id='{{i}}_res'>
+                            </td>
+                            <td><input onclick="get_code(this);" type='submit' value='Học lệnh' form='form{{i}}'
+                                    class='btn btn-primary' id='cmd_{{i}}'>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                        {%for i in range(44,57) %}
+                        <tr class="cool_mid">
+                            <td>{{i-13*2}} độ C</td>
+
+                            <td>
+                                <div id="countdown_{{i}}" style="background-color: pink; align-content: center"></div>
+                                <input type='text' name='button{{i}}' class='form-control' form='form1' id='{{i}}_res'>
+                            </td>
+                            <td><input onclick="get_code(this);" type='submit' value='Học lệnh' form='form{{i}}'
+                                    class='btn btn-primary' id='cmd_{{i}}'>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                        {%for i in range(57,70) %}
+                        <tr class="cool_high">
+                            <td>{{i-13*3}} độ C</td>
+
+                            <td>
+                                <div id="countdown_{{i}}" style="background-color: pink; align-content: center"></div>
+                                <input type='text' name='button{{i}}' class='form-control' form='form1' id='{{i}}_res'>
+                            </td>
+                            <td><input onclick="get_code(this);" type='submit' value='Học lệnh' form='form{{i}}'
+                                    class='btn btn-primary' id='cmd_{{i}}'>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                        {%for i in range(70,83) %}
+                        <tr class="heat_auto">
+                            <td>{{i-13*4}} độ C</td>
+
+                            <td>
+                                <div id="countdown_{{i}}" style="background-color: pink; align-content: center"></div>
+                                <input type='text' name='button{{i}}' class='form-control' form='form1' id='{{i}}_res'>
+                            </td>
+                            <td><input onclick="get_code(this);" type='submit' value='Học lệnh' form='form{{i}}'
+                                    class='btn btn-primary' id='cmd_{{i}}'>
+                            </td>
+                        </tr>
+                        {%endfor%}
+
+
+                        {%for i in range(83,96) %}
+                        <tr class="heat_low">
+                            <td>{{i-13*5}} độ C</td>
+
+                            <td>
+                                <div id="countdown_{{i}}" style="background-color: pink; align-content: center"></div>
+                                <input type='text' name='button{{i}}' class='form-control' form='form1' id='{{i}}_res'>
+                            </td>
+                            <td><input onclick="get_code(this);" type='submit' value='Học lệnh' form='form{{i}}'
+                                    class='btn btn-primary' id='cmd_{{i}}'>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                        {%for i in range(96,109) %}
+                        <tr class="heat_mid">
+                            <td>{{i-13*6}} độ C</td>
+
+                            <td>
+                                <div id="countdown_{{i}}" style="background-color: pink; align-content: center"></div>
+                                <input type='text' name='button{{i}}' class='form-control' form='form1' id='{{i}}_res'>
+                            </td>
+                            <td><input onclick="get_code(this);" type='submit' value='Học lệnh' form='form{{i}}'
+                                    class='btn btn-primary' id='cmd_{{i}}'>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                        {%for i in range(109, 122) %}
+                        <tr class="heat_high">
+                            <td>{{i-13*7}} độ C</td>
+
+                            <td>
+                                <div id="countdown_{{i}}" style="background-color: pink; align-content: center"></div>
+                                <input type='text' name='button{{i}}' class='form-control' form='form1' id='{{i}}_res'>
+                            </td>
+                            <td><input onclick="get_code(this);" type='submit' value='Học lệnh' form='form{{i}}'
+                                    class='btn btn-primary' id='cmd_{{i}}'>
+                            </td>
+                        </tr>
+                        {%endfor%}
+
+
+
+                    </table>
+                    <input type='submit' value='Lưu' class="btn btn-primary" form='form1' class='form-control'>
+                </form>
+
+            </div>
+
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+    <script>
+        $(document).ready(function () {
+            $('.cool_low').hide();
+            $('.cool_mid').hide();
+            $('.cool_high').hide();
+            $('.heat_auto').hide();
+            $('.heat_low').hide();
+            $('.heat_mid').hide();
+            $('.heat_high').hide();
+            gatewayFunc();
+        });
+        gateway = document.getElementById('gateway').value;
+        function change_mode() {
+            operation_mode = document.getElementById('operation_mode').value;
+            fan_mode = document.getElementById('fan_mode').value;
+            if (operation_mode == 'Cool') {
+                if (fan_mode == 'Auto') {
+                    $('.cool_auto').show();
+                    $('.cool_low').hide();
+                    $('.cool_mid').hide();
+                    $('.cool_high').hide();
+                    $('.heat_auto').hide();
+                    $('.heat_low').hide();
+                    $('.heat_mid').hide();
+                    $('.heat_high').hide();
+                }
+                else if (fan_mode == 'Low') {
+                    $('.cool_auto').hide();
+                    $('.cool_low').show();
+                    $('.cool_mid').hide();
+                    $('.cool_high').hide();
+                    $('.heat_auto').hide();
+                    $('.heat_low').hide();
+                    $('.heat_mid').hide();
+                    $('.heat_high').hide();
+                }
+                else if (fan_mode == 'Mid') {
+                    $('.cool_auto').hide();
+                    $('.cool_low').hide();
+                    $('.cool_mid').show();
+                    $('.cool_high').hide();
+                    $('.heat_auto').hide();
+                    $('.heat_low').hide();
+                    $('.heat_mid').hide();
+                    $('.heat_high').hide();
+                }
+                else {
+                    $('.cool_auto').hide();
+                    $('.cool_low').hide();
+                    $('.cool_mid').hide();
+                    $('.cool_high').show();
+                    $('.heat_auto').hide();
+                    $('.heat_low').hide();
+                    $('.heat_mid').hide();
+                    $('.heat_high').hide();
+                }
+            }
+            else {
+                if (fan_mode == 'Auto') {
+                    $('.cool_auto').hide();
+                    $('.cool_low').hide();
+                    $('.cool_mid').hide();
+                    $('.cool_high').hide();
+                    $('.heat_auto').show();
+                    $('.heat_low').hide();
+                    $('.heat_mid').hide();
+                    $('.heat_high').hide();
+                }
+                else if (fan_mode == 'Low') {
+                    $('.cool_auto').hide();
+                    $('.cool_low').hide();
+                    $('.cool_mid').hide();
+                    $('.cool_high').hide();
+                    $('.heat_auto').hide();
+                    $('.heat_low').show();
+                    $('.heat_mid').hide();
+                    $('.heat_high').hide();
+                }
+                else if (fan_mode == 'Mid') {
+                    $('.cool_auto').hide();
+                    $('.cool_low').hide();
+                    $('.cool_mid').hide();
+                    $('.cool_high').hide();
+                    $('.heat_auto').hide();
+                    $('.heat_low').hide();
+                    $('.heat_mid').show();
+                    $('.heat_high').hide();
+                }
+                else {
+                    $('.cool_auto').hide();
+                    $('.cool_low').hide();
+                    $('.cool_mid').hide();
+                    $('.cool_high').hide();
+                    $('.heat_auto').hide();
+                    $('.heat_low').hide();
+                    $('.heat_mid').hide();
+                    $('.heat_high').show();
+                }
+            }
+        }
+        function get_code(obj) {
+            var gateway = document.getElementById("gateway").value;
+            if (gateway == "") {
+                alert("Không có broadlink !");
+            }
+            else {
+                var attr = obj.id.split('_')[1];
+                var cmd = '#cmd_' + attr;
+                var countdown = "countdown_" + attr;
+                var res = '#' + attr + "_res"
+                $(cmd).prop('disabled', true);
+                $.post('./learn_command?' + gateway, function (data, status) {
+                    $(res).val(data['result']);
+                    $(cmd).prop('disabled', false);
+                    document.getElementById(countdown).innerHTML = "";
+                });
+            }
+        }
+        function gatewayFunc() {
+            // document.getElementById('off').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'formoff'></form>";
+            // document.getElementById('channel18').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form18'></form>";
+            // document.getElementById('channel19').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form19'></form>";
+            // document.getElementById('channel20').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form20'></form>";
+            // document.getElementById('channel21').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form21'></form>";
+            // document.getElementById('channel22').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form22'></form>";
+            // document.getElementById('channel23').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form23'></form>";
+            // document.getElementById('channel24').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form24'></form>";
+            // document.getElementById('channel25').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form25'></form>";
+            // document.getElementById('channel26').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form26'></form>";
+            // document.getElementById('channel27').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form27'></form>";
+            // document.getElementById('channel28').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form28'></form>";
+            // document.getElementById('channel29').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form29'></form>";
+            // document.getElementById('channel30').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form30'></form>";
+
+            //     $(function () {
+            //         $('#cmd_off').bind('click', function () {
+            //             $('#cmd_off').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#off_res').val(data['result']);
+            //                 $('#cmd_off').prop('disabled', false);
+            //                 document.getElementById("countdown_off").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_18').bind('click', function () {
+            //             $('#cmd_18').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#18_res').val(data['result']);
+            //                 $('#cmd_18').prop('disabled', false);
+            //                 document.getElementById("countdown_18").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_19').bind('click', function () {
+            //             $('#cmd_19').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#19_res').val(data['result']);
+            //                 $('#cmd_19').prop('disabled', false);
+            //                 document.getElementById("countdown_19").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_20').bind('click', function () {
+            //             $('#cmd_20').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#20_res').val(data['result']);
+            //                 $('#cmd_20').prop('disabled', false);
+            //                 document.getElementById("countdown_20").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_21').bind('click', function () {
+            //             $('#cmd_21').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#21_res').val(data['result']);
+            //                 $('#cmd_21').prop('disabled', false);
+            //                 document.getElementById("countdown_21").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_22').bind('click', function () {
+            //             $('#cmd_22').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#22_res').val(data['result']);
+            //                 $('#cmd_22').prop('disabled', false);
+            //                 document.getElementById("countdown_22").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_23').bind('click', function () {
+            //             $('#cmd_23').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#23_res').val(data['result']);
+            //                 $('#cmd_23').prop('disabled', false);
+            //                 document.getElementById("countdown_23").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_24').bind('click', function () {
+            //             $('#cmd_24').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#24_res').val(data['result']);
+            //                 $('#cmd_24').prop('disabled', false);
+            //                 document.getElementById("countdown_24").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_25').bind('click', function () {
+            //             $('#cmd_25').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#25_res').val(data['result']);
+            //                 $('#cmd_25').prop('disabled', false);
+            //                 document.getElementById("countdown_25").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_26').bind('click', function () {
+            //             $('#cmd_26').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#26_res').val(data['result']);
+            //                 $('#cmd_26').prop('disabled', false);
+            //                 document.getElementById("countdown_26").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_27').bind('click', function () {
+            //             $('#cmd_27').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#27_res').val(data['result']);
+            //                 $('#cmd_27').prop('disabled', false);
+            //                 document.getElementById("countdown_27").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_28').bind('click', function () {
+            //             $('#cmd_28').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#28_res').val(data['result']);
+            //                 $('#cmd_28').prop('disabled', false);
+            //                 document.getElementById("countdown_28").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_29').bind('click', function () {
+            //             $('#cmd_29').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#29_res').val(data['result']);
+            //                 $('#cmd_29').prop('disabled', false);
+            //                 document.getElementById("countdown_29").innerHTML = "";
+            //             });
+            //         });
+
+            //         $('#cmd_30').bind('click', function () {
+            //             $('#cmd_30').prop('disabled', true);
+            //             $.post('./learn_command?' + gateway, function (data, status) {
+            //                 $('#30_res').val(data['result']);
+            //                 $('#cmd_30').prop('disabled', false);
+            //                 document.getElementById("countdown_30").innerHTML = "";
+            //             });
+            //         });
+            //     });
+        }
+
+
+    </script>

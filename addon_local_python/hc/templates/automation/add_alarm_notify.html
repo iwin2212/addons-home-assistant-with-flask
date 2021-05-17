@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Automation</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thêm kịch bản</h3>
+                <form style="margin-top: 5%;" action='./add_alarm_notify' method='POST'>
+                    <table class="table">
+                        <tr>
+                            <td><strong>Tên kịch bản</strong></td>
+                            <td><input type='text' name='ten' class='form-control' placeholder="ví dụ: kịch bản đi ngủ"
+                                    required></td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'><strong>Khoảng thời gian</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Từ</td>
+                            <td><input type='text' placeholder='hh:mm' name='after' class='form-control hourPicker'
+                                    value=""></td>
+                        </tr>
+                        <tr>
+                            <td>Đến</td>
+                            <td><input type='text' placeholder='hh:mm' name='before' class='form-control hourPicker'
+                                    value=""></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="background-color: #a1d3f7;"><strong>TRIGGER (Thiết bị kích
+                                    hoạt)</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Định danh thiết bị</td>
+                            <td>
+                                <select name='entity_id' class='form-control'>
+                                    <option disabled selected value> -- Chọn 1 thiết bị -- </option>
+                                    {%for i in list_entity_id%}
+                                    {%if i.split(".")[0] == "alarm_control_panel"%}
+                                    <option>{{i}}</option>
+                                    {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Từ trạng thái</td>
+                            <td>
+                                <select name='fromstate' class='form-control'>
+                                    <option disabled selected value> -- Chọn trạng thái -- </option>
+                                    <option>disarmed</option>
+                                    <option>armed_away</option>
+                                    <option>armed_home</option>
+                                    <option>triggered</option>
+                                    <option>armed_night</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Đến trạng thái</td>
+                            <td>
+                                <select name='tostate' class='form-control'>
+                                    <option disabled selected value> -- Chọn trạng thái -- </option>
+                                    <option>disarmed</option>
+                                    <option>armed_away</option>
+                                    <option>armed_home</option>
+                                    <option>triggered</option>
+                                    <option>armed_night</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Thời gian chờ</td>
+                            <td><input type="text" name="trigger_time" class="form-control"
+                                    placeholder="số nguyên (phút)">
+                            </td>
+                        </tr>
+                        <td colspan="2" style="background-color: #a1d3f7;"><strong>Thiết bị thông báo</strong></td>
+                        <tr>
+                            <td>Tên dịch vụ thông báo</td>
+                            <td>
+                                <select name='service' class='form-control' onchange="changeAction()" id="service">
+                                    <option disabled selected value> -- Chọn dịch vụ báo động --</option>
+                                    {%for i in list_services%}
+                                    <option>{{i}}</option>
+                                    {%endfor%}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr id="action_content"></tr>
+
+                    </table>
+                    <input type='submit' value='Lưu' class="btn btn-primary">
+                </form>
+
+            </div>
+        </section>
+    </body>
+    {%block content%}
+    {%include 'head_foot/footer.html' %}
+    {%endblock%}
+    <script>
+        function changeAction() {
+            x = $("#service").val();
+            if (x == "xiaomi_aqara.play_ringtone") {
+                string = `
+            <tr class = "action">
+            <td>Địa chỉ MAC của gateway</td>
+            <td>
+                <select class = "form-control" name = "gw_mac">
+                    <option selected disabled value>-- Chọn địa chỉ MAC --</option>
+                    {%for i in list_xiaomi_gateway%}
+                        <option>{{i['mac']}}</option>
+                    {%endfor%}
+            </td>
+        </tr>
+        <tr class = "action">
+            <td>ID âm thanh</td>
+            <td>
+                <input type = "text" class = "form-control" name = "ringtone_id" placeholder = "số nguyên" required>
+            </td>
+        </tr>
+        <tr class = "action">
+            <td>Âm lượng</td>
+            <td>
+                <input type = "text" class = "form-control" name = "ringtone_vol" placeholder = "từ 1 đén 100" value = "">
+            </td>
+        </tr>
+        <tr id = "action_content"></tr>
+            `;
+            }
+            else {
+                string = `<tr class = "action">
+            <td>Tiêu đề cảnh báo</td>
+            <td>
+                <input type = "text" class = "form-control" name = "title">
+            </td>
+        </tr>
+        <tr class = "action">
+            <td>Nội dung</td>
+            <td>
+                <input type = "text" class = "form-control" name = "message" required>
+            </td>
+        </tr>
+        <tr class = "action">
+            <td>Email</td>
+            <td>
+                <input type = "text" class = "form-control" name = "email">
+            </td>
+        </tr>
+        <tr id = "action_content"></tr>`;
+
+            }
+            $("tr[class = 'action']").remove();
+            $("#action_content").replaceWith(string);
+        }
+
+        $(document).ready(function () {
+            $('.datepicker').timepicker({
+                timeFormat: 'HH:mm:ss',
+                controlType: 'select',
+                oneLine: true
+            });
+            $('.hourPicker').timepicker({
+                controlType: 'select',
+                oneLine: true,
+                timeFormat: 'HH:mm'
+            });
+        });
+    </script>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Sim</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thêm bộ GSM</h3>
+                <div id='error_log' class='alert alert-danger alert-dismissible' style="display: none;">
+                </div>
+                {%if err != ''%}
+                <div class='alert alert-danger alert-dismissible'>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+                {{err}}
+                {%endif%}
+                {%if success != ''%}
+                <div class='alert alert-success alert-dismissible'>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{success}}
+                </div>
+                {%endif%}
+                <a target="_blank" rel="noopener noreferrer" href=" http://gsm.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <form style="margin-top: 5%;" action='./add_sim' method='POST'>
+                    <table class="table">
+                        <tr>
+                            <td width="40%">Platform</td>
+                            <td><input type='text' id='platform' name='platform' value='mqtt' class="form-control" disabled>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="40%">Địa chỉ IP nội mạng</td>
+                            <td><input type='text' id='ip' name='ip' class='form-control' placeholder="Ví dụ: 192.168.1.10, sau đó bấm Connect" required></td>
+                        </tr>
+                    </table>
+                    <input id="save" type="button" value="Connect" class="btn btn-primary">
+                    <!-- <button class="btn btn-primary" id type="submit">Connect</button> -->
+                    <div id="a"></div>
+                </form>
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+<script>
+    $(document).ready(function () {
+        $('form').bind("keypress", function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        $("#save").on('click', function () {
+            setTimeout(function () {
+                $('#error_log').hide();
+                var x = $("#ip").val();
+                $.ajax({
+                    url: "/get_sim_info?ip=" + x,
+                    type: "GET",
+                    success: function (data) {
+                        try {
+                            res = JSON.parse(data);
+                            type = res['model'];
+                            for (i in type) {
+                                if (isNaN(type[i]) == false) {
+                                    numb = parseInt(type[i]);
+                                }
+                            }
+                            $('.con').remove();
+
+                            $("table").append("<tr colspan='2'><td><div style='background-color: rgb(206, 255, 192); align-content: center'>Đã kết nối thành công bộ GSM</div></td></tr>");
+                            $('#save').replaceWith(`<input id = "save" type = 'submit' value = "Lưu" class = "btn btn-primary" >`)
+                        }
+                        catch (error) {
+                            document.getElementById('error_log').innerHTML = data;
+                            $('#error_log').show();
+                        }
+                    }
+                });
+            }, 500);
+        });
+    })
+</script>

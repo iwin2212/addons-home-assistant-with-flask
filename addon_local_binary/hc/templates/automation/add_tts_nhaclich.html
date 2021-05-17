@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add TTS Nhaclich</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+
+                <h3 id='title'>Nhắc lịch bằng giọng nói</h3>
+                <form style="margin-top: 5%" action='./add_tts_nhaclich' method='POST'>
+                    <table class="table">
+                        <tr>
+                            <td><strong>Tên kịch bản</strong></td>
+                            <td><input type='text' placeholder='ví dụ: nhắc uống thuốc lúc 8h tối' name='ten'
+                                    class='form-control'></td>
+                        </tr>
+                        <tr>
+                            <td>Thời gian</td>
+                            <td><input type='text' placeholder='ví dụ: 20:00' name='time'
+                                    class='form-control hourPicker' required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ngày</td>
+                            <td>
+                                <div class="row seven-cols">
+                                    <div class="col-md-1">
+                                        <input type="checkbox" value="2" name="mon">Thứ hai
+
+                                    </div>
+                                    <div class="col-md-1">
+
+                                        <input type="checkbox" value="3" name="tue">Thứ ba
+
+                                    </div>
+                                    <div class="col-md-1">
+
+                                        <input type="checkbox" value="4" name="wed">Thứ tư
+
+                                    </div>
+                                    <div class="col-md-1">
+
+                                        <input type="checkbox" value="5" name="thu">Thứ năm
+
+                                    </div>
+                                    <div class="col-md-1">
+
+                                        <input type="checkbox" value="6" name="fri">Thứ sáu
+
+                                    </div>
+                                    <div class="col-md-1">
+
+                                        <input type="checkbox" value="7" name="sat">Thứ bảy
+
+                                    </div>
+                                    <div class="col-md-1">
+
+                                        <input type="checkbox" value="8" name="sun">Chủ nhật
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Mục "Chọn cửa cần kiểm tra" cho
+                                    phép thông báo ra loa trạng thái cửa đang Đóng/Mở<br><small>Lưu ý: Mục này là mục
+                                        tuỳ chọn. Trong trường hợp không cần kiểm tra có thể bỏ qua không
+                                        chọn.</small></strong></td>
+                        </tr>
+                        <tr>
+                            <td>Chọn cửa cần kiểm tra (tuỳ chọn)</td>
+                            <td>
+                                <select name='door_sensor' id='door_sensor' class='form-control'
+                                    onchange="check_condition()">
+                                    <option disabled selected value> -- Chọn 1 thiết bị --</option>
+                                    {%for i in list_entity_id%}
+                                    {%if (i.split(".")[0] == "sensor") or (i.split(".")[0] == "binary_sensor") %}
+                                    {% if (i.find("door") != -1) or (i.find("contact") != -1) or (i.find("_action_user")
+                                    != -1) or (i.find("_lock_action") != -1) %}
+                                    <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                    {%endif%}
+                                    {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </td>
+                            <td id='status1' style="display: none;"><img src="./static/icon/check.png" alt="OK"
+                                    height="20" width="20">
+                            </td>
+                        </tr>
+                        <tr id="trigger_state" style="display: none;">
+                            <td>Chọn kiểu trạng thái</td>
+                            <td>
+                                <select name='state' class='form-control'>
+                                    <option value="on">Mở</option>
+                                    <option value="off">Đóng</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Chọn loa để thông báo nhắc
+                                    lịch</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Chọn loa</td>
+                            <td>
+                                <select name='entity_id' id='entity_id' class='form-control'
+                                    onchange="check_condition()" required>
+                                    <option disabled selected value> -- Chọn 1 thiết bị --</option>
+                                    {%for i in list_entity_id%}
+                                    {%if (i.split(".")[0] == "media_player") and (list_entity_name[loop.index -
+                                    1].find("TV: ") == -1) %}
+                                    <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                    {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </td>
+                            <td id='status2' style="display: none;"><img src="./static/icon/check.png" alt="OK"
+                                    height="20" width="20">
+                            </td>
+                            <td id='err2'><img src="./static/icon/close.png" alt="OK" height="20" width="20">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Lời nhắc</td>
+                            <td>
+                                <input type="text" name="msg" class='form-control'
+                                    placeholder="Ví dụ: Đã đến giờ uống thuốc buổi tối.">
+                            </td>
+                        </tr>
+                    </table>
+                    <input type='submit' value='Lưu' class="btn btn-primary">
+                </form>
+
+            </div>
+
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+    <script>
+        $(document).ready(function () {
+            $('.datepicker').timepicker({
+                controlType: 'select',
+                oneLine: true,
+                timeFormat: 'HH:mm:ss'
+            });
+            $('.hourPicker').timepicker({
+                controlType: 'select',
+                oneLine: true,
+                timeFormat: 'HH:mm'
+            });
+        });
+        function formatTime() {
+            $('.datepicker').timepicker({
+                controlType: 'select',
+                oneLine: true,
+                timeFormat: 'HH:mm:ss'
+            });
+        }
+
+        function check_condition() {
+            entity_id = document.getElementById('entity_id').value;
+            door_sensor = document.getElementById('door_sensor').value;
+            if (entity_id == '') {
+                $('#status1').show();
+                $('#err2').show();
+                $('#err1').hide();
+                $('#trigger_state').show();
+                $('#entity_id').focus();
+            }
+            else if (door_sensor == '') {
+                $('#status2').show();
+                $('#err1').show();
+                $('#err2').hide();
+                $('#door_sensor').focus();
+            }
+            else {
+                $('#status1').show();
+                $('#status2').show();
+                $('#err1').hide();
+                $('#err2').hide();
+            }
+        }
+    </script>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Add Sensor</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+  <script src="./static/js/jquery.min.js"></script>
+  <script src="./static/js/popper.min.js"></script>
+  <script src="./static/js/bootstrap.min.js"></script>
+</head>
+<div class = "container">
+        <ul class = 'nav justify-content-end'>
+                <li class = 'nav-item'>
+                    <a class = 'nav-link' href = "./">Trang chủ</a>
+                </li>
+            </ul>
+<h3 class = 'text-primary'>Thêm notify service</h3>
+<form action='./add_notify_service' method = 'POST'>
+    <table class = "table">
+        <tr>
+            <td>Tên</td>
+            <td><input type = 'text' name = 'name' class = "form-control" placeholder = "viết liên không dấu, ví dụ ha_notify" required></td>
+        </tr>
+        <tr>
+            <td>Key</td>
+            <td><input type = 'text' name = 'key' class = "form-control" placeholder = "lấy từ trang pushbullet.com" required> </td>
+        </tr>
+    </table>
+    <input type = 'submit' value = 'Lưu' class = "btn btn-primary">
+</form>
+<br>
+{%block content%}
+        {%include 'head_foot/footer.html' %}
+    {%endblock%}
+</div>

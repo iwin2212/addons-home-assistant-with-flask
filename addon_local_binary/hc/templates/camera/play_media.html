@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>CAMERA</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body onload="time()">
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            {% if namefiles | length == 0%}
+            <div class="container">
+                <div class="row">
+                    <div id="no_broad" class="col-md-12">
+                        <h4>Không tìm thấy bản ghi này</h4>
+                        <a href="./show_video" class="btn btn-primary" role="button">Trở lại danh sách bản ghi</a>
+                    </div>
+                </div>
+            </div>
+            {%else%}
+
+            <div class="container">
+                <h3 id='title'>Bản ghi:
+                    {{namefiles.split('.')[0]}}
+                </h3>
+                <div class="row" id="table-item" style='margin-top: 5%;'>
+                    <table class='table table-borderless col-md-12 col-12'>
+                        <thead class="thead-primary">
+                            <tr>
+                                <td colspan="2">
+                                    {% if namefiles.split('.')[1] =='mp4' %}
+                                    <video width="720" controls>
+                                        <source src="./static/camera/{{namefiles}}" type="video/mp4">
+                                    </video>
+                                    {% else %}
+                                    <img src="./static/camera/{{namefiles}}" alt="{{namefiles}}" width="500" height="600">
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <strong>Thời gian tạo:</strong>
+                                            </td>
+                                            <td>
+                                                <p id="hms"></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Ngày tạo:</strong>
+                                            </td>
+                                            <td>
+                                                <p id="dmy"></p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a href="./show_video" class="btn btn-primary" role="button">Trở lại danh sách bản
+                                        ghi</a>
+                                </td>
+                                <td>
+                                    <form action='./del_file?name={{namefiles}}' method='POST'>
+                                        <input type='submit' value='Xoá bản ghi' onclick="return confirm('Bạn có chắc chắn muốn xóa ?');" class="btn btn-danger active">
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    {%endif%}
+                </div>
+
+            </div>
+
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+
+    <script>
+        var name = {{ namefiles.split('.')[0] | tojson}};
+
+        function time() {
+            hms_idx = name.split('-')[1];
+            dmy_idx = name.split('-')[0].split('_')[1];
+            document.getElementById('hms').innerHTML = (hms_idx.substr(0, 2) + ':' + hms_idx.substr(2, 2) + ':' + hms_idx.substr(4, 2));
+            document.getElementById('dmy').innerHTML = (dmy_idx.substr(6, 2) + '/' + dmy_idx.substr(4, 2) + '/' + dmy_idx.substr(0, 4));
+        }
+
+    </script>
+
+</html>

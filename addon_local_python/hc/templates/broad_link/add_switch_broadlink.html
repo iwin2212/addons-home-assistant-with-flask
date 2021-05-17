@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Broadlink Device</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id="title">Thêm thiết bị Broadlink</h3>
+                <div class="row" id="table-item">
+                    <div class="col-md-12 col-12">
+
+                        <form action='./add_switch_broadlink' method='POST' name='myForm'>
+                            <table class="table">
+                                <tr>
+                                    <td>Platform</td>
+                                    <td><input type='text' id='platform' name='platform' class="form-control"
+                                            value='broadlink' disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>Địa chỉ IP nội bộ</td>
+                                    <td id='host_'><input type='text' name='host' id='host' class='form-control'
+                                            placeholder="địa chỉ IP của thiết bị broadlink, ví dụ: 192.168.1.13"
+                                            required onchange="validHost()"></td>
+                                </tr>
+                                <tr>
+                                    <td>Địa chỉ Mac</td>
+                                    <td id='mac_'><input type='text' name='mac' id='mac' class='form-control'
+                                            placeholder="Nhập địa chỉ MAC của bộ Broadlink. Ví dụ AA:BB:CC:DD:EE:FF"
+                                            required onchange="validMac()"></td>
+                                </tr>
+                                <tr>
+                                    <td>Loại thiết bị</td>
+                                    <td>
+                                        <select name="type" class='form-control' onchange='myFunc()' id='type' required>
+                                            <option disabled selected value>--Chọn kiểu broadlink--</option>
+                                            <option>rm</option>
+                                            <option>rm_mini</option>
+                                            <option>rm_mini3_newblackbean</option>
+                                            <option>rm_mini3_redbean</option>
+                                            <option>sp1</option>
+                                            <option>sp2</option>
+                                            <option>sp3</option>
+                                            <option>mp1</option>
+                                            <option>rm4c_mini</option>
+                                            <option>rm4_mini</option>
+                                            <option>rm4c_pro</option>
+                                            <option>rm4_pro</option>
+                                        </select>
+                                    </td>
+
+                                </tr>
+                            </table>
+                            <input type='submit' value='Lưu' id="save" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+        </div>
+    </body>
+
+</html>
+<script>
+    function myFunc() {
+
+        x = document.getElementById('type').value;
+        if (x == 'sp1' || x == 'sp2' || x == 'sp3' || x == 'sc1') {
+            string = '<tr id = "con"><td>Tên thiết bị</td><td><input type = "text" name = "name" class = "form-control" placeholder = "ví dụ: broadlink 1" required></td></tr>';
+            $(".con").remove();
+            $("#con").remove();
+            $('table').append(string);
+        }
+        // if (x == 'rm' || x == 'rm_mini' || x == 'rm4c_mini' || x == 'rm4_mini' || x == 'rm4_pro' || x == 'rm4c_pro' || x == 'rm_mini3_newblackbean' || x == 'rm_mini3_redbean') {
+        //     string = '<tr id = "con"><td>Timeout (đơn vị giây)</td><td><input type = "text" name = "timeout" value = "15" class = "form-control" placeholder ="thời gian phản hồi tối đa cho phép" required></td></tr>'
+
+        //     $(".con").remove();
+        //     $("#con").remove();
+        //     $('table').append(string);
+        // }
+        if (x == 'mp1') {
+            string = '<tr class = "con"><td>Tên thiết bị</td><td><input type = "text" name = "name" class = "form-control" placeholder = "ví dụ: "broadlink 1" required></td></tr>';
+            string += '<tr class = "con"><td>Scan Interval</td><td><input type = "text" name = "scan_interval" class = "form-control" placeholder = "thời gian cập nhật trạng thái (đơn vị phút)" required></td></tr>';
+            string += '<tr class = "con"><td>Slot 1</td><td><input type = "text" name = "slot1" class = "form-control" placeholder = "tên thiết bị ứng với ổ cắm 1, ví dụ: tivi LG" required></td></tr>';
+            string += '<tr class = "con"><td>Slot 2</td><td><input type = "text" name = "slot2" class = "form-control" placeholder = "tên thiết bị ứng với ổ cắm 2, ví dụ: quạt treo tường" required></td></tr>';
+            string += '<tr class = "con"><td>Slot 3</td><td><input type = "text" name = "slot3" class = "form-control" placeholder = "tên thiết bị ứng với ổ cắm 1, ví dụ: rèm cửa" required></td></tr>';
+            string += '<tr class = "con"><td>Slot 4</td><td><input type = "text" name = "slot4" class = "form-control" placeholder = "tên thiết bị ứng với ổ cắm 1, ví dụ: máy bơm nước" required></td></tr>';
+            $(".con").remove();
+            $("#con").remove();
+            $('table').append(string);
+        }
+    }
+    function validHost() {
+        var host = document.getElementById('host').value;
+        var x = validateHost(host);
+        if (x == false) {
+            $('#valid_host').remove();
+            $('#host_').append("<div id = 'valid_host' class = 'text-danger'>Sai cú pháp địa chỉ host</div>");
+        }
+        else
+            $('#valid_host').remove();
+    }
+
+
+    function validMac() {
+        var mac = document.getElementById('mac').value;
+        var x = validateMac(mac);
+        if (x == false) {
+            $('#valid_mac').remove();
+            $('#mac_').append("<div id = 'valid_mac' class = 'text-danger'>Sai cú pháp địa chỉ mac</div>");
+        }
+        else
+            $('#valid_mac').remove();
+    }
+
+</script>

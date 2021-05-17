@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add đồng bộ</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user_scalable=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id="main">
+            <div class="container">
+
+                <h3 id='title'>Đồng bộ trạng thái 2 thiết bị </h3>
+                <form style="margin-top: 5%;" action='./add_dongbo' method='POST'>
+                    <table class="table">
+                        <tr>
+                            <td><strong>Tên đồng bộ</strong></td>
+                            <td><input type='text' name='ten' class='form-control' autocomplete="off"
+                                    placeholder='Ví dụ: đồng bộ cầu thang tầng 1' required></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kiểu đồng bộ</strong></td>
+                            <td>
+                                <select name='type' class='form-control' required>
+                                    <option disabled selected value>-- Chọn kiểu đồng bộ --</option>
+                                    <option>Đồng bộ một chiều</option>
+                                    <option>Đồng bộ hai chiều</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Thiết bị 1</td>
+                            <td>
+                                <select name='entity1' class='form-control selectpicker' data-dropup-auto="false"
+                                    data-size="7" data-live-search="true" required>
+                                    <option disabled selected value> -- Chọn 1 thiết bị -- </option>
+                                    {%for i in list_entity_id%}
+                                    {%if i.split(".")[0] in ["switch", "light"]%}
+                                    <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                    {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>Thiết bị 2</td>
+                            <td>
+                                <select name="entity2" class='form-control selectpicker' data-dropup-auto="false"
+                                    data-size="7" data-live-search="true" required>
+                                    <option disabled selected value>-- Chọn 1 thiết bị --</option>
+                                    {%for i in list_entity_id%}
+                                    {%if i.split(".")[0] in ["switch", "light"]%}
+                                    <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                    {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <input type='submit' value='Lưu' class="btn btn-primary">
+                </form>
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+    <script>
+        $(function () {
+            $('.selectpicker').selectpicker();
+        });
+    </script>
+
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Server Manager</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./static/css/style.css">
+  <script src="./static/js/jquery.min.js"></script>
+  <script src="./static/js/popper.min.js"></script>
+  <script src="./static/js/bootstrap.min.js"></script>
+</head>
+<body>
+    {%include 'head_foot/header.html'%}
+    <section id='main'>
+            <div style="margin-top: 10%;" class = "container">
+                    <h3>Khôi phục hệ thống</h3>
+                    <br>
+                    {%if err != ''%}
+                    <div class = 'alert alert-danger alert-dismissible'>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        {{err}}
+                    </div>
+                    {%endif%}
+                    <form action='./restore' method = 'POST' enctype="multipart/form-data">
+                        Vui lòng chọn file Zip từ máy bạn
+                        <input type = 'file' name = 'file'><br>
+                        <input type = 'submit' value = 'Khôi phục' class = "btn btn-active btn-primary">
+                    </form>
+                </div>
+    </section>
+    {%block content%}
+        {%include 'head_foot/footer.html' %}
+    {%endblock%}
+</body>
+    
+</html>

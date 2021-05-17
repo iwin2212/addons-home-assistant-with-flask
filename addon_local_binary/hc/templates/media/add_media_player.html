@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add TV</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+
+                <h3 id='title'>Thêm mới TV</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://tv.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <form style='margin-top: 6%;' action='./add_media_player' method='POST'>
+                    <table class="table">
+                        <tr>
+                            <td width="35%">Tên TV</td>
+                            <td><input type='text' name='name' class="form-control" placeholder="Ví dụ: TV Sony"
+                                    required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="35%">Chọn remote hồng ngoại</td>
+                            <td>
+                                <select id="entity_id" name='gateway' class='form-control' onchange="show_brand()"
+                                    required>
+                                    <option disabled selected value>-- Chọn remote --</option>
+                                    {%for gateway in list_gateway%}
+                                    <option>{{gateway['entity_id']}}</option>
+                                    {%endfor%}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr id='device' style="display: none;">
+                            <td width="35%">Chọn hãng sản xuất</td>
+                            <td>
+                                <select name='model' onchange="myFunc({{list_ir}})" id='model' class='form-control'
+                                    required>
+                                    <option disabled selected value>--Chọn hãng từ danh sách--</option>
+                                    {% for model in list_ir%}
+                                    <option>{{model}}</option>
+                                    {%endfor%}
+                                </select>
+                            </td>
+
+                        </tr>
+                        <tr id='code' style="display: none;">
+                            <td width="35%">Mã thiết bị</td>
+                            <td>
+                                <input type='text' name='device_code' class='form-control' required
+                                    placeholder="nhập số nguyên dương, ví dụ: 1000">
+                            </td>
+                        </tr>
+                    </table>
+                    <input type='submit' value='Lưu' class="btn btn-primary">
+                </form>
+
+            </div>
+
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+
+<script>
+    function show_brand() {
+        $('#device').show();
+        $('#code').show();
+    }
+
+    function myFunc(list_ir) {
+        model = document.getElementById('model').value;
+        string = '<tr id="code"><td width="35%">Chọn mã TV</td><td><select name = "device_code" id="model_test" class = "form-control" onchange="show_test()"><option disabled selected value>--chọn 1 model đại diện--</option>'
+        for (i in list_ir[model]) {
+            string += '<option>' + i + "(" + list_ir[model][i] + ")" + '</option>';
+        }
+        string += '</select></td></tr>'
+        $('#code').replaceWith(string);
+    }
+
+    function show_test() {
+        $('#test_device').remove();
+        string2 = `<tr id="test_device" style="display: none;">
+            <td>Thử điều khiển TV</td>
+            <td id="func">
+            </td>
+        </tr>`
+        $("table").append(string2);
+        string = `<table class='container-fluid table-borderless'>
+                    <tr>
+                        <td>Bật TV</td><td><input type='button' class='btn btn-info' value='BẬT' onclick='media_on()'></td>
+                        <td>Tắt TV</td><td><input type='button' class='btn btn-info' value='TẮT' onclick='media_off()'></td>
+                    </tr>
+                    <tr>
+                        <td>Tăng âm lượng</td><td><input type='button' class='btn btn-info' value='TĂNG' onclick='media_volume_up()'></td>
+                        <td>Giảm âm lượng</td><td><input type='button' class='btn btn-info' value='GIẢM' onclick='media_volume_down()'></td>
+                    </tr>
+                </table>`;
+        document.getElementById('func').innerHTML = string;
+        $(test_device).show();
+    }
+
+
+    function media_volume_down() {
+        gateway = document.getElementById('entity_id').value;
+        model = document.getElementById('model_test').value;
+        model = model.split('(')[1].split(')')[0];
+        $.post('./check_command_media_volume_down?gateway=' + gateway + '&model=' + model, function (data, status) {
+        });
+    }
+
+    function media_volume_up() {
+        gateway = document.getElementById('entity_id').value;
+        model = document.getElementById('model_test').value;
+        model = model.split('(')[1].split(')')[0];
+        $.post('./check_command_media_volume_up?gateway=' + gateway + '&model=' + model, function (data, status) {
+        });
+    }
+
+    function media_off() {
+        gateway = document.getElementById('entity_id').value;
+        model = document.getElementById('model_test').value;
+        model = model.split('(')[1].split(')')[0];
+        $.post('./check_command_media_off?gateway=' + gateway + '&model=' + model, function (data, status) {
+        });
+    }
+
+    function media_on() {
+        gateway = document.getElementById('entity_id').value;
+        model = document.getElementById('model_test').value;
+        model = model.split('(')[1].split(')')[0];
+        $.post('./check_command_media_on?gateway=' + gateway + '&model=' + model, function (data, status) {
+        });
+    }
+
+</script>

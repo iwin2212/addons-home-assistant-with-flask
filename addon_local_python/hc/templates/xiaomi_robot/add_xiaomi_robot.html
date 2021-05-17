@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Add Xiaomi Switch</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/style.css">
+    <script src="./static/js/jquery.min.js"></script>
+    <script src="./static/js/popper.min.js"></script>
+    <script src="./static/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    {%include 'head_foot/header.html'%}
+    <div class="container">
+        <h3 id='title'>Thêm robot Xiaomi gen 1/2</h3>
+        <h5 style="float: right"><a target="blank" href="http://tokenxiaomi.javisco.vn/">Hướng dẫn lấy token</a></h5 >
+        <form style="margin-top: 6%" action='./add_xiaomi_robot' method='POST'>
+            <table class="table">
+                
+                <tr>
+                    <td>Platform</td>
+                    <td><input type='text' id='platform' name='platform' class="form-control" value='xiaomi_miio'
+                            disabled></td>
+                </tr>
+                <tr>
+                    <td>Địa chỉ IP nội mạng</td>
+                    <td><input type='text' name='host' class='form-control'
+                            placeholder="địa chỉ nội mạng của robot, ví dụ: 192.168.10.100" required></td>
+                </tr>
+                <tr>
+                    <td>Tên robot</td>
+                    <td><input type='text' name='name' class='form-control' placeholder="ví dụ: osin" required></td>
+                </tr>
+                <tr>
+                    <td>Token</td>
+                    <td><input type='text' name='token' class='form-control'
+                            placeholder="chuỗi token, ví dụ: 2e4bc079e99eac2fd613fbbcf060270d" required></td>
+                </tr>
+            </table>
+            <input type='submit' value='Lưu' class="btn btn-primary">
+        </form>
+    </div>
+    {%block content%}
+    {%include 'head_foot/footer.html' %}
+    {%endblock%}
+</body>
+
+</html>

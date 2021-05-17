@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Xiaomi Switch Manager</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {% include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class='container'>
+                <h3 id='title'>Danh sách ổ cắm Xiaomi</h3>
+                {%if list_xiaomi_switch | length == 0%}
+
+                <div class="row" style=" text-align:center;">
+                    <div class="red-square">
+                        <h4>Không có thiết bị nào </h4>
+                        <a class="btn btn-info" role="button" href="./add_xiaomi_switch">Thêm thiết bị</a>
+                    </div>
+                </div>
+                {%else%}
+                <a class="btn btn-info" role="button" href="./add_xiaomi_switch" style="margin-top: 5%">Thêm thiết bị</a>
+                <table style='margin-top: 1%;' class='table table-striped'>
+                    <tr>
+                        <th>TÊN Ổ CẮM</th>
+                        <th>THÔNG TIN</th>
+                        <th>THAO TÁC</th>
+                    </tr>
+                    {% for device in list_xiaomi_switch %}
+                    <tr>
+                        <td>{{device['name']}}</td>
+                        <td>
+                            <ul>
+                                <li><strong>HOST:</strong> {{device['host']}}</li>
+                                <li><strong>MODEL:</strong> {{device['model']}}</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <form action='./delete_xiaomi_switch?device_token={{device["token"]}}' method='POST'>
+                                <input type='submit' onclick="return confirm('Bạn chăc chắn muốn xóa ?')" value='Xoá' class="btn btn-danger">
+                            </form>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </table>
+                {%endif%}
+
+
+            </div>
+        </section>
+
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+
+<style>
+    .linkButton {
+        background: none;
+        border: none;
+        color: #0066ff;
+        cursor: pointer;
+    }
+</style>

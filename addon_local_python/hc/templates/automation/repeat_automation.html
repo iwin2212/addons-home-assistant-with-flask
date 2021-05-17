@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Automation</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <link rel="stylesheet" href="./static/css/zoom.css">
+        <link rel="stylesheet" href="./static/css/menu.css">
+        <link rel="stylesheet" href="./static/css/modal.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+        <script src="./static/js/automation.js"></script>
+        <script src="./static/js/modal.js"></script>
+        <script src="./static/js/search_text.js"></script>
+        <script src="./static/js/time_selector.js"></script>
+        <script src="./static/js/states.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thêm thông báo trạng thái thiết bị</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://notifystate.javisco.vn"
+                    style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <form action='./add_repeat_automation' method='POST'>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td width="30%"><strong>Tên tự động</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table class='container-fluid table-borderless'>
+                                    <tr>
+                                        <td width="70%"><input type='text' name='ten' id='ten' class='form-control'
+                                                onchange="specialcharecter()" placeholder="ví dụ: Kiểm tra cửa khoá"
+                                                required>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Chọn điều kiện xảy ra</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="30%"><strong>Chọn tần suất lặp lại</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table class='container-fluid table-bordered'>
+                                    <tr>
+                                        <td colspan="2">
+                                            <select name='time_trigger' id='time_trigger' class='form-control'
+                                                onchange="period_onchange(this)" required>
+                                                <option selected disabled> --- Chọn tần suất ở đây --- </option>
+                                                <option value="yearly"> Hàng năm </option>
+                                                <option value="monthly"> Hàng tháng </option>
+                                                <option value="daily"> Hàng ngày </option>
+                                                <option value="custom"> Lựa chọn khác </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr id='time-condition'></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>Kiểm tra trạng thái thiết bị</strong> (tuỳ chọn) </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table class='container-fluid table-bordered'>
+
+                                    <tr class="add_condition"></tr>
+                                    <tr>
+                                        <td><button type="button" class="btn btn-info" onclick="addCondition()">Thêm
+                                                kiểm tra trạng thái</button></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Tin nhắn thông báo ra
+                                    loa</strong>
+                            </td>
+                        </tr>
+                        <tr style="display: none;">
+                            <td>
+                                <table class="container-fluid table-borderless">
+                                    <td>
+                                        <strong>Template</strong>
+                                    </td>
+                                    <tr>
+                                        <td>
+                                            <textarea id="template" name="message"
+                                                style="width:100%;background-color: transparent" rows="5"
+                                                readonly></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table class="container-fluid table-borderless">
+                                    <td>
+                                        <strong>Nhập nội dung thông báo</strong>
+                                    </td>
+                                    <tr>
+                                        <td><button type="button" class="btn btn-info" onclick="click_menu()">Chọn
+                                                thiết bị</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <textarea id="message" style="width:100%;" rows="5"
+                                                onmouseup="on_right_click()" onkeyup="get_text_to_template()"
+                                                onkeypress="return disable_enterKey(event);"
+                                                placeholder="Nhập lời thông báo ở đây. Hiện đã hỗ trợ chọn thêm thiết bị để thông báo."></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table class="container-fluid table-borderless">
+                                    <td>
+                                        <strong>Thông báo sẽ phát ra loa</strong>
+                                    </td>
+                                    <tr>
+                                        <td>
+                                            <textarea id="example" style="width:100%; background-color: transparent;"
+                                                rows="5" readonly></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color: #a1d3f7;"><strong>Chọn loa phát thông báo</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table class='container-fluid table-borderless'>
+                                    <tr>
+                                        <td width="30%"><strong>Chọn loa thông minh</strong></td>
+                                        <td width="70%">
+                                            <select class='form-control selectpicker' name='speaker' id='speaker'
+                                                data-dropup-auto="false" data-size="7" data-live-search="true" required>
+                                                <option selected disabled> --- Chọn Loa phát thông báo --- </option>
+                                                {% for entity in list_entitys %}
+                                                {% set list_entity_name = entity.split(" (")[0] %}
+                                                {% set list_entity_id = entity.split(" (")[1].split(")")[0] %}
+                                                {% if list_entity_id.split(".")[0] == "media_player" %}
+                                                {% if list_entity_name.find("TV: ") == -1 %}
+                                                <option>{{entity}}</option>
+                                                {% endif %}
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <input id='del_act' type="text" name='del_act' value='' style="display: none;">
+                    <input type="button" value='Lưu' onclick="check_time_trigger()" class="btn btn-primary">
+                </form>
+            </div>
+
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <a onclick="close_modal_click();" style="cursor: pointer;">
+                        <img src="./static/icon/back.png" class="img-fluid" height="30" width="30" />
+                    </a>
+                    <input id='text_' type="text" class='form-control' placeholder="Nhập từ bạn cần tìm kiếm tại đây"
+                        oninput="key_search(this)" onkeyup="return on_keyup(event, this);">
+                    <br>
+                    <select id='selected_dev' class='form-control' onchange="get_dev2text(this)">
+                        <option selected disabled> --- Chọn thiết bị thực hiện --- </option>
+                    </select>
+                </div>
+            </div>
+            {% include 'menu/menu_right_click.html' %}
+        </section>
+    </body>
+    {%block content%}
+    {%include 'head_foot/footer.html' %}
+    {%endblock%}
+    <script>
+        function specialcharecter() {
+            var iChars = "!`@#$%^&*()+=-[]\\\';,./{}|\":<>?~_";
+            var iNums = "0123456789";
+            var data = document.getElementById("ten").value;
+            for (var i = 0; i < data.length; i++) {
+                if (i == 0) {
+                    if (iNums.indexOf(data.charAt(i)) != -1) {
+                        alert("Tên mà bạn nhập không được bắt đầu bằng số. \nHãy nhập lại.");
+                        document.getElementById("ten").value = "";
+                        document.getElementById("ten").focus();
+                        return false;
+                    }
+                }
+                if (iChars.indexOf(data.charAt(i)) != -1) {
+                    alert("Tên mà bạn nhập không được chứa ký tự đặc biệt. \nHãy nhập lại.");
+                    document.getElementById("ten").value = "";
+                    document.getElementById("ten").focus();
+                    return false;
+                }
+            }
+        }
+
+        count_condition_rows = 0;
+        let dem_condition = 0;
+        count_trigger_row = 0
+        var list_entitys = {{ list_entitys | tojson }};
+        // Do not allow to type special character
+        // $('#message').bind('keypress', function (e) {
+
+        //     if ($('#message').val().length == 0) {
+        //         var k = e.which;
+        //         var ok = k >= 65 && k <= 90 || // A-Z
+        //             k >= 97 && k <= 122 || // a-z
+        //             k >= 48 && k <= 57; // 0-9
+
+        //         if (!ok) {
+        //             e.preventDefault();
+        //         }
+        //     }
+        // });
+
+        function formatTime() {
+            $('.datepicker').timepicker({
+                controlType: 'select',
+                oneLine: true,
+                timeFormat: 'HH:mm:ss'
+            });
+        }
+
+        function period_onchange(entity) {
+            if ((entity.value == 'daily') || (entity.value == 'custom')) {
+                string = `{% include 'timepicker/dayly.html'%}`;
+            }
+            else if (entity.value == 'monthly') {
+                string = `{% include 'timepicker/monthly.html'%}`;
+            }
+            else if (entity.value == 'yearly') {
+                string = `{% include 'timepicker/yearly.html'%}`;
+            }
+            $('#time-condition').replaceWith(string);
+            $.getScript("./static/js/time_selector.js");
+            $("#Month").on("change", function (event) {
+                month_onchange(this)
+            });
+            get_number_of_days_on_janury();
+        }
+
+        function disable_enterKey(e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                return false;
+            }
+        }
+
+        function on_right_click(e) {
+            var rightclick;
+            if (!e) var e = window.event;
+            if (e.button) rightclick = (e.button == 2);
+            if (rightclick) {
+                show_menu();
+            }
+        }
+
+        function clicked_menu(entity) {
+            close_menu();
+            var dev = entity.text.trim();
+            add_string_dev(dev);
+            if (dev == '') {
+                remove_string_dev();
+                close_modal();
+            }
+            else { add_modal(dev); }
+        }
+
+        function close_modal_click() {
+            close_modal();
+            remove_string_dev();
+        }
+
+        function add_string_dev(dev) {
+            string = $('#message').val();
+            if (string.lastIndexOf('->') == string.length - 2) {
+                string = string.substring(0, string.lastIndexOf('#'));
+            }
+            if (dev == 'Cảm biến') {
+                string = string + '#sensor->';
+                document.getElementById('message').value = string;
+            }
+            else if (dev == 'Công tắc') {
+                string = string + '#switch->';
+                document.getElementById('message').value = string;
+            }
+            else if (dev == 'Đèn') {
+                string = string + '#light->';
+                document.getElementById('message').value = string;
+            }
+            else if (dev == 'Điều hoà') {
+                string = string + '#climate->';
+                document.getElementById('message').value = string;
+            }
+            else if (dev == 'Khoá') {
+                string = string + '#lock->';
+                document.getElementById('message').value = string;
+            }
+            else if (dev == 'Quạt') {
+                string = string + '#fan->';
+                document.getElementById('message').value = string;
+            }
+            else if (dev == 'Rèm') {
+                string = string + '#curtain->';
+                document.getElementById('message').value = string;
+            }
+            else if (dev == 'TV') {
+                string = string + '#tv->';
+                document.getElementById('message').value = string;
+            }
+            else {
+
+            }
+        }
+
+        function remove_string_dev() {
+            string = $('#message').val();
+            if (string.lastIndexOf('->') == string.length - 2) {
+                string = string.substring(0, string.lastIndexOf('#'));
+            }
+            document.getElementById('message').value = string;
+            document.getElementById('message').focus();
+        }
+
+        function add_modal(dev) {
+            document.getElementById('text_').value = '';
+            var select_section = document.getElementById("selected_dev");
+            var select_section_value = select_section.value;
+            entities = add_option(dev);
+            if (entities.length != 0) {
+                $(select_section).find('option')
+                    .remove().end().append('<option disabled selected value="whatever"> -- Chọn 1 thiết bị -- </option>')
+                    .val('whatever')
+                    ;
+                for (var i = 0; i < entities.length; i++) {
+                    if (select_section_value != entities[i]) {
+                        var
+                            custom_option = document.createElement("option"); var t = document.createTextNode(entities[i]);
+                        custom_option.appendChild(t); select_section.appendChild(custom_option);
+                    }
+                }
+            }
+            open_modal();
+        }
+
+        function check_time_trigger() {
+            if (document.getElementById('ten').value == '') {
+                alert('Bạn cần điền tên kịch bản')
+                document.getElementById('ten').focus();
+            }
+            else if (document.getElementById('time_trigger').value == '--- Chọn tần suất ở đây ---') {
+                alert('Bạn cần chọn thời gian kích hoạt')
+                document.getElementById('time_trigger').focus();
+            }
+            else if (document.getElementById('speaker').value == '--- Chọn Loa phát thông báo ---') {
+                alert('Bạn cần chưa chọn loa thông báo')
+                document.getElementById('speaker').focus();
+            }
+            else {
+                $("form").submit();
+            }
+        }
+
+        function add_option(dev) {
+            $('#selected_dev')
+                .find('option')
+                .remove()
+                .end()
+                .append('<option disabled selected value="whatever"> -- Chọn 1 thiết bị -- </option>')
+                .val('whatever')
+                ;
+            var entities = [];
+            switch (dev) {
+                case 'Cảm biến':
+                    for (var i = 0; i < list_entitys.length; i++) {
+                        if (list_entitys[i].split('.')[0].split('(')[1] == 'sensor' ||
+                            list_entitys[i].split('.')[0].split('(')[1] == 'binary_sensor') { e = list_entitys[i]; entities.push(e); }
+                    } break;
+                case 'TV': for (var i = 0; i < list_entitys.length; i++) {
+                    if
+                        (list_entitys[i].split('.')[0].split('(')[1] == 'media_player') {
+                        if (list_entitys[i].search('TV: ') != -1) {
+                            e = list_entitys[i];
+                            entities.push(e);
+                        }
+                    }
+                }
+                    break;
+                case 'Điều hoà': for (var i = 0; i < list_entitys.length; i++) {
+                    if
+                        (list_entitys[i].split('.')[0].split('(')[1] == 'climate') { e = list_entitys[i]; entities.push(e); }
+                } break;
+                case 'Rèm': for (var i = 0; i < list_entitys.length; i++) {
+                    if
+                        (list_entitys[i].split('.')[0].split('(')[1] == 'cover') { e = list_entitys[i]; entities.push(e); }
+                } break;
+                case 'Công tắc': for (var i = 0; i < list_entitys.length; i++) {
+                    if
+                        (list_entitys[i].split('.')[0].split('(')[1] == 'switch') { e = list_entitys[i]; entities.push(e); }
+                } break;
+                case 'Đèn': for (var i = 0; i < list_entitys.length; i++) {
+                    if
+                        (list_entitys[i].split('.')[0].split('(')[1] == 'light') { e = list_entitys[i]; entities.push(e); }
+                } break;
+                case 'Khoá': for (var i = 0; i < list_entitys.length; i++) {
+                    if (list_entitys[i].search('_lock') != -1 ||
+                        list_entitys[i].search('_action') != -1) { e = list_entitys[i]; entities.push(e); }
+                } break; default:
+                    $(select_section).selectpicker("refresh");
+            }
+            return entities;
+        }
+
+    </script>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Tự động bật tắt điện nhà vệ sinh</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+
+                <h3 id='title'>Thiết lập tự động nhà vệ sinh </h3>
+                <form style="margin-top: 5%;" action='./add_bathroom_automation' method='POST'>
+                    <table class="table">
+                        <tr>
+                            <td><strong>Tên tự động</strong></td>
+                            <td><input type='text' name='ten' class='form-control' required enabled
+                                    placeholder="Ví dụ: Tự động vệ sinh phòng ngủ"></td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'><strong>Thời gian hiệu lực</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Từ (giờ:phút)</td>
+                            <td><input type='text' autocomplete="off" placeholder='Ví dụ 17:00' name='after'
+                                    class='hourPicker form-control' value="00:00" required></td>
+                        </tr>
+                        <tr>
+                            <td>Đến (giờ:phút)</td>
+                            <td><input type='text' autocomplete="off" placeholder='Ví dụ 20:00' name='before'
+                                    class='hourPicker form-control' value="23:59" required></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="background-color: #a1d3f7;">Các cảm biến trong nhà vệ sinh</td>
+                        </tr>
+                        <tr>
+                            <td>Cảm biến cửa</td>
+                            <td>
+                                <select name='door' class='form-control selectpicker' data-dropup-auto="false"
+                                    data-size="7" data-live-search="true" required>
+                                    <option disabled selected value> -- Chọn 1 cảm biến cửa -- </option>
+                                    {% for i in list_entity_id %}
+                                    {% if (i.split(".")[0] == "binary_sensor" and "contact" in i)
+                                    or (i.split(".")[0] == "sensor" and "contact" in i)
+                                    or (i.split(".")[0] == "binary_sensor" and "door" in i)
+                                    or (i.split(".")[0] == "sensor" and "door" in i) %}
+                                    <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>Chọn kiểu phòng tắm</td>
+                            <td>
+                                <select id='bathroom_type' name='bathroom_type' class='form-control'
+                                    onchange="change_bathroom_type()" required>
+                                    <option selected>Loại 1 ngăn: ngăn vệ sinh và ngăn tắm chung (1 cảm biến cửa và 1
+                                        cảm biến chuyển động)</option>
+                                    <option>Loại 2 ngăn: ngăn vệ sinh và ngăn tắm riêng (1 cảm biến cửa và 1 cảm biến
+                                        chuyển động)
+                                    </option>
+                                    <option>Loại 2 ngăn: ngăn vệ sinh và ngăn tắm riêng (1 cảm biến cửa và 2 cảm biến
+                                        chuyển động)
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class='motion_sensor_tr'>
+                            <td>Cảm biến chuyển động</td>
+                            <td>
+                                <select name='motion' class='form-control selectpicker' data-dropup-auto="false"
+                                    data-size="7" data-live-search="true" onchange='addTimer()' id="sensor_motion"
+                                    required>
+                                    <option disabled selected value> -- Chọn 1 cảm biến chuyển động -- </option>
+                                    {%for i in list_entity_id%}
+                                    {%if (i.split(".")[0] == "binary_sensor" and "occupancy" in i)
+                                    or (i.split(".")[0] == "sensor" and "occupancy" in i)
+                                    or (i.split(".")[0] == "binary_sensor" and "motion" in i)
+                                    or (i.split(".")[0] == "sensor" and "motion" in i)%}
+                                    <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                    {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr id='motion_block'></tr>
+                        <tr id="motion_sensor"></tr>
+                        <tr>
+                            <td colspan="2" style="background-color: #a1d3f7;">Các thiết bị sẽ bật tắt tự động</td>
+                        </tr>
+                        <tr id="block_device_id_0">
+                            <td>Thiết bị thực hiện</td>
+                            <td>
+                                <select name="switch" class='form-control selectpicker' data-dropup-auto="false"
+                                    data-size="7" data-live-search="true" required>
+                                    <option disabled selected value>-- Chọn 1 thiết bị --</option>
+                                    {%for i in list_entity_id%}
+                                    {%if i.split(".")[0] in ["switch", "light", "fan"]%}
+                                    <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                    {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </td>
+                            <td><button id='delete_0' type="button" value="Delete" class="btn btn-primary active"
+                                    onclick="deleteItem(0)">Delete</button></td>
+                        <tr class="device"></tr>
+                        <tr>
+                            <td colspan="2"><button type="button" class="btn" style="background-color: #e0dbcd"
+                                    onclick="addDevice()">Thêm thiết bị</button></td>
+                        </tr>
+                    </table>
+                    <input type='submit' value='Lưu' class="btn btn-primary">
+                </form>
+
+            </div>
+
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>
+
+<script>
+    $(function () {
+        $('.selectpicker').selectpicker();
+    });
+
+    let dem = 1;
+    function addDevice() {
+        string = `
+        <tr id = "block_device_id_${dem}">
+            <td id = "device_id_${dem}">Định danh thiết bị</td>
+            <td>
+                <select name = 'switch' class = 'form-control selectpicker' data-dropup-auto="false" data-size="7" data-live-search="true" id="device_${dem}" required>
+                    <option disabled selected value> -- Chọn 1 thiết bị -- </option>
+                    {%for i in list_entity_id%}
+                        {%if i.split(".")[0] in ["switch", "light", "fan"] %}
+                            <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                        {%endif%}
+                    {%endfor%}
+                </select>
+            </td>
+            <td><button id = 'delete_${dem}' type = "button" value = "Delete" class = "btn btn-primary active" onclick = "deleteItem(${dem})">Delete</button></td>
+        </tr>
+        <tr id = 'tr_content_${dem}' class = "device"></tr>
+        `;
+        $("tr[class = 'device'").replaceWith(string);
+        dem++;
+        $(function () {
+            $('.selectpicker').selectpicker();
+        });
+    }
+
+    function deleteItem(dem) {
+        $('#device_' + dem).remove();
+        $(`tr[class = 'trigger_content_${dem}']`).remove();
+        $(`#device_id_` + dem).remove();
+        $('#delete_' + dem).remove();
+        $('#block_device_id_' + dem).remove();
+    }
+
+    function addTimer() {
+        motion_sensor = $('#sensor_motion').val();
+        if (motion_sensor != null) {
+            var string = `
+            <tr id = 'motion_sensor'>
+                    <td>
+                        Thời gian tắt đèn sau khi không có chuyển động (mm:ss)    
+                    </td>
+                    <td>
+                        <input type = "text" value = "01:00" name = "time_motion" class = "form-control">       
+                    </td>    
+                </tr>
+            `
+            $("#motion_sensor").replaceWith(string);
+        }
+    }
+
+    function change_bathroom_type() {
+        if (document.getElementById('bathroom_type').value == 'Loại 2 ngăn: ngăn vệ sinh và ngăn tắm riêng (1 cảm biến cửa và 2 cảm biến chuyển động)') {
+            string = `<tr class='motion_sensor_tr'>
+                        <td>Chọn cảm biến chuyển động trong ngăn vệ sinh</td>
+                        <td>
+                            <select name='motion' class='form-control selectpicker' data-dropup-auto="false"
+                                data-size="7" data-live-search="true" onchange='addTimer()' id="sensor_motion"
+                                required>
+                                <option disabled selected value> -- Chọn 1 cảm biến chuyển động -- </option>
+                                {%for i in list_entity_id%}
+                                    {%if (i.split(".")[0] == "binary_sensor" and "occupancy" in i) or (i.split(".")[0] == "sensor" and "occupancy" in i) or (i.split(".")[0] == "binary_sensor" and "motion" in i) or (i.split(".")[0] == "sensor" and "motion" in i)%}
+                                        <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                    {%endif%}
+                                {%endfor%}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class='motion_sensor_tr'>
+                        <td>Chọn cảm biến chuyển động trong ngăn tắm</td>
+                        <td>
+                            <select name='motion_2' class='form-control selectpicker' data-dropup-auto="false"
+                                data-size="7" data-live-search="true" onchange='addTimer()' id="sensor_motion_no2"
+                                required>
+                                <option disabled selected value> -- Chọn 1 cảm biến chuyển động -- </option>
+                                {%for i in list_entity_id%}
+                                {%if (i.split(".")[0] == "binary_sensor" and "occupancy" in i)
+                                or (i.split(".")[0] == "sensor" and "occupancy" in i)
+                                or (i.split(".")[0] == "binary_sensor" and "motion" in i)
+                                or (i.split(".")[0] == "sensor" and "motion" in i)%}
+                                <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                {%endif%}
+                                {%endfor%}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id='motion_block'></tr>`;
+            $('.motion_sensor_tr').remove();
+            $('#motion_block').replaceWith(string);
+            $(function () {
+                $('.selectpicker').selectpicker();
+            });
+        }
+        else {
+            string = `<tr class='motion_sensor_tr'>
+                            <td>Cảm biến chuyển động</td>
+                            <td>
+                                <select name='motion' class='form-control selectpicker' data-dropup-auto="false"
+                                    data-size="7" data-live-search="true" onchange='addTimer()' id="sensor_motion"
+                                    required>
+                                    <option disabled selected value> -- Chọn 1 cảm biến chuyển động -- </option>
+                                    {%for i in list_entity_id%}
+                                        {%if (i.split(".")[0] == "binary_sensor" and "occupancy" in i) or (i.split(".")[0] == "sensor" and "occupancy" in i) or (i.split(".")[0] == "binary_sensor" and "motion" in i) or (i.split(".")[0] == "sensor" and "motion" in i)%}
+                                            <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                        {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr id='motion_block'></tr>`;
+            $('.motion_sensor_tr').remove();
+            $('#motion_block').replaceWith(string);
+            $(function () {
+                $('.selectpicker').selectpicker();
+            });
+        }
+    }
+
+    $(document).ready(function () {
+        $('.hourPicker').timepicker({
+            controlType: 'select',
+            oneLine: true,
+            timeFormat: 'HH:mm'
+        });
+    });
+</script>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chỉnh sửa đồng bộ</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user_scalable=1">
+    <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+    <script src="./static/js/jquery.min.js"></script>
+    <script src="./static/js/popper.min.js"></script>
+    <script src="./static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./static/css/style.css">
+</head>
+
+<body>
+    {%include 'head_foot/header.html'%}
+    <section>
+        <div class="container">
+            <h3 class='text-primary' id='title'>Thêm kịch bản đồng bộ </h3>
+            <form style="margin-top:5%;" action='./edit_automation?iden={{iden}}' method='POST'>
+                <table class="table">
+                    <tr>
+                        <td><strong>Tên kịch bản</strong></td>
+                        <td><input type='text' name='ten' class='form-control' required
+                                value="{{name.replace('chiều đi','').replace('chiều về', '')}}"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kiểu đồng bộ</strong></td>
+                        <td>
+                            {%if automation_data[0] == 1%}
+                            <select name='type' class='form-control' required>
+                                <option selected>Đồng bộ một chiều</option>
+                                <option>Đồng bộ hai chiều</option>
+                            </select>
+                            {%else%}
+                            <select name='type' class='form-control' required>
+                                <option selected>Đồng bộ hai chiều</option>
+                                <option>Đồng bộ một chiều</option>
+                            </select>
+                            {%endif%}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Công tắc kích hoạt</td>
+                        <td>
+                            <select name='entity1' class='form-control' required>
+                                <option selected>{{name_entity1}} ({{automation_data[1]}})</option>
+                                {%for i in list_entity_id%}
+                                {%if i.split(".")[0] in ["switch", "light", "fan", "cover", "climate", "media_player"]%}
+                                <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                {%endif%}
+                                {%endfor%}
+                            </select>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>Công tắc hành động</td>
+                        <td>
+                            <select name="entity2" class='form-control' required>
+                                <option selected>{{name_entity2}} ({{automation_data[2]}})</option>
+                                {%for i in list_entity_id%}
+                                {%if i.split(".")[0] in ["switch", "light", "fan", "cover", "climate", "media_player"]%}
+                                <option>{{list_entity_name[loop.index - 1]}} ({{i}})</option>
+                                {%endif%}
+                                {%endfor%}
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <input type='submit' value='Lưu' class="btn btn-primary">
+            </form>
+        </div>
+    </section>
+
+    {%block content%}
+    {%include 'head_foot/footer.html' %}
+    {%endblock%}
+    </div>
+</body>

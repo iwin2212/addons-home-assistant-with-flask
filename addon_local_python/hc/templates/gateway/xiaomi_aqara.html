@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Xiaomi Aqara Manager</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+
+            <div class='container'>
+                <h3 id='title'>Danh sách Xiaomi gateway</h3>
+                {%if list_xiaomi_aqara | length == 0%}
+                <div class="row" style="text-align:center;">
+                    <a class="btn btn-info" role="button" href="./add_xiaomi_aqara">Thêm thiết bị</a>
+                    <div class="red-square">
+                        <h4>Không có thiết bị nào </h4>
+                    </div>
+                </div>
+                {%else%}
+                <div class="row" style="margin-top: 5%;">
+                    <a class="btn btn-info" role="button" href="./add_xiaomi_aqara">Thêm thiết bị</a>
+                    <table class='table table-striped' style="margin-top: 1%">
+                        <tr>
+                            <th>STT</th>
+                            <th>Thông tin chi tiết</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        {% for device in list_xiaomi_aqara %}
+
+                        <tr>
+                            <td width="10%">{{loop.index}}</td>
+                            <td width="60%">
+                                <ul>
+                                    <li><strong>Tên:</strong> {{device['entity_id']}}</li>
+                                </ul>
+                            </td>
+                            <td width="30%">
+                                <form action="./delete_xiaomi?id={{device['entity_id']}}" method='POST'>
+                                    <input type='submit' onclick="return confirm('Bạn có chắc chắn muốn xóa ?')"
+                                        value='Xoá' class="btn btn-danger">
+                                </form>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </table>
+                </div>
+
+                {%endif%}
+
+
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+</html>

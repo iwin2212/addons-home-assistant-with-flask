@@ -1,0 +1,8 @@
+Hướng dẫn thêm chức năng báo nói.
+Vào .homeassistant 
+Tạo một file mới trong thư mục custom_components tên là read_news.py
+Vào link https://github.com/tranvien98/.homeassistant/blob/master/custom_components/read_news.py chép code vào file vừa mới tạo.
+Trong file configuration.yaml chèn dòng 
+read_news:
+
+Check config và khởi động lại homeassistant.

@@ -1,0 +1,490 @@
+{
+    "climate": {
+        "Toyotomi": {
+            "AKIRA GAN/GAG-A128 VL": "1000"
+        },
+        "Panasonic": {
+            "CS-CE7HKEW": "1020",
+            "CS-CE9HKEW": "1020",
+            "CS-CE12HKEW": "1020",
+            "CS-PC24MKF": "1020",
+            "CS-C24PKF": "1020",
+            "CS-RE9GKE": "1021",
+            "CS-RE12GKE": "1021",
+            "CS-Z25TK": "1022",
+            "CS-HE9JKE": "1023",
+            "CS-HE12JKE": "1023",
+            "CS-HE9LKE": "1023",
+            "CS-MRE7MKE": "1024",
+            "CS-E18FKR": "1025",
+            "CS-PC12QKT": "1026"
+        },
+        "Ggeneral Electric": {
+            "Unknown": "1040",
+            "AE1PH09IWF": "1041",
+            "AE0PH09IWO": "1041",
+            "AE1PH12IWF": "1041",
+            "AE0PH12IWO": "1041",
+            "AE4PH18IWF": "1041",
+            "AE5PH18IWO": "1041",
+            "ASHA09LCC": "1042"
+        },
+        "General Electric": {
+            "ASWX09LECA": "1043"
+        },
+        "LG": {
+            "R09AWN": "1060",
+            "R24AWN": "1060",
+            "E09EK": "1060",
+            "Unknown": "1064",
+            "P12RK": "1062",
+            "P12EP1": "1063",
+            "LG080EC": "1065",
+            "LG100EC": "1065",
+            "LG150EC": "1065",
+            "LG200EC": "1065",
+            "RAS-32CNH2": "1083"
+        },
+        "Hitachi": {
+            "Unknown": "1080",
+            "RAC-10EH1": "1081",
+            "RAC-18EH1": "1081",
+            "RAS-10EH1": "1081",
+            "RAS-10EH3": "1081",
+            "RAS-18EH1": "1081",
+            "RAS-25YHA": "1082",
+            "RAS-35YHA": "1082",
+            "RAS-DX18HDK": "1084"
+        },
+        "Daikin": {
+            "FTXS25CVMB": "1100",
+            "FTXS35CVMB": "1100",
+            "FTXS60BVMB": "1100",
+            "FVXS25BVMB": "1100",
+            "FTXS20LVMA": "1101",
+            "FTXS25LVMA": "1101",
+            "FTXS35LVMA": "1101",
+            "FTXS46LVMA": "1101",
+            "FTXS50LVMA": "1101",
+            "FTXS60LVMA": "1101",
+            "FTXS71LVMA": "1101",
+            "FTXS85LVMA": "1101",
+            "FTXS95LVMA": "1101",
+            "FVXS50FV1B": "1101",
+            "FTV20AXV14": "1102",
+            "Unknown": "1103",
+            "TF25DVM": "1104",
+            "ATX20KV1B": "1106",
+            "ATX25KV1B": "1106",
+            "ATX35KV1B": "1106",
+            "FTX25JAV1NB": "1107"
+        },
+        "Dalkin": {
+            "FTX12NMVJU": "1105"
+        },
+        "Mitsubishi Electric": {
+            "MSZ-GL25VGD": "1120",
+            "MSZ-GL35VGD": "1120",
+            "MSZ-GL42VGD": "1120",
+            "MSZ-GL50VGD": "1120",
+            "MSZ-GL60VGD": "1120",
+            "MSZ-GL71VGD": "1120",
+            "MSZ-GL80VGD": "1120",
+            "MSZ-GA35VA": "1121",
+            "SRK25ZSX-SRC25ZSX": "1123",
+            "MLZ-KP25VF": "1125",
+            "MLZ-KP35VF": "1125",
+            "MLZ-KP50VF": "1125",
+            "MSX09-NV II": "1126",
+            "MSH-07RV": "1126",
+            "MSH-12RV": "1126",
+            "MSZ-HJ25VA": "1127",
+            "MSZ-HJ35VA": "1128"
+        },
+        "Mitsubishi": {
+            "MSZ-AP50VGKD": "1122",
+            "MSZ-SF25VE3": "1124",
+            "MSZ-SF35VE3": "1124",
+            "MSZ-SF42VE3": "1124",
+            "MSZ-SF50VE3": "1124",
+            "MSZ-AP20VG": "1124",
+            "MHS-A13VD": "99990100"
+        },
+        "Actron": {
+            "Unknown": "1140"
+        },
+        "Carrier": {
+            "Unknown": "1160",
+            "40GKX-024RB": "1161"
+        },
+        "Gree": {
+            "GWH12-KF-K3DNA5G-I": "1180",
+            "Unknown": "1181",
+            "GMV-R45G/NaB-K": "1182"
+        },
+        "Tosot": {
+            "T09H-SJ": "1200"
+        },
+        "Sungold": {
+            "Unknown": "1220"
+        },
+        "Consul": {
+            "Unknown": "1240",
+            "CBV12CBBNA": "1241",
+            "CBY12DBBNA": "1241"
+        },
+        "Toshiba": {
+            "RAS-13NKV-E / RAS-13NAV-E": "1260",
+            "RAS-13NKV-A / RAS-13NAV-A": "1260",
+            "RAS-16NKV-E / RAS-16NAV-E": "1260",
+            "RAS-16NKV-A / RAS-16NAV-A": "1260"
+        },
+        "Fujitsu": {
+            "AR-RBE1E": "1280",
+            "Unknown": "1281",
+            "AR-JW11": "1282",
+            "AR-AB5": "1283",
+            "AR-REG1U": "1284",
+            "AR-RCE1E": "1285",
+            "AR-JE5": "1286",
+            "ASYG-LMCE": "1287",
+            "AR-REB1E": "1287",
+            "AR-AB8": "1288"
+        },
+        "Sharp": {
+            "AY-B22DM": "1300"
+        },
+        "Haier": {
+            "Unknown": "1320"
+        },
+        "Tadiran": {
+            "Unknown": "1340",
+            "WIND 3P": "1560"
+        },
+        "Springer": {
+            "Split Hi Wall Maxiflex": "1360"
+        },
+        "Midea": {
+            "Unknown": "1381",
+            "MSY-12HRDN1": "1382",
+            "KFR-35G": "1383"
+        },
+        "Samsung": {
+            "Unknown": "1400",
+            "AR**HSF/JFS**": "1401"
+        },
+        "Sintech": {
+            "KFR-34GW": "1420"
+        },
+        "Akai": {
+            "Unknown": "1440"
+        },
+        "Alliance": {
+            "Unknown": "1460"
+        },
+        "Junkers": {
+            "Excellence": "1480"
+        },
+        "Sanyo": {
+            "Unknown": "1500",
+            "SAP-KR124EHEA": "1501"
+        },
+        "Hisense": {
+            "Unknown": "1521",
+            "DGR11R2": "1522"
+        },
+        "Whirlpool": {
+            "SPIS412L": "1540"
+        },
+        "Chigo": {
+            "Unknown": "1580"
+        },
+        "Sumikura 2CAT": {
+            "SK2C AT": "1597391773"
+        },
+        "Sumikura 1C": {
+            "SK1C": "1597392857"
+        },
+        "Sumikura2C": {
+            "SK 2C": "1597393756"
+        },
+        "Beko": {
+            "BEVCA 120": "1600"
+        },
+        "Saijo DENKI": {
+            "IR lcd 10": "99991000"
+        },
+        "Javis": {
+            "Javis123": "1600832497"
+        },
+        "Tornado": {
+            "Super - Inverter A, i": "1620",
+            "Inverter": "1620",
+            "Inverter A": "1620",
+            "Super Design": "1620",
+            "Super Plasma": "1620",
+            "Gold i": "1620",
+            "Multi ON-OFF": "1620",
+            "Multi Inverter": "1620",
+            "Super Gold i": "1620",
+            "Plasma Gold": "1620",
+            "Super Legend 40": "1621"
+        },
+        "FUJIKO": {
+            "Unknown": "1640"
+        },
+        "ROYAL": {
+            "08HPN1T1": "1660"
+        },
+        "Mitsubishi Heavy": {
+            "SRK25ZJ-S1": "1680",
+            "SRK71ZK-S": "1681",
+            "SRKM25H": "1682",
+            "SRK40HBE": "1682",
+            "DXK12ZMA-S": "1683",
+            "SRK50ZS-S": "1685",
+            "SRK20ZSA-W": "1686",
+            "SRK25ZSA-W": "1686",
+            "SRK35ZSA-W": "1686",
+            "SRK50ZSA-W": "1686",
+            "SRK35ZJX-S": "1687"
+        },
+        "Mitsubishi Heavy Industries": {
+            "DXK24ZRA": "1684"
+        },
+        "Electrolux": {
+            "EACS/I-HAT/N3": "1700",
+            "EACS-HA": "1701",
+            "QI/QE09F": "1702",
+            "QI/QE09R": "1702",
+            "QI/QE12F": "1702",
+            "QI/QE12R": "1702",
+            "QI/QE18F": "1702",
+            "QI/QE18R": "1702",
+            "QI/QE22F": "1702",
+            "QI/QE22R": "1702",
+            "XI/XE09F": "1702",
+            "XI/XE09R": "1702",
+            "XI/XE12F": "1702",
+            "XI/XE12R": "1702",
+            "XI/XE18F": "1702",
+            "XI/XE18R": "1702",
+            "XI/XE22F": "1702",
+            "XI/XE22R": "1702"
+        },
+        "Erisson": {
+            "EC-S07T2": "1720"
+        },
+        "Kelvinator": {
+            "KSV25HRG": "1740"
+        },
+        "Daitsu": {
+            "DS12U-RV": "1760",
+            "DS-9KIDT": "1761",
+            "ASD9KI-DT": "1762"
+        },
+        "Trotec": {
+            "YX1F6": "1780",
+            "YX1F": "1781"
+        },
+        "Ballu": {
+            "YKR-K/002E": "1800"
+        },
+        "Riello": {
+            "WSI XN": "1820",
+            "RAR-3U4": "1820"
+        },
+        "Hualing": {
+            "KFR-45GW/JNV": "1840",
+            "KFR-45G/JNV": "1840"
+        },
+        "Simbio": {
+            "Unknown": "1860"
+        },
+        "Saunier Duval": {
+            "1": "1880"
+        },
+        "TCL": {
+            "TAC-12CHSD/XA21I": "1900"
+        },
+        "Aokesi": {
+            "Unknown": "1920"
+        },
+        "Electra": {
+            "Unknown": "1941",
+            "Electra Classic": "1942"
+        },
+        "AUX": {
+            "Unknown": "1960"
+        },
+        "Fuji": {
+            "Unknown": "1980"
+        },
+        "Aeronik": {
+            "ASO-12IL": "2000",
+            "ASI-12IL": "2000"
+        },
+        "Ariston": {
+            "A-IFWHxx-IGX": "2020"
+        },
+        "Pioneer": {
+            "WYS018GMFI17RL": "2040",
+            "WYS009GMFI17RL": "2040",
+            "CB018GMFILCFHD": "2040",
+            "CB012GMFILCFHD": "2040"
+        },
+        "Dimplex": {
+            "GDPAC12RC": "2060"
+        },
+        "Sendo": {
+            "SND-18/IK": "2080"
+        },
+        "Mirage": {
+            "Magnum Inverter 19": "2100"
+        },
+        "Technibel": {
+            "MPAF13A0R5IAA": "2120"
+        },
+        "Unionaire": {
+            "Artify": "2140"
+        },
+        "Lennox": {
+            "2018": "2160",
+            "2019": "2160"
+        },
+        "Hokkaido": {
+            "LA09-DUAL H1": "2180"
+        },
+        "IGC": {
+            "RAK-12NH": "2200",
+            "RAK-18NH": "2200"
+        },
+        "Blueridge": {
+            "RG57A4": "2220",
+            "BGEFU1": "2220"
+        },
+        "DeLonghi": {
+            "PAC N82ECO": "2240",
+            "PAC AN111": "2240"
+        },
+        "Profio": {
+            "Unknown": "2260"
+        },
+        "Hantech": {
+            "A018-12KR2": "2280",
+            "A016-09KR2/A": "2281"
+        },
+        "Zanussi": {
+            "ZH/TT-02": "2300"
+        },
+        "Whynter": {
+            "ARC-08WB": "2320",
+            "ARC-10WB": "2320",
+            "ARC-126MD": "2320",
+            "ARC-126MDB": "2320",
+            "ARC-148MS": "2320"
+        },
+        "Vortex": {
+            "VOR-12C3/407": "2340"
+        },
+        "Flouu": {
+            "Unknown": "2360"
+        },
+        "BAXI": {
+            "Unknow": "2380"
+        },
+        "Yamatsu": {
+            "YAM-12KDA": "2400"
+        },
+        "VS": {
+            "Unknown": "2420"
+        },
+        "daikin vrv": {
+            "BRC4C158": "99990001"
+        },
+        "Daikin FTXV25QVMV": {
+            "FTXV25QVMV": "99990010"
+        }
+    },
+    "fan": {
+        "Kaze": {
+            "Unknown": "1000"
+        },
+        "Acorn": {
+            "Unknown": "1020"
+        },
+        "Lucci Air": {
+            "Aria": "1040"
+        },
+        "Super Fan": {
+            "Super Fan A1": "1060"
+        },
+        "Hamilton Bay": {
+            "Unknown": "1080"
+        },
+        "Pacific": {
+            "Unknown": "1100"
+        },
+        "Europace": {
+            "Unknown": "1120"
+        }
+    },
+    "media_player": {
+        "Philips": {
+            "26PFL560H": "1000"
+        },
+        "Sony": {
+            "KDL-46HX800": "1020"
+        },
+        "LG": {
+            "22MT47DC": "1040",
+            "LH6235D": "1041"
+        },
+        "Samsung": {
+            "UE40F6500": "1060",
+            "UE40H7000SL": "1060",
+            "UE40C6000": "1061",
+            "UE40D6500": "1061",
+            "UE32H5500": "1061",
+            "UE22D5000": "1061"
+        },
+        "Insignia": {
+            "NS-42D510NA15": "1080"
+        },
+        "Toshiba": {
+            "42C3530D": "1100"
+        },
+        "Yamaha": {
+            "Unknown": "1120",
+            "HTR-3065": "1121",
+            "RX-V373": "1121",
+            "RX-V373BL": "1121",
+            "RX-V375": "1121",
+            "RX-V375BL": "1121",
+            "YHT-497": "1121",
+            "YHT-497BL": "1121",
+            "VR50590": "1122",
+            "AX-380": "9999"
+        },
+        "RME": {
+            "ADI-2 DAC FS": "1140"
+        },
+        "Logitech": {
+            "Z906": "1160",
+            "Z-5500": "1161"
+        },
+        "TCL": {
+            "55EP640": "1180"
+        },
+        "Pace": {
+            "TDS850NNZ": "1200",
+            "TDC850NF": "1200"
+        },
+        "Silver": {
+            "MEO": "1220"
+        },
+        "TurboX": {
+            "TXV-2420": "1240"
+        }
+    }
+}

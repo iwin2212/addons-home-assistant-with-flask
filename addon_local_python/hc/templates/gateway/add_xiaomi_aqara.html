@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Add Xiaomi Aqara</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thêm Xiaomi gateway</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://xiaomi.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <a href='./xiaomi_aqara' class='btn btn-info' type="button" id="back" style="margin-bottom: 2%;">Danh
+                    sách Xiaomi Aqara</a>
+                <div id='notify_denied' class='alert alert-danger alert-dismissible' style="display: none;"></div>
+                <div id='notify_success' class='alert alert-success alert-dismissible' style="display: none;"></div>
+                <form action='/add_xiaomi_aqara' method='POST'>
+                    <table class="table table-borderless" style="margin-top: 3%;">
+                        <tr>
+                            <td width="20%">Tài khoản MI</td>
+                            <td><input type='text' name='username' id='username' class="form-control" placeholder="Nhập Username (email hoặc user ID)">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Mật khẩu</td>
+                            <td><input type='password' name='password' id='password' class="form-control" placeholder="Nhập mật khẩu của tài khoản Mi">
+                                <input type="checkbox" onclick="showPass()"> Hiện mật khẩu
+                            </td>
+                        </tr>
+                    </table>
+                    <input type="button" id="config" onclick="config_aqara()" value='Tìm thiết bị' class="btn btn-primary">
+                    <div style="display: none;" id='add_primary'></div>
+                    <div style="display: none;" id='pending' class="spinner-border text-primary"></div>
+                    <input type="button" value='Lưu' class="btn btn-primary" id='submit' style="display: none;" onclick="connect_xiaomi()">
+                </form>
+
+            </div>
+
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+    <script>
+        function showPass() {
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+        // Prevent form submission on Enter key press
+        function on_keyup(e) {
+            if (e.keyCode == 13) {
+                config_aqara();
+                return false;
+            }
+        }
+
+        function config_aqara() {
+            username = document.getElementById('username').value;
+            password = document.getElementById('password').value;
+            $('#pending').show();
+            $('#config').hide();
+            $('#notify_denied').hide();
+            $.post("/config_aqara?username=" + username + "&password=" + password, function (data, status) {
+                $('#pending').hide();
+                if (data['result'] == 'Unable to log in.') {
+                    $('#config').show();
+                    document.getElementById('notify_denied').innerHTML = "Đăng nhập không thành công. Vui lòng kiểm tra lại username và mật khẩu.";
+                    $('#notify_denied').show();
+                }
+                else {
+                    $('#add_primary').show();
+                    show_ip(data['result']);
+                }
+            });
+        }
+
+        function show_ip(data) {
+            string = "<select name='ip_addr' id='ip_addr' class='form-control' required><option disabled selected> -- Chọn địa chỉ IP -- </option>";
+            data.forEach(function (value) {
+                ip = value['ip'];
+                if (ip == '') { }
+                else {
+                    string += '<option>' + value['ip'] + ' : ' + value['name'] + ' - server: ' + value['server'] + '</option>';
+                }
+            });
+            string += "</select>";
+            table_value = `
+                                        <div style="display: none;" id='add_primary'>
+                                            <table class="table" style="margin-top: 3%;">
+                                                <tr>
+                                                    <td width="20%">Chọn địa chỉ IP</td>
+                                                    <td>`+ string + `</td>
+                                                    </tr>
+                                                    <tr id='info' style="display: none;">
+                                                        <td colspan='2'><input class='form-control' id='token_value' name='token_value'></td>
+                                                    </tr>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        `;
+            $('#add_primary').replaceWith(table_value);
+            $('#add_primary').show();
+            $("#ip_addr").change(function () {
+                ip = this.value.split(' : ')[0];
+                data.forEach(function (value) {
+                    if (ip == value['ip']) {
+                        token = value['token'];
+                    }
+                });
+                document.getElementById('token_value').value = token;
+                $('#submit').show();
+            });
+        }
+
+        function connect_xiaomi() {
+            $('#pending').show();
+            $('#submit').hide();
+            token_value = document.getElementById('token_value').value;
+            ip_addr = document.getElementById('ip_addr').value.split(' : ')[0];
+            name = document.getElementById('ip_addr').value.split(' : ')[1];
+            $.post("/connect_xiaomi?token=" + token_value + "&ip=" + ip_addr + "&name=" + name, function (data, status) {
+                $('#pending').hide();
+                $('#submit').show();
+                $('#notify_denied').hide();
+                var error = data.result.error;
+                if (!error) {
+                    add_success();
+                }
+                else {
+                    if (error['reason'] == "already_configured") {
+                        document.getElementById('notify_denied').innerHTML = "Thiết bị này đã được cấu hình trước đó.";
+                        $('#notify_denied').show();
+                    }
+                    else {
+                        console.log(error['reason'])
+                        document.getElementById('notify_denied').innerHTML = "Đã có lỗi xảy ra khi kết nối. Vui lòng thử lại sau.";
+                        $('#notify_denied').show();
+                    }
+                }
+            });
+        }
+
+        function add_success() {
+            document.getElementById('notify_success').innerHTML = "Thêm thiết bị thành công.";
+            $('#notify_success').show();
+            var timeleft = 3;
+            var downloadTimer = setInterval(function () {
+                timeleft -= 1;
+                if (timeleft <= 0) {
+                    window.location.href = "./xiaomi_aqara";
+                }
+            }, 1000);
+        }
+    </script>
+
+</html>
