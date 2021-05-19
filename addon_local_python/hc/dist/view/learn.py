@@ -1,11 +1,10 @@
-from flask import Flask, render_template, request, session, jsonify, send_file, Blueprint
-from yaml_util import yaml2dict, dict2yaml, is_nocontent
+from flask import render_template, request, session, jsonify, Blueprint
+from yaml_util import yaml2dict
 from utils import *
-from no_accent_vietnamese import no_accent_vietnamese
 import time
 from view.media import list_TV
 from view.climate import climate_rm
-from learn_command import learning_command_with_ir, learning_command_with_rf, learning_command_rf
+from learn_command import learning_command_with_ir, learning_command_rf
 mod = Blueprint('learn', __name__)
 
 
@@ -158,15 +157,14 @@ def hoc_lenh_dieu_hoa():
 
 @mod.route('/learn_command', methods=['POST'])
 def command_handle():
-    mac = request.args.get('mac')
-    ip = request.args.get('host')
-    p = learning_command_with_ir(mac, ip)
+    entity_id = request.args.get('entity_id')
+    
+    p = learning_command_with_ir(entity_id)
     return jsonify(result=p)
 
 
 @mod.route('/learn_command_rf', methods=['POST'])
 def command_handling():
-    mac = request.args.get('mac')
-    ip = request.args.get('host')
-    p = learning_command_rf(mac, ip)
+    entity_id = request.args.get('entity_id')
+    p = learning_command_rf(entity_id)
     return jsonify(result=p)

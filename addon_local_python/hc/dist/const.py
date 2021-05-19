@@ -8,26 +8,20 @@
 # data_file = '/Volumes/Data/Dropbox/09_home_assistant/18_ha_tool/data'
 # CODE_FILE = '/Volumes/Data/Dropbox/09_home_assistant/18_ha_tool/data/code.txt'
 
-# ROOT_DIR = '/usr/share/hassio/homeassistant/'
+ROOT_DIR = '/usr/share/hassio/homeassistant/'
 # ROOT_DIR = '/home/iwin/.homeassistant/'
-# data_file = '/media/iwin/DATA/intern/18_ha_tool/data'
-# CODE_FILE = '/media/iwin/DATA/intern/18_ha_tool/data/code.txt'
+data_file = '/media/iwin/DATA/intern/18_ha_tool/data'
+CODE_FILE = '/media/iwin/DATA/intern/18_ha_tool/data/code.txt'
 
+##Chạy trên 5005
 # ROOT_DIR = '/usr/share/hassio/homeassistant/'
 # data_file = '/usr/share/hassio/hatool/data'
 # CODE_FILE = '/usr/local/etc/code.txt'
 
-# ROOT_DIR = 'C:/Users/bacht/AppData/Roaming/.homeassistant'
-# data_file = 'D:/intern/18_ha_tool/data'
-# CODE_FILE = 'D:/intern/18_ha_tool/data/code.txt'
-
-# ROOT_DIR = '/usr/share/hassio/homeassistant/'
-# data_file = '/home/iwin/Desktop/intern/18_ha_tool/data'
-# CODE_FILE = '/home/iwin/Desktop/intern/18_ha_tool/data/code.txt'
-
-ROOT_DIR = '/config/'
-data_file = '/share/hatool/data'
-CODE_FILE = '/share/hatool/data/code.txt'
+##Addons configuration
+# ROOT_DIR = '/config/'
+# data_file = '/share/hatool/data'
+# CODE_FILE = '/usr/local/etc/code.txt'
 
 URL_STATE = 'http://127.0.0.1:8123/api/states'
 URL_SERVICE = 'http://127.0.0.1:8123/api/services'

@@ -21,49 +21,6 @@
                     style="float: right;">
                     Bấm vào đây để xem hướng dẫn
                 </a>
-                <!-- <div id='off'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel18'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel19'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel20'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel21'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel22'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel23'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel24'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel25'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel26'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel27'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel28'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel29'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div>
-                <div id='channel30'>
-                    <form action='./learn_command' method='POST' id='form2'></form>
-                </div> -->
-
 
 
                 <form style='margin-top:5%;' action='./hoc_lenh_dieu_hoa' method='POST' id='form1'>
@@ -363,7 +320,7 @@
             }
         }
         function get_code(obj) {
-            var gateway = document.getElementById("gateway").value;
+            var gateway = 'entity_id=' + $( "#gateway option:selected" ).text().trim();
             if (gateway == "") {
                 alert("Không có broadlink !");
             }
@@ -381,148 +338,6 @@
             }
         }
         function gatewayFunc() {
-            // document.getElementById('off').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'formoff'></form>";
-            // document.getElementById('channel18').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form18'></form>";
-            // document.getElementById('channel19').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form19'></form>";
-            // document.getElementById('channel20').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form20'></form>";
-            // document.getElementById('channel21').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form21'></form>";
-            // document.getElementById('channel22').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form22'></form>";
-            // document.getElementById('channel23').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form23'></form>";
-            // document.getElementById('channel24').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form24'></form>";
-            // document.getElementById('channel25').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form25'></form>";
-            // document.getElementById('channel26').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form26'></form>";
-            // document.getElementById('channel27').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form27'></form>";
-            // document.getElementById('channel28').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form28'></form>";
-            // document.getElementById('channel29').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form29'></form>";
-            // document.getElementById('channel30').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form30'></form>";
-
-            //     $(function () {
-            //         $('#cmd_off').bind('click', function () {
-            //             $('#cmd_off').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#off_res').val(data['result']);
-            //                 $('#cmd_off').prop('disabled', false);
-            //                 document.getElementById("countdown_off").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_18').bind('click', function () {
-            //             $('#cmd_18').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#18_res').val(data['result']);
-            //                 $('#cmd_18').prop('disabled', false);
-            //                 document.getElementById("countdown_18").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_19').bind('click', function () {
-            //             $('#cmd_19').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#19_res').val(data['result']);
-            //                 $('#cmd_19').prop('disabled', false);
-            //                 document.getElementById("countdown_19").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_20').bind('click', function () {
-            //             $('#cmd_20').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#20_res').val(data['result']);
-            //                 $('#cmd_20').prop('disabled', false);
-            //                 document.getElementById("countdown_20").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_21').bind('click', function () {
-            //             $('#cmd_21').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#21_res').val(data['result']);
-            //                 $('#cmd_21').prop('disabled', false);
-            //                 document.getElementById("countdown_21").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_22').bind('click', function () {
-            //             $('#cmd_22').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#22_res').val(data['result']);
-            //                 $('#cmd_22').prop('disabled', false);
-            //                 document.getElementById("countdown_22").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_23').bind('click', function () {
-            //             $('#cmd_23').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#23_res').val(data['result']);
-            //                 $('#cmd_23').prop('disabled', false);
-            //                 document.getElementById("countdown_23").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_24').bind('click', function () {
-            //             $('#cmd_24').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#24_res').val(data['result']);
-            //                 $('#cmd_24').prop('disabled', false);
-            //                 document.getElementById("countdown_24").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_25').bind('click', function () {
-            //             $('#cmd_25').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#25_res').val(data['result']);
-            //                 $('#cmd_25').prop('disabled', false);
-            //                 document.getElementById("countdown_25").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_26').bind('click', function () {
-            //             $('#cmd_26').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#26_res').val(data['result']);
-            //                 $('#cmd_26').prop('disabled', false);
-            //                 document.getElementById("countdown_26").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_27').bind('click', function () {
-            //             $('#cmd_27').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#27_res').val(data['result']);
-            //                 $('#cmd_27').prop('disabled', false);
-            //                 document.getElementById("countdown_27").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_28').bind('click', function () {
-            //             $('#cmd_28').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#28_res').val(data['result']);
-            //                 $('#cmd_28').prop('disabled', false);
-            //                 document.getElementById("countdown_28").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_29').bind('click', function () {
-            //             $('#cmd_29').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#29_res').val(data['result']);
-            //                 $('#cmd_29').prop('disabled', false);
-            //                 document.getElementById("countdown_29").innerHTML = "";
-            //             });
-            //         });
-
-            //         $('#cmd_30').bind('click', function () {
-            //             $('#cmd_30').prop('disabled', true);
-            //             $.post('./learn_command?' + gateway, function (data, status) {
-            //                 $('#30_res').val(data['result']);
-            //                 $('#cmd_30').prop('disabled', false);
-            //                 document.getElementById("countdown_30").innerHTML = "";
-            //             });
-            //         });
-            //     });
         }
 
 

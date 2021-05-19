@@ -19,7 +19,7 @@ echo "File ircode.json does not exist, copying $SRC/ircode.json to $DEST"
 cp -f "$SRC/ircode.json" "$DEST"
 fi
 
-echo "Update the other file of data directory"
+echo "Overwrite the latest configuration files"
 cp -f "$SRC/climate_code.json" "$DEST"
 cp -f "$SRC/api.json" "$DEST"
 cp -f "$SRC/config_mqtt.json" "$DEST"
@@ -31,8 +31,8 @@ cp -f "$SRC/code.txt" "$DEST"
 cp -f "$SRC/configuration_template.yaml" "$DEST"
 cp -f "$SRC/list_channel.csv" "$DEST"
 
-echo "Clean temp file"
+echo "Clean the temporary folder"
 rm -rf $SRC
 
-echo "Starting HC Tool..."
+echo "Starting Javis HC Tool..."
 /dist/main

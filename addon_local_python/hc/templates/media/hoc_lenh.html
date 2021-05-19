@@ -237,7 +237,7 @@
 
 <script>
     function get_code(obj) {
-        var gateway = document.getElementById("gateway").value;
+        var gateway = 'entity_id=' + $( "#gateway option:selected" ).text().trim();
         var attr = obj.id.split('_')[1];
         var cmd = '#cmd_' + attr;
         var countdown = "countdown_" + attr;

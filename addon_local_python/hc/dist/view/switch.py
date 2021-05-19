@@ -1,8 +1,6 @@
-from flask import Flask, render_template, request, redirect, session, jsonify, send_file, Blueprint
-from yaml_util import yaml2dict, dict2yaml, is_nocontent
+from flask import render_template, request, session, jsonify, Blueprint
+from yaml_util import yaml2dict, dict2yaml
 from utils import *
-from no_accent_vietnamese import no_accent_vietnamese
-import time
 import json
 from const import *
 import os
@@ -12,7 +10,6 @@ import re
 import socket
 import time
 from wifi_connector import *
-from learn_command import learning_command_with_ir, learning_command_with_rf, learning_command_rf
 mod = Blueprint('switch', __name__)
 
 

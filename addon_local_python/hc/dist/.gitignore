@@ -1,0 +1,11 @@
+**/__pycache__/*
+**/.vscode/*
+**/dist/*
+**/main.spec
+**/build/*
+**/data/test.json
+**/.DS_Store
+**/main
+##**/data/ircode.json
+**/data_file.json
+const.py

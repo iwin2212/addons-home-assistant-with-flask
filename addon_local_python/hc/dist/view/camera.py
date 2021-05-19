@@ -20,13 +20,15 @@ def camera():
             check_exist(filename)
             data = yaml2dict(filename)
             for item in data:
-                camera['name'] = item['name']
-                camera['platform'] = item['platform']
-                camera['still_image_url'] = item['still_image_url']
-                camera['ip'] = item['stream_source'].split(
-                    '@')[1].split(':')[0]
-                list_camera.append(camera)
-                camera = {}
+                try:
+                    camera['name'] = item['name']
+                    camera['platform'] = item['platform']
+                    camera['input'] = item['input']
+                    list_camera.append(camera)
+                    camera = {}
+                except Exception as error:
+                    logging.warning("Error: {}".format(error))
+                    continue
             return render_template('./camera/camera.html', list_camera=list_camera, info=info)
         return render_template('./login.html', error='')
     return render_template('./login.html', error='')
@@ -42,16 +44,15 @@ def add_camera():
         password = request.form['password']
         ip = request.form['ipaddr']
         port = request.form['port']
-        still_image_url = url = local_ip + name + '.jpg'
-        stream_source = 'rtsp://' + username + ':' + password + '@' + ip + ':' + port
+        params = request.form['params']
+        stream_source = 'rtsp://' + username + ':' + password + '@' + ip + ':' + port + params
         # save file to camera.yaml
         dict_camera = {}
         data = yaml2dict(os.path.join(ROOT_DIR, 'camera.yaml'))
 
-        dict_camera['platform'] = 'generic'
+        dict_camera['platform'] = 'ffmpeg'
         dict_camera['name'] = name
-        dict_camera['still_image_url'] = still_image_url
-        dict_camera['stream_source'] = stream_source
+        dict_camera['input'] = stream_source
 
         data.append(dict_camera)
         dict2yaml(data, os.path.join(ROOT_DIR, 'camera.yaml'))

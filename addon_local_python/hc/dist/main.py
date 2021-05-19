@@ -5,10 +5,11 @@ from const import *
 import os
 import requests
 from utils import *
-import time
 import subprocess
-import time
-app = Flask(__name__, static_folder='/static', template_folder='/templates') 
+##Addons
+# app = Flask(__name__, static_folder='/static', template_folder='/templates')
+##Chạy trực tiếp 5005
+app = Flask(__name__)
 app.config['SECRET_KEY'] = 'oh_so_secret'
 
 app.register_blueprint(air_condition.mod)
@@ -94,7 +95,6 @@ def change_password_handle():
 
 @app.route('/')
 def index():
-    cur = time.time()
     if 'logged_in' in session:
         if session['logged_in'] == True:
             return render_template('./index.html')
