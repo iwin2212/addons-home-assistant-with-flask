@@ -97,7 +97,7 @@
 </html>
 <script>
     function myFunc() {
-        x = document.getElementById('entity_id').value;
+        x = 'entity_id=' + $( "#entity_id option:selected" ).text().trim();
         document.getElementById('command_on').innerHTML = "<form action = '/learn_command?" + x + "' method = 'POST' id = 'form2'></form>";
         document.getElementById('command_off').innerHTML = "<form action = '/learn_command?" + x + "' method = 'POST' id = 'form3'></form>";
         $(function () {
@@ -122,7 +122,7 @@
     }
 
     function get_form() {
-        x = document.getElementById('entity_id').value;
-        document.getElementById('post').innerHTML = `<form action="./add_switch_co_san?` + x + `" method='POST' id='form1'></form>`;
+        s = document.getElementById('entity_id').value;
+        document.getElementById('post').innerHTML = `<form action="./add_switch_co_san?` + s + `" method='POST' id='form1'></form>`;
     }
 </script>

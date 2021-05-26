@@ -136,7 +136,7 @@
     }
 
     function gatewayFunc() {
-        gateway = document.getElementById('gateway').value;
+        gateway = 'entity_id=' + $( "#gateway option:selected" ).text().trim();
         document.getElementById('turn_on').innerHTML = "<form action='./learn_command?" + gateway + "' method = 'POST' id = 'form5'></form>";
 
 

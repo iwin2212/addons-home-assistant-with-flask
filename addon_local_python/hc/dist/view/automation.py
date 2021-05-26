@@ -1675,23 +1675,24 @@ def add_lock():
                             "after": after if after != "24:00" else "00:00",
                             "before": before if before != "24:00" else "00:00"
                         })
-                touch_lock = request.form['touch_lock'].split(',')
-                rfid_lock = request.form['rfid_lock'].split(',')
-                passcode_lock = request.form['passcode_lock'].split(',')
+                touch_lock = request.form['touch_lock']
+                rfid_lock = request.form['rfid_lock']
+                passcode_lock = request.form['passcode_lock']
                 list_string = []
                 string_ = ''
+
                 if (touch_lock != ''):
                     for i in touch_lock:
                         list_string.append(
-                            '((trigger.payload_json["action_source_name"] == "touch_unlock") and (trigger.payload_json["action_user"] == ' + i + "))")
+                            '((trigger.payload_json["action_source_name"] == "touch_unlock") and (trigger.payload_json["action_user"] == ' + i + '))')
                 if (passcode_lock != ''):
                     for i in passcode_lock:
                         list_string.append(
-                            '((trigger.payload_json["action_source_name"] == "keypad") and (trigger.payload_json["action_user"] == ' + i + "))")
+                            '((trigger.payload_json["action_source_name"] == "keypad") and (trigger.payload_json["action_user"] == ' + i + '))')
                 if (rfid_lock != ''):
                     for i in rfid_lock:
                         list_string.append(
-                            '((trigger.payload_json["action_source_name"] == "rfid_card_unlock") and (trigger.payload_json["action_user"] == ' + i + "))")
+                            '((trigger.payload_json["action_source_name"] == "rfid_card_unlock") and (trigger.payload_json["action_user"] == ' + i + '))')
                 for i in range(len(list_string)):
                     if (i < len(list_string) - 1):
                         string_ += list_string[i] + ' or '

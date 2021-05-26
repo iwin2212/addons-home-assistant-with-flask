@@ -1,4 +1,4 @@
-from view import air_condition, scripts_manager, newspaper, qrcode, media, gateway_xiaomi, sensor, wifi, homekit, alarm, automation, camera, sim, switch, climate, fan, light, xiaomi, learn, e_measure, gg_cast, switchbot, count_down
+from view import air_condition, scripts_manager, newspaper, qrcode, media, gateway_xiaomi, sensor, wifi, homekit, alarm, automation, camera, sim, switch, climate, fan, light, xiaomi, learn, e_measure, gg_cast, switchbot, count_down, spotify,telegram
 from flask import Flask, render_template, request, session, send_file
 from yaml_util import yaml2dict, dict2yaml
 from const import *
@@ -7,9 +7,9 @@ import requests
 from utils import *
 import subprocess
 ##Addons
-# app = Flask(__name__, static_folder='/static', template_folder='/templates')
+app = Flask(__name__, static_folder='/static', template_folder='/templates')
 ##Chạy trực tiếp 5005
-app = Flask(__name__)
+# app = Flask(__name__)
 app.config['SECRET_KEY'] = 'oh_so_secret'
 
 app.register_blueprint(air_condition.mod)
@@ -35,6 +35,8 @@ app.register_blueprint(e_measure.mod)
 app.register_blueprint(gg_cast.mod)
 app.register_blueprint(switchbot.mod)
 app.register_blueprint(count_down.mod)
+app.register_blueprint(spotify.mod)
+app.register_blueprint(telegram.mod)
 
 
 @app.route('/login')
@@ -402,4 +404,4 @@ def not_found():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=2021, debug=True)
+    app.run(host='0.0.0.0', port=2021, debug=False)

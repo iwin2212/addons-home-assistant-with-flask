@@ -19,16 +19,13 @@
             <div class='container'>
                 <h3 id="title">Công cụ quản lý JAVIS HC</h3>
 
-                <div id='error' class='alert alert-danger alert-dismissible' {% if error==null %} style="display: none;"
-                    {% endif %}>{{error}}</div>
+                <div id='error' class='alert alert-danger alert-dismissible' {% if error==null %} style="display: none;" {% endif %}>{{error}}</div>
                 <div class="row" id="menu-item">
                     <div class="col-md-12 col-12">
                         <ul class="list-group d-flex flex-row flex-wrap">
-                            <a style="color: #0066ff;" href='./qr'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./qr' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/qr-code.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/qr-code.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Mã QR Code
                             </a>
@@ -40,174 +37,136 @@
                                 </div>&nbsp;&nbsp;
                                 Thiết lập Configurator
                             </a> -->
-                            <a style="color: #0066ff;" href='./wifi'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./wifi' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/wifi-signal.png" class="img-fluid" alt="wifi" height="40"
-                                        width="40">
+                                    <img src="./static/icon/wifi-signal.png" class="img-fluid" alt="wifi" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Kết nối wifi
                             </a>
-                            <a style="color: #0066ff;" href='./add_scripts_home'
-                                class="fireWork list-group-item list-group-item-action w-50  d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./add_scripts_home' class="fireWork list-group-item list-group-item-action w-50  d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/035-scripts.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/035-scripts.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Quản lý kịch bản
                             </a>
 
-                            <a style="color: #0066ff;" href='./automation'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./automation' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/automation.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/automation.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Quản lý Tự động hóa
                             </a>
 
-                            <a style="color: #0066ff;" href='./switch_broadlink'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./switch_broadlink' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/voip-gateway.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/voip-gateway.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Thiết bị Broadlink
                             </a>
 
                             <!-- <a class = "list-group-item list-group-item-action w-50"><a  style="color: #0066ff;" href = './add_notify_service'>Thiết lập thiết bị gửi thông báo</a></a>  -->
-                            <a style="color: #0066ff;" href='./show_fully_broadlink'
-                                class="fireWork list-group-item list-group-item-action w-50  d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./show_fully_broadlink' class="fireWork list-group-item list-group-item-action w-50  d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/switch.png" class="img-fluid" alt="qrcode" height="30"
-                                        width="30">
+                                    <img src="./static/icon/switch.png" class="img-fluid" alt="qrcode" height="30" width="30">
                                 </div>&nbsp;&nbsp;
                                 Công tắc hồng ngoại, RF
                             </a>
 
-                            <a style="color: #0066ff;" href='./media_player'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./media_player' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/TV.svg" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/TV.svg" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Danh sách TV
                             </a>
 
-                            <a style="color: #0066ff;" href='./TV_remote'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./TV_remote' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/tv_remote.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/tv_remote.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Bộ điều khiển TV
                             </a>
 
-                            <a style="color: #0066ff;" href='./climate'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center ">
+                            <a style="color: #0066ff;" href='./climate' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center ">
                                 <div class="image-parent">
-                                    <img src="./static/icon/climate.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/climate.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Quản lý điều hoà
                             </a>
 
-                            <a style="color: #0066ff;" href="./climate_rm"
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href="./climate_rm" class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/ac_remote.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/ac_remote.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Bộ điều khiển điều hòa
                             </a>
 
-                            <a style="color: #0066ff;" href='./fan'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./fan' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/025-fan.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/025-fan.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Quản lý quạt (beta)
                             </a>
 
-                            <a style="color: #0066ff;" href='./list_fan'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./list_fan' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/005-remote-control.png" class="img-fluid" alt="qrcode"
-                                        height="40" width="40">
+                                    <img src="./static/icon/005-remote-control.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Bộ điều khiển quạt
                             </a>
 
 
-                            <a style="color: #0066ff;" href='./mqtt'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./mqtt' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/001-switch.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/001-switch.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Công tắc MQTT
                             </a>
 
-                            <a style="color: #0066ff;" href='./dooya_cover'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./dooya_cover' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/cover.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/cover.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Danh sách Rèm
                             </a>
 
-                            <a style="color: #0066ff;" href='./xiaomi_aqara'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./xiaomi_aqara' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/gateway.svg" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/gateway.svg" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Quản lý Gateway Xiaomi
                             </a>
 
-                            <a style="color: #0066ff;" href='./xiaomi_switch'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./xiaomi_switch' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/plug.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/plug.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Quản lý Ổ cắm Xiaomi
                             </a>
 
-                            <a style="color: #0066ff;" href='./xiaomi_robot'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./xiaomi_robot' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/003-robot-vacuum-cleaner.png" class="img-fluid" alt="qrcode"
-                                        height="40" width="40">
+                                    <img src="./static/icon/003-robot-vacuum-cleaner.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Quản lý Robot Xiaomi
                             </a>
 
-                            <a href='./light' style="color: #0066ff;"
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a href='./light' style="color: #0066ff;" class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/034-light-bulb.png" class="img-fluid" alt="qrcode"
-                                        height="40" width="40">
+                                    <img src="./static/icon/034-light-bulb.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Quản lí Đèn Yeelight
                             </a>
 
-                            <a href='./gg_cast' style="color: #0066ff;"
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a href='./gg_cast' style="color: #0066ff;" class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/gg_cast.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/gg_cast.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Quản lí thiết bị Google Cast
                             </a>
 
-                            <a style="color: #0066ff;" href="./alarm"
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href="./alarm" class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/030-alarm.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/030-alarm.png" class="img-fluid" alt="qrcode" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Thiết bị cảnh báo (beta)
                             </a>
@@ -225,24 +184,19 @@
                                 </div>&nbsp;&nbsp;
                                 Apple HomeKit (beta)
                             </a> -->
-                            <a style="color: #0066ff;" href='./switchbot'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./switchbot' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/switchbot.png" class="img-fluid" alt="camera" height="40"
-                                        width="40">
+                                    <img src="./static/icon/switchbot.png" class="img-fluid" alt="camera" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Công tắc Switchbot
                             </a>
-                            <a style="color: #0066ff;" href='./camera'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./camera' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/camera.png" class="img-fluid" alt="camera" height="40"
-                                        width="40">
+                                    <img src="./static/icon/camera.png" class="img-fluid" alt="camera" height="40" width="40">
                                 </div>&nbsp;&nbsp;
                                 Camera
                             </a>
-                            <a style="color: #0066ff;" href='./sim'
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href='./sim' class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
                                     <img src="./static/icon/sim.png" class="img-fluid" alt="sim" height="40" width="40">
                                 </div>&nbsp;&nbsp;
@@ -280,15 +234,22 @@
                             </div>&nbsp;&nbsp;
                             Báo nói (beta)
                         </a> -->
-                            <a style="color: #0066ff;" href="./e_measure"
-                                class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
+                            <a style="color: #0066ff;" href="./e_measure" class="fireWork list-group-item list-group-item-action w-50 d-flex align-items-center">
                                 <div class="image-parent">
-                                    <img src="./static/icon/eco-house.png" class="img-fluid" alt="qrcode" height="40"
-                                        width="40">
+                                    <img src="./static/icon/eco-house.png" class="img-fluid" alt="e_measure" height="40" width="40">
                                 </div>&nbsp;&nbsp;Bộ đo điện
                             </a>
+                            <a style="color: #0066ff;" href="./spotify" class="list-group-item list-group-item-action w-50 d-flex align-items-center">
+                                <div class="image-parent">
+                                    <img src="./static/icon/spotify.png" class="img-fluid" alt="spotify" height="40" width="40">
+                                </div>&nbsp;&nbsp;Cấu hình Spotify
+                            </a>
+                            <a style="color: #0066ff;" href="./telegram" class="list-group-item list-group-item-action w-50 d-flex align-items-center">
+                                <div class="image-parent">
+                                    <img src="./static/icon/telegram.png" class="img-fluid" alt="telegram" height="40" width="40">
+                                </div>&nbsp;&nbsp;Cấu hình Telegram
+                            </a>
                         </ul>
-
                     </div>
                 </div>
             </div>

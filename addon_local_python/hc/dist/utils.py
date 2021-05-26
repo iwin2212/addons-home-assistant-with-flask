@@ -1,13 +1,10 @@
-import time
-from datetime import datetime
 from websocket import create_connection
 from flask import request
 import requests
 import json
 from yaml_util import yaml2dict, dict2yaml
-from const import ROOT_DIR, data_file, CODE_FILE
+from const import ROOT_DIR, data_file
 import os
-import subprocess
 from subprocess import Popen, PIPE, STDOUT
 import zipfile
 import shutil
@@ -893,6 +890,10 @@ def write_ircode(IR_CODE):
     ircode_path = os.path.join(data_file, 'ircode.json')
     with open(ircode_path, 'w') as outfile:
         json.dump(IR_CODE, outfile, indent=4)
+
+
+def file_existed(path) -> bool:
+    return os.path.isfile(path)
 
 
 if __name__ == "__main__":

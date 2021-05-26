@@ -44,6 +44,19 @@
                                                 value="{{lock_automation['alias']}}" required>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td colspan='2'><strong>Thời gian hiệu lực</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Từ (giờ:phút)</td>
+                                        <td><input type='text' autocomplete="off" placeholder='Ví dụ 17:00' name='after'
+                                                class='hourPicker form-control' value="00:00"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Đến (giờ:phút)</td>
+                                        <td><input type='text' autocomplete="off" placeholder='Ví dụ 20:00'
+                                                name='before' class='hourPicker form-control' value="23:59"></td>
+                                    </tr>
                                 </table>
                             </td>
                         </tr>
@@ -631,10 +644,15 @@
     }
     list_entitys = {{ list_entity_id | tojson }};
     list_entity_name = {{ list_entity_name | tojson }};
-    lock_list = {{ lock_automation['condition'][0]['value_template'] | tojson }};
-
+    lock_list = {{ lock_automation['condition'] | tojson }};
+    
+    for (var i=0; i<lock_list.length; i++){
+        if (lock_list[i]["condition"] == "template"){
+            access_list = lock_list[i]["value_template"].split(' or ');
+        }
+    }
+    
     function get_lock() {
-        access_list = lock_list.split(' or ')
         for (i of access_list) {
             x = i.split('trigger.payload_json["action_user"] == ')[1].split('))')[0];
             if (i.search("touch_unlock") != -1) {

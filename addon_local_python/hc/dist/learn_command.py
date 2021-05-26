@@ -30,7 +30,7 @@ def learning_command(entity_id, command_type='ir') -> str:
     result = ws.recv()
 
     payload = json.dumps({"type": "execute_script", "sequence": [{"service": "remote.learn_command", "data": {
-                         "device": "learning_command", "command": "learn_via_ws", "command_type": command_type, "alternative": True, "timeout": 30, "entity_id": entity_id}}], "id": 32})
+                         "device": "learning_command", "command": "learn_via_ws", "command_type": command_type, "timeout": 30, "entity_id": entity_id}}], "id": 32})
     ws.send(payload)
     result = ws.recv()
     return json.loads(result)['success']
@@ -55,4 +55,4 @@ def get_broadlink_remote_codes(entity_id):
 
     with open(os.path.join(root, broadlink_file)) as json_file:
         data = json.load(json_file)['data']['learning_command']['learn_via_ws']
-    return data[0]
+    return data

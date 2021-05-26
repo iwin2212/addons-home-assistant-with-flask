@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Spotify</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Thiết lập tài khoản Spotify</h3>
+                <div class="alert alert-success alert-dismissible fade show" id="restart" role="alert" style="display: none;">
+                    Yêu cầu đã được thực hiện.
+                    Bạn vui lòng check config và khởi động lại hệ thống tại <a href="./homeassistant">đây</a>.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {%if require != ''%}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Bạn vui lòng check config và khởi động lại hệ thống tại <a href="./homeassistant">đây</a>.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {%endif%}
+                <a target="_blank" rel="noopener noreferrer" href="http://spotify.javisco.vn" style="float: right;">
+                    Bấm vào đây để xem hướng dẫn
+                </a>
+                <table class="table">
+                    <tr>
+                        <td colspan="3" style="background-color: #a1d3f7;"><strong>Tài khoản Spotify</strong></td>
+                    </tr>
+                    <tr>
+                        <td width="20%">Client id</td>
+                        <td><input type='text' id='client_id' name='client_id' value='{{spotify_data["spotify"]["client_id"]}}' class="form-control" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="20%">Client secret</td>
+                        <td><input type='text' id='client_secret' name='client_secret' value='{{spotify_data["spotify"]["client_secret"]}}'  class='form-control' required></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="background-color: #a1d3f7;"><strong>Tài khoản Spotcast</strong></td>
+                    </tr>
+                    <tr>
+                        <td width="20%">Spotcast dc</td>
+                        <td><input type='text' id='sp_dc' name='sp_dc' value='{{spotify_data["spotcast"]["sp_dc"]}}' class="form-control" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="20%">Spotcast key</td>
+                        <td><input type='text' id='sp_key' name='sp_key' value='{{spotify_data["spotcast"]["sp_key"]}}'  class='form-control' required></td>
+                    </tr>
+                </table>
+                <button class="btn btn-primary" type="button" onclick="save_data()">Lưu lại</button>
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+</html>
+
+<script src="./static/js/spotify.js"></script>
