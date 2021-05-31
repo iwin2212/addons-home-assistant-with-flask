@@ -896,5 +896,10 @@ def file_existed(path) -> bool:
     return os.path.isfile(path)
 
 
+def get_token():
+    secret_data = yaml2dict(os.path.join(ROOT_DIR, 'secrets.yaml'))
+    return secret_data['token']
+
+
 if __name__ == "__main__":
     compress_data("c.zip", "config_folder")

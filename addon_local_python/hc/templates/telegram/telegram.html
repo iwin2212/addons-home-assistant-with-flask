@@ -24,7 +24,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                {%if require != ''%}
+                {%if require == 'restart'%}
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     Bạn vui lòng check config và khởi động lại hệ thống tại <a href="./homeassistant">đây</a>.
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -51,7 +51,14 @@
                     </tr>
                     <tr>
                         <td width="20%">Username</td>
-                        <td><input type='text' id='user' name='user' value='{{telegram_data["notify"][1]["data"]["user"]}}' placeholder="Nhập username tài khoản telegram của bạn"  class='form-control' required></td>
+                        <td>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">@</span>
+                                </div>
+                                <input type='text' id='user' name='user' value='{{telegram_data["notify"][1]["data"]["user"]}}' placeholder="Nhập username tài khoản telegram của bạn" class='form-control' required>
+                            </div>
+                        </td>
                     </tr>
                     </tr>
                     <tr>
@@ -66,6 +73,7 @@
         {%include 'head_foot/footer.html' %}
         {%endblock%}
     </body>
+
 </html>
 
 <script src="./static/js/telegram.js"></script>

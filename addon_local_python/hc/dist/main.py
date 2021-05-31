@@ -1,4 +1,5 @@
-from view import air_condition, scripts_manager, newspaper, qrcode, media, gateway_xiaomi, sensor, wifi, homekit, alarm, automation, camera, sim, switch, climate, fan, light, xiaomi, learn, e_measure, gg_cast, switchbot, count_down, spotify,telegram
+from view import air_condition, scripts_manager, newspaper, qrcode, media, gateway_xiaomi, sensor, wifi, homekit, alarm, automation, camera, sim, switch, climate, fan, light, xiaomi, learn, e_measure, gg_cast, switchbot, count_down, spotify, telegram
+from view import update_ir
 from flask import Flask, render_template, request, session, send_file
 from yaml_util import yaml2dict, dict2yaml
 from const import *
@@ -6,9 +7,9 @@ import os
 import requests
 from utils import *
 import subprocess
-##Addons
+# Addons
 app = Flask(__name__, static_folder='/static', template_folder='/templates')
-##Chạy trực tiếp 5005
+# Chạy trực tiếp 5005
 # app = Flask(__name__)
 app.config['SECRET_KEY'] = 'oh_so_secret'
 
@@ -37,6 +38,7 @@ app.register_blueprint(switchbot.mod)
 app.register_blueprint(count_down.mod)
 app.register_blueprint(spotify.mod)
 app.register_blueprint(telegram.mod)
+app.register_blueprint(update_ir.mod)
 
 
 @app.route('/login')
@@ -178,7 +180,6 @@ def check_config():
     }
     res = requests.post(url_service, headers=headers)
     data = res.json()
-    # print(data)
     return render_template('./homeassistant.html', info='', config_result=data['result'], config_err=data['errors'])
 
 

@@ -24,14 +24,15 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                {%if require != ''%}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    Bạn vui lòng check config và khởi động lại hệ thống tại <a href="./homeassistant">đây</a>.
+                {%if require == 'error'%}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Bạn cần cài đặt component spotcast trước khi thiết lập ở màn hình này. Vui lòng xem hướng dẫn để biết thêm chi tiết tại <a target="_blank" rel="noopener noreferrer"  href="http://spotify.javisco.vn">đây</a>.
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                {%endif%}
+                {% else%}
+                
                 <a target="_blank" rel="noopener noreferrer" href="http://spotify.javisco.vn" style="float: right;">
                     Bấm vào đây để xem hướng dẫn
                 </a>
@@ -41,27 +42,28 @@
                     </tr>
                     <tr>
                         <td width="20%">Client id</td>
-                        <td><input type='text' id='client_id' name='client_id' value='{{spotify_data["spotify"]["client_id"]}}' class="form-control" required>
+                        <td><input type='text' id='client_id' name='client_id' value='{{spotify_data["spotify"]["client_id"]}}' placeholder="e30c6fd65fb8452cb2082bb5bce49ea4" class="form-control" required>
                         </td>
                     </tr>
                     <tr>
                         <td width="20%">Client secret</td>
-                        <td><input type='text' id='client_secret' name='client_secret' value='{{spotify_data["spotify"]["client_secret"]}}'  class='form-control' required></td>
+                        <td><input type='text' id='client_secret' name='client_secret' value='{{spotify_data["spotify"]["client_secret"]}}' placeholder="8493057f186245a6a457e4639972d838" class='form-control' required></td>
                     </tr>
                     <tr>
                         <td colspan="3" style="background-color: #a1d3f7;"><strong>Tài khoản Spotcast</strong></td>
                     </tr>
                     <tr>
                         <td width="20%">Spotcast dc</td>
-                        <td><input type='text' id='sp_dc' name='sp_dc' value='{{spotify_data["spotcast"]["sp_dc"]}}' class="form-control" required>
+                        <td><input type='text' id='sp_dc' name='sp_dc' value='{{spotify_data["spotcast"]["sp_dc"]}}' placeholder="AQAcHQ2YN7TZDliIFwzbUHDSR2ZJgaMsWNGIyDVdyBuUaM1EZuzuP7FZ2Gr04IW76DCgE5hla--vbbHbcnFzIBRolC17mAsBo2FuEQjGEoYQ2A" class="form-control" required>
                         </td>
                     </tr>
                     <tr>
                         <td width="20%">Spotcast key</td>
-                        <td><input type='text' id='sp_key' name='sp_key' value='{{spotify_data["spotcast"]["sp_key"]}}'  class='form-control' required></td>
+                        <td><input type='text' id='sp_key' name='sp_key' value='{{spotify_data["spotcast"]["sp_key"]}}' placeholder="ef4f9083-1efb-46c9-8c9d-3ec6aa870f3a"  class='form-control' required></td>
                     </tr>
                 </table>
                 <button class="btn btn-primary" type="button" onclick="save_data()">Lưu lại</button>
+                {%endif%}
             </div>
         </section>
         {%block content%}

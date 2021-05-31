@@ -12,7 +12,7 @@
         <script src="./static/js/bootstrap.min.js"></script>
     </head>
 
-    <body onload='myFunc();get_form()'>
+    <body onload='get_form()'>
         {%include 'head_foot/header.html'%}
         <section id='main'>
             <div class="container">
@@ -65,7 +65,7 @@
                                 placeholder="bấm nút học lệnh và làm theo hướng dẫn" required>
                         </td>
                         <td id='learn_command_on'>
-                            <input type='button' value='Học lệnh' form='form2' class='btn btn-primary' id='cmd_on'
+                            <input type='button' value='Học lệnh'  class='btn btn-primary' id='cmd_on' onclick="get_code(this)"
                                 class="btn btn-primary">
                         </td>
                     </tr>
@@ -77,7 +77,7 @@
                                 placeholder="bấm nút học lệnh và làm theo hướng dẫn" required>
                         </td>
                         <td id='learn_command_off'>
-                            <input type='button' value='Học lệnh' form='form3' class='btn btn-primary' id='cmd_off'
+                            <input type='button' value='Học lệnh' class='btn btn-primary' id='cmd_off' onclick="get_code(this)"
                                 class="btn btn-primary">
                         </td>
                     </tr>
@@ -96,28 +96,13 @@
 
 </html>
 <script>
-    function myFunc() {
+    function  get_code(en){
         x = 'entity_id=' + $( "#entity_id option:selected" ).text().trim();
-        document.getElementById('command_on').innerHTML = "<form action = '/learn_command?" + x + "' method = 'POST' id = 'form2'></form>";
-        document.getElementById('command_off').innerHTML = "<form action = '/learn_command?" + x + "' method = 'POST' id = 'form3'></form>";
-        $(function () {
-            $('#cmd_on').bind('click', function () {
-                $('#cmd_on').prop('disabled', true);
-                $.post('./learn_command?' + x, function (data, status) {
-                    document.getElementById("countdown").innerHTML = '';
-                    $('#cmd_on_res').val(data['result']);
-                    $('#cmd_on').prop('disabled', false);
-                });
-            });
-
-            $('#cmd_off').bind('click', function () {
-                $('#cmd_off').prop('disabled', true);
-                $.post('./learn_command?' + x, function (data, status) {
-                    document.getElementById("countdown2").innerHTML = '';
-                    $('#cmd_off_res').val(data['result']);
-                    $('#cmd_off').prop('disabled', false);
-                });
-            });
+        document.getElementById(en.id).disabled = true;
+        $.post('./learn_command?' + x, function (data, status) {
+            document.getElementById("countdown").innerHTML = '';
+            en.parentElement.parentElement.children[1].children[1].value = data['result'];
+            document.getElementById(en.id).disabled = false;
         });
     }
 

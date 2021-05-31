@@ -2,24 +2,42 @@ from flask import Blueprint, render_template, session
 from flask.globals import request
 from flask.json import jsonify
 from utils import file_existed
-from const import ROOT_DIR
-from account import spotify_account
+from const import ROOT_DIR, local_ip
 import os
 from yaml_util import yaml2dict, dict2yaml
 import shutil
 import logging
+import requests
 mod = Blueprint('spotify', __name__)
 
 
-def check_spotify_account(path=os.path.join(ROOT_DIR, "packages/spotify.yaml"), require='') -> dict:
-    if ((file_existed(path)) and file_existed(os.path.join(ROOT_DIR, "custom_components"))):
-        data = yaml2dict(path)
-        return data, require
-    else:
-        clone_custom_components()
-        dict2yaml(spotify_account, path)
-        require = "restart"
-        return spotify_account, require
+# def check_spotify_account(path=os.path.join(ROOT_DIR, "packages/spotify.yaml"), require='') -> dict:
+#     if ((file_existed(path)) and file_existed(os.path.join(ROOT_DIR, "custom_components/spotcast"))):
+#         data = yaml2dict(path)
+#         return data, require
+#     else:
+#         # clone_custom_components()
+#         # dict2yaml(spotify_account, path)
+#         require = "error"
+#         return spotify_account, require
+def check_spotify_account(require='') -> dict:
+    secret_file = os.path.join(ROOT_DIR, 'secrets.yaml')
+    url_service = 'http://'+local_ip+':8123/api/config/core/check_config'
+    data = yaml2dict(secret_file)
+    authen_code = data['token']
+    headers = {
+        "Authorization": "Bearer " + authen_code,
+        "content-type": "application/json"
+    }
+    res = requests.post(url_service, headers=headers)
+    data = res.json()
+    
+    if ((data['result'] ==  'invalid' and 'spotcast' in data['errors']) or os.path.isdir(os.path.join(ROOT_DIR, "custom_components/spotcast")) == False):
+        require = 'error'
+        spotify_yaml = os.path.join(ROOT_DIR, "packages/spotify.yaml")
+        if (file_existed(spotify_yaml)):
+            os.remove(spotify_yaml)
+    return require
 
 
 def clone_custom_components(temp_path=ROOT_DIR, dst=os.path.join(ROOT_DIR, "custom_components"), clone="git clone https://github.com/fondberg/spotcast.git") -> str:
@@ -48,8 +66,13 @@ def spotify():
     if 'logged_in' in session:
         if session['logged_in']:
             try:
-                spotify_data, require = check_spotify_account()
-                return render_template('./spotify/spotify.html', spotify_data=spotify_data, require=require)
+                require = check_spotify_account()
+                spotify_yaml_path = os.path.join(ROOT_DIR, "packages/spotify.yaml")
+                if (file_existed(spotify_yaml_path)):
+                    spotify_account = yaml2dict(spotify_yaml_path)
+                else:
+                    from account import spotify_account
+                return render_template('./spotify/spotify.html', spotify_data=spotify_account, require=require)
             except Exception as error:
                 logging.warning("Error: {}".format(error))
                 return render_template('./index.html', error='Thiết bị đang khởi động. Vui lòng thử lại sau')

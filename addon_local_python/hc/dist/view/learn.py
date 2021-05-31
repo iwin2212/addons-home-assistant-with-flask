@@ -88,7 +88,7 @@ def hoc_lenh_dieu_hoa():
                 data['minTemperature'] = 18.0
                 data['maxTemperature'] = 30.0
                 data['precision'] = 1.0
-                data["operationModes"] = ["cool", "heat", "off"]
+                data["operationModes"] = ["cool", "heat"]
                 data["fanModes"] = ["low", "mid", "high", "auto"]
                 data['commands']['off'] = request.form['buttonoff']
                 data['commands']['cool'] = {}
@@ -158,7 +158,6 @@ def hoc_lenh_dieu_hoa():
 @mod.route('/learn_command', methods=['POST'])
 def command_handle():
     entity_id = request.args.get('entity_id')
-    
     p = learning_command_with_ir(entity_id)
     return jsonify(result=p)
 

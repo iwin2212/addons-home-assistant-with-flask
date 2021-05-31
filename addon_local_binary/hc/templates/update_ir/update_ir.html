@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Update IR</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Cập nhật IR</h3>
+                <div class="alert alert-success alert-dismissible fade show" id="restart" role="alert" style="display: none;">
+                    Yêu cầu đã được thực hiện.
+                    Bạn vui lòng check config và khởi động lại hệ thống tại <a href="./homeassistant">đây</a>.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {%if require == 'error'%}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Bạn cần cài đặt component spotcast trước khi thiết lập ở màn hình này. Vui lòng xem hướng dẫn để biết thêm chi tiết tại <a target="_blank" rel="noopener noreferrer" href="http://spotify.javisco.vn">đây</a>.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% else%}
+
+                <table class="table">
+                    <tr>
+                        <td colspan="3" style="background-color: #a1d3f7;"><strong>Tài khoản Spotcast</strong></td>
+                    </tr>
+                </table>
+                <button class="btn btn-primary" type="button" onclick="">Lưu lại</button>
+                {%endif%}
+            </div>
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+</html>
+
+<script src="./static/js/spotify.js"></script>
