@@ -41,7 +41,9 @@ def add_climate_device():
             IR_CODE = load_ircode()
             list_ir = IR_CODE['climate']
             list_ir = {k: v for k, v in sorted(list_ir.items())}
-            return render_template('./air_condition/add_climate.html', list_gateway=list_broadlink, list_ir=list_ir)
+            
+            list_javis_ir = get_javis_dev()
+            return render_template('./air_condition/add_climate.html', list_gateway=list_broadlink, list_ir=list_ir, list_javis_ir=list_javis_ir)
         return render_template('./login.html', error='')
     return render_template('./login.html', error='')
 

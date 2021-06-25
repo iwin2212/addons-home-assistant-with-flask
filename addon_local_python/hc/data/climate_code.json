@@ -59,6 +59,20 @@
                 "max"
             ]
         },
+        "DAIKINVRV": {
+            "mode": [
+                "off",
+                "cool",
+                "dry",
+                "fan_only"
+            ],
+            "fan_mode": [
+                "auto",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
         "DAIKIN128": {
             "mode": [
                 "off",

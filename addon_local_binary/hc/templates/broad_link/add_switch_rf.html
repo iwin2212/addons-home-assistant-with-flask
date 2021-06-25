@@ -46,7 +46,7 @@
                                 onchange="get_form()" required>
                                 <option disabled>--Chọn 1 Broadlink RM4 Pro đã thiết lập--</option>
                                 {%for broadlink in list_broadlink%}
-                                <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}" {% if
+                                <option value="entity_id={{broadlink['entity_id']}}" {% if
                                     broadlink['entity_id']==entity_id %} selected {% endif %} {% if
                                     list_mac[loop.index-1] in list_mini_devices %} disabled {% endif %}>
                                     {{broadlink['entity_id']}}

@@ -6,3 +6,4 @@ broadlink==0.16.0
 flask_cors
 paho-mqtt
 websockets
+paho-mqtt

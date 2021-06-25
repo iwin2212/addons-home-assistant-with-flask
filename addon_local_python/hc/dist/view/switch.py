@@ -5,38 +5,10 @@ import json
 from const import *
 import os
 import requests
-import threading
-import re
 import socket
-import time
+from learn_command import learning_command
 from wifi_connector import *
 mod = Blueprint('switch', __name__)
-
-
-# xoa cac thiet bi sensor, climate, media
-# @mod.route('/delete_device', methods=['POST'])
-# def remove_device():
-#     item = request.args.get("item")
-#     mac = request.args.get("mac")
-#     if request.method == 'POST':
-#         filename = os.path.join(ROOT_DIR, item + '.yaml')
-#         list_device = yaml2dict(filename)
-#         devices = []
-#         for i in list_device:
-#             if 'mac' in i.keys():
-#                 if i['mac'] != mac:
-#                     devices.append(i)
-#             else:
-#                 devices.append(i)
-#         list_device = devices
-#         dict2yaml(list_device, filename)
-#         if item == 'climate':
-#             pre_url = 'air_condition' + '.'
-#         elif item == 'sensor' or item == 'media':
-#             pre_url = item + '.'
-#         else:
-#             pre_url = ''
-#         return redirect(url_for(pre_url+'show_' + item))
 
 
 @mod.route('/switch_broadlink')
@@ -47,10 +19,16 @@ def show_broadlink_switch():
         if info != None:
             info = "Thêm thiết bị thành công."
         list_broadlink = get_broadlink_device_from_api()
-        return render_template('./broad_link/switch_broadlink.html', info=info, list_broadlink=list_broadlink, eth0=eth0)
+        data_broadlink = []
+        model = []
+        for i in list_broadlink:
+            name = i['attributes']['friendly_name'].replace(" Remote", "")
+            data_broadlink.append(get_info_broadlink(name))
+            model.append(get_model_broadlink(name))
+        return render_template('./broad_link/switch_broadlink.html', info=info, list_broadlink=list_broadlink, eth0=eth0, data_broadlink=data_broadlink, model=model)
     except Exception as err:
         print(err)
-        return render_template('./index.html', error='Thiết bị đang khởi động. Vui lòng thử lại sau')
+        return render_template('./index.html', error='Home Assistant chưa sắn sàng. Vui lòng kiểm tra và thử lại')
 
 
 @mod.route('/show_fully_broadlink')
@@ -66,13 +44,13 @@ def show_fully_broadlink():
                 check_exist(filename)
                 list_device = yaml2dict(filename)
                 list_device = [
-                    i for i in list_device if i['platform'] == 'broadlink']
+                    i for i in list_device if( i['platform'] == 'broadlink' or (i['platform'] == 'mqtt' and ("/remote/nec" in i['command_topic'])))]
                 for i in list_device:
                     items.append(i)
                 list_entity_id = get_list_entity_id()
                 return render_template('./broad_link/fully_broadlink_devices.html', items=items, list_entity_id=list_entity_id, info=info)
             except:
-                return render_template('./index.html', error='Thiết bị đang khởi động. Vui lòng thử lại sau')
+                return render_template('./index.html', error='Home Assistant chưa sắn sàng. Vui lòng kiểm tra và thử lại')
         return render_template('./login.html', error='')
     return render_template('./login.html', error='')
 
@@ -246,15 +224,16 @@ def add_switch_rf():
 
 @mod.route('/pairing_rf', methods=['POST'])
 def pairing_rf():
-    mac = request.args.get('mac')
-    ip = request.args.get('host')
-    p = learning_command_with_rf(mac, ip)
+    entity_id = request.args.get('entity_id')
+    p = learning_command(entity_id, 'rf')
     return jsonify(result=p)
 
 
 @mod.route('/add_switch_rf', methods=['POST'])
 def add_switch_rf_handler():
-    mac = request.args.get('mac')
+    entity_id = request.form['entity_id'].split('.')[1].split('_remote')[0]
+    remote_data = get_info_broadlink(entity_id)
+    mac = remote_data[0]['data']['mac']
     mac = mac[0:2] + ':' + mac[2:4] + ':' + mac[4:6] + \
         ':' + mac[6:8] + ':' + mac[8:10] + ':' + mac[10:12]
     filename = os.path.join(ROOT_DIR, 'switch.yaml')
@@ -291,7 +270,8 @@ def add_switch_co_san():
         if session['logged_in'] == True:
             entity_id = request.args.get('entity_id')
             list_broadlink, list_mac, list_host = broadlink_devices_info()
-            return render_template('./broad_link/add_switch_co_san.html', entity_id=entity_id, list_broadlink=list_broadlink, list_mac=list_mac, list_host=list_host)
+            list_javis_ir = get_javis_dev()
+            return render_template('./broad_link/add_switch_co_san.html', entity_id=entity_id, list_javis_ir=list_javis_ir, list_broadlink=list_broadlink, list_mac=list_mac, list_host=list_host)
         return render_template('./login.html', error='')
     return render_template('./login.html', error='')
 
@@ -299,35 +279,47 @@ def add_switch_co_san():
 @mod.route('/add_switch_co_san', methods=['POST'])
 def add_switch_co_san_handler():
     mac = request.args.get('mac')
-    mac = mac[0:2] + ':' + mac[2:4] + ':' + mac[4:6] + \
-        ':' + mac[6:8] + ':' + mac[8:10] + ':' + mac[10:12]
     filename = os.path.join(ROOT_DIR, 'switch.yaml')
     list_switch_hub = yaml2dict(filename)
-    # print(request.form)
-    find_mac = 0
-    switch_data = {
-        "name": request.form["name"],
-        "command_on": request.form["command_on"],
-        "command_off": request.form["command_off"]
-    }
-    for switch in list_switch_hub:
-        if (switch.get('mac') == mac):
-            find_mac = 1
-            # xử lý với trường hợp các bộ HC chạy theo kiểu cũ
-            if (str(type(switch["switches"])) == "<class 'dict'>"):
-                switch["switches"] = [switch_data]
-            ##################################
-            else:
-                switch["switches"].append(switch_data)
-    if find_mac == 0:
-        data = {}
-        data['mac'] = mac
-        data['platform'] = "broadlink"
-        data["switches"] = []
-        data["switches"].append(switch_data)
+    if (mac != None):
+        mac = mac[0:2] + ':' + mac[2:4] + ':' + mac[4:6] + \
+            ':' + mac[6:8] + ':' + mac[8:10] + ':' + mac[10:12]
+        # print(request.form)
+        find_mac = 0
+        switch_data = {
+            "name": request.form["name"],
+            "command_on": request.form["command_on"],
+            "command_off": request.form["command_off"]
+        }
+        for switch in list_switch_hub:
+            if (switch.get('mac') == mac):
+                find_mac = 1
+                # xử lý với trường hợp các bộ HC chạy theo kiểu cũ
+                if (str(type(switch["switches"])) == "<class 'dict'>"):
+                    switch["switches"] = [switch_data]
+                ##################################
+                else:
+                    switch["switches"].append(switch_data)
+        if find_mac == 0:
+            data = {}
+            data['mac'] = mac
+            data['platform'] = "broadlink"
+            data["switches"] = []
+            data["switches"].append(switch_data)
+            list_switch_hub.append(data)
+        dict2yaml(list_switch_hub, filename)
+        return show_fully_broadlink()
+    else:
+        data = {
+            "command_topic": request.form["entity_id"] + "/remote/nec",
+            "name": request.form["name"],
+            "payload_off": request.form["command_off"],
+            "payload_on": request.form["command_on"],
+            "platform": "mqtt"
+        }
         list_switch_hub.append(data)
-    dict2yaml(list_switch_hub, filename)
-    return show_fully_broadlink()
+        dict2yaml(list_switch_hub, filename)
+        return show_fully_broadlink()
 
 
 @mod.route('/show_mqtt')

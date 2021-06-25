@@ -17,9 +17,8 @@
         <section id='main'>
             <div class="container">
 
-                <h3 id='title'>Công tắc hồng ngoại điều khiển qua Broadlink RM mini/Pro</h3>
-                <a target="_blank" rel="noopener noreferrer" href=" http://congtachongngoai.javisco.vn"
-                    style="float: right;">
+                <h3 id='title'>Công tắc hồng ngoại</h3>
+                <a target="_blank" rel="noopener noreferrer" href=" http://congtachongngoai.javisco.vn" style="float: right;">
                     Bấm vào đây để xem hướng dẫn
                 </a>
 
@@ -37,15 +36,22 @@
                     <tr>
                         <td>Chọn remote hồng ngoại</td>
                         <td>
-                            <select name='entity_id' id='entity_id' class='form-control' form='form1' required
-                                onchange='get_form()'>
-                                <option disabled>--Chọn 1 Broadlink RM mini/Pro đã thiết lập--</option>
-                                {%for broadlink in list_broadlink%}
-                                <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}" {% if
-                                    broadlink['entity_id']==entity_id %} selected {% endif %}>
-                                    {{broadlink['entity_id']}}
-                                </option>
-                                {%endfor%}
+                            <select name='entity_id' id='entity_id' class='form-control' form='form1' required onchange='get_form()'>
+                                <optgroup label="Broadlink RM mini/Pro">
+                                    {%for broadlink in list_broadlink%}
+                                    <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}" {% if broadlink['entity_id']==entity_id %} selected {% endif %}>
+                                        {{broadlink['entity_id']}}
+                                    </option>
+                                    {%endfor%}
+                                </optgroup>
+
+                                <optgroup label="Javishome IR">
+                                    {%for dev in list_javis_ir%}
+                                    <option>
+                                        {{dev['netid']}}
+                                    </option>
+                                    {%endfor%}
+                                </optgroup>
                             </select>
                         </td>
                         <td></td>
@@ -53,32 +59,27 @@
 
                     <tr>
                         <td>Tên công tắc hồng ngoại</td>
-                        <td><input type='text' name='name' class='form-control' form='form1'
-                                placeholder="Nên viết có dấu. Ví dụ: rèm cửa sổ" required></td>
+                        <td><input type='text' name='name' class='form-control' form='form1' placeholder="Nên viết có dấu. Ví dụ: rèm cửa sổ" required></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Lệnh bật (Command On)</td>
                         <td>
                             <div id="countdown" style="background-color: pink; align-content: center"></div>
-                            <input type='text' name='command_on' class='form-control' form='form1' id='cmd_on_res'
-                                placeholder="bấm nút học lệnh và làm theo hướng dẫn" required>
+                            <input type='text' name='command_on' class='form-control' form='form1' id='cmd_on_res' placeholder="bấm nút học lệnh và làm theo hướng dẫn" required>
                         </td>
                         <td id='learn_command_on'>
-                            <input type='button' value='Học lệnh'  class='btn btn-primary' id='cmd_on' onclick="get_code(this)"
-                                class="btn btn-primary">
+                            <input type='button' value='Học lệnh' class='btn btn-primary' id='cmd_on' onclick="get_code(this)" class="btn btn-primary">
                         </td>
                     </tr>
                     <tr>
                         <td>Lệnh tắt (Command Off)</td>
                         <td>
                             <div id="countdown2" style="background-color: pink; align-content: center"></div>
-                            <input type='text' name='command_off' class='form-control' form='form1' id='cmd_off_res'
-                                placeholder="bấm nút học lệnh và làm theo hướng dẫn" required>
+                            <input type='text' name='command_off' class='form-control' form='form1' id='cmd_off_res' placeholder="bấm nút học lệnh và làm theo hướng dẫn" required>
                         </td>
                         <td id='learn_command_off'>
-                            <input type='button' value='Học lệnh' class='btn btn-primary' id='cmd_off' onclick="get_code(this)"
-                                class="btn btn-primary">
+                            <input type='button' value='Học lệnh' class='btn btn-primary' id='cmd_off' onclick="get_code(this)" class="btn btn-primary">
                         </td>
                     </tr>
                 </table>
@@ -96,14 +97,25 @@
 
 </html>
 <script>
-    function  get_code(en){
-        x = 'entity_id=' + $( "#entity_id option:selected" ).text().trim();
-        document.getElementById(en.id).disabled = true;
-        $.post('./learn_command?' + x, function (data, status) {
-            document.getElementById("countdown").innerHTML = '';
-            en.parentElement.parentElement.children[1].children[1].value = data['result'];
-            document.getElementById(en.id).disabled = false;
-        });
+    function get_code(en) {
+        x = 'entity_id=' + $("#entity_id option:selected").text().trim();
+        if (x.search("remote") != -1) {
+            document.getElementById(en.id).disabled = true;
+            $.post('./learn_command?' + x, function (data, status) {
+                document.getElementById("countdown").innerHTML = '';
+                en.parentElement.parentElement.children[1].children[1].value = data['result'];
+                document.getElementById(en.id).disabled = false;
+            });
+        }
+        else {
+            document.getElementById(en.id).disabled = true;
+            $.post('./learning_with_smart_ir?' + x, function (data, status) {
+                console.log(data.cmd)
+                document.getElementById("countdown").innerHTML = '';
+                en.parentElement.parentElement.children[1].children[1].value = data.cmd;
+                document.getElementById(en.id).disabled = false;
+            });
+        }
     }
 
     function get_form() {

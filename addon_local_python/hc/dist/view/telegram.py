@@ -30,14 +30,20 @@ def telegram():
                 return render_template('./telegram/telegram.html', telegram_data=telegram_data)
             except Exception as error:
                 logging.warning("Error: {}".format(error))
-                return render_template('./index.html', error='Thiết bị đang khởi động. Vui lòng thử lại sau')
+                return render_template('./index.html', error='Home Assistant chưa sắn sàng. Vui lòng kiểm tra và thử lại')
         return render_template('./login.html', error='')
     return render_template('./login.html', error='')
 
 
 @mod.route('/save_telegram', methods=['POST'])
 def save_telegram():
-    acc = {'telegram_bot': [{'platform': 'polling', 'api_key': request.args.get('api_key'), 'allowed_chat_ids': [int(request.args.get('chat_id'))]}], 'notify': [{'platform': 'telegram', 'name': 'telegram', 'chat_id': int(request.args.get('chat_id'))}, {
-    'name': 'Telegram_Call', 'platform': 'rest', 'resource': 'http://api.callmebot.com/start.php', 'data': {'source': 'HA', 'user': "@" + "".join(str(request.args.get('user')).split("@")), 'lang': 'vi-VN-Wavenet-A', 'rpt': int(request.args.get('rpt'))}}]}
+    group_chat_id = request.args.get('group_chat_id')
+    if group_chat_id == "":
+        acc = {'telegram_bot': [{'platform': 'polling', 'api_key': request.args.get('api_key'), 'allowed_chat_ids': [int(request.args.get('chat_id'))]}], 'notify': [{'platform': 'telegram', 'name': 'telegram', 'chat_id': int(request.args.get('chat_id'))}, {
+        'name': 'Telegram_Call', 'platform': 'rest', 'resource': 'http://api.callmebot.com/start.php', 'data': {'source': 'HA', 'user': "@" + "".join(str(request.args.get('user')).split("@")), 'lang': 'vi-VN-Wavenet-A', 'rpt': int(request.args.get('rpt'))}}]}
+    else:
+        acc = {'telegram_bot': [{'platform': 'polling', 'api_key': request.args.get('api_key'), 'allowed_chat_ids': [int(request.args.get('chat_id')), -int(group_chat_id)]}], 'notify': [{'platform': 'telegram', 'name': 'telegram', 'chat_id': int(request.args.get('chat_id'))}, {
+        'name': 'Telegram_Call', 'platform': 'rest', 'resource': 'http://api.callmebot.com/start.php', 'data': {'source': 'HA', 'user': "@" + "".join(str(request.args.get('user')).split("@")), 'lang': 'vi-VN-Wavenet-A', 'rpt': int(request.args.get('rpt'))}}]}
+
     dict2yaml(acc, os.path.join(ROOT_DIR, "packages/telegram.yaml"))
     return jsonify({"require": "restart"})

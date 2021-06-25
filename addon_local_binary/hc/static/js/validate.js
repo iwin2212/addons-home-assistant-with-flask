@@ -84,3 +84,13 @@ function join_word(string) {
     var result = string_spl.join("_");
     return result;
 }
+
+function checkIsIPV4(entry) {
+    var blocks = entry.split(".");
+    if (blocks.length === 4) {
+        return blocks.every(function (block) {
+            return parseInt(block, 10) >= 0 && parseInt(block, 10) <= 255;
+        });
+    }
+    return false;
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>SmartIR Javishome</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./static/css/style.css">
+        <link rel="stylesheet" href="./static/css/style_switch_broadlink.css">
+        <script src="./static/js/jquery.min.js"></script>
+        <script src="./static/js/popper.min.js"></script>
+        <script src="./static/js/bootstrap.min.js"></script>
+        <script src="./static/js/validate.js"></script>
+    </head>
+
+    <body>
+        {%include 'head_foot/header.html'%}
+        <section id='main'>
+            <div class="container">
+                <h3 id='title'>Danh sách thiết bị hồng ngoại JAVIShome</h3>
+
+                <div id="delete_error" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                    <p id="error_text">Đã xảy ra lỗi khi thực hiện 'xoá'. Vui lòng thử lại sau</p>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div style="margin-top: 1%">
+                    <a class="btn btn-primary" href="./show_fully_broadlink" data-toggle="tooltip" title="Học lệnh bằng Javishome IR">Thêm công tắc IR hồng ngoại</a>
+                    <input id="add_device" class="btn btn-primary" onclick="show_info_table()" type="button" data-toggle="tooltip" title="Thêm thiết bị Javishome IR có sẵn trong mạng" value="Thêm thiết bị"></input>
+                </div>
+
+                <table id="info_table" class="table table-borderless" style="display: none;margin-top: 1%;  width: 50%;">
+                    <tr>
+                        <td colspan="3" style="background-color: #a1d3f7;"><strong>Nhập thông số bộ Javishome IR</strong></td>
+                    </tr>
+                    <tr>
+                        <td width="20%">Địa chỉ IP</td>
+                        <td>
+                            <input type='text' value="" onkeypress="hide_error()" class="form-control" placeholder="ví dụ: 192.168.1.100" required>
+                        </td>
+                        <td>
+                            <input class="btn btn-primary" onclick="connect_javis_ir(this)" id="connect" type="button" data-toggle="tooltip" title="Kết nối đến bộ Javishome" value="Kết nối"></input>
+                            <div style="display: none; margin: 2%;" id='pending' class="spinner-border text-primary"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" id="error" style="display: none;">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <p id="error_text">Địa chỉ IP được nhập bị sai cú pháp.</p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div style="margin-top: 1%">
+                    {% if device | length == 0%}
+                    <div id="no_broad" class="col-md-12">
+                        <h4>Không có thiết bị JAVIShome IR nào </h4>
+                    </div>
+                    {%else%}
+                    <table class="table" style="margin-top: 3%">
+                        <tr class="thead-light">
+                            <th>STT</th>
+                            <th>Thiết bị Broadlink</th>
+                            <th>Thông số chi tiết</th>
+                            <th>Hành động</th>
+                        </tr>
+                        {%for dev in device%}
+                        <tr>
+                            <td width="10%">{{loop.index}}</td>
+                            <td width="20%">
+                                <ul>
+                                    <li>{{dev['netid']}}</li>
+                                </ul>
+                            </td>
+                            <td width="55%">
+                                <ul>
+                                    <li>Mã thiết bị: {{dev['model']}}</li>
+                                    <li>Kiểu thiết bị: {{dev['type']}}</li>
+                                    <li>Phiên bản: {{dev['version']}}</li>
+                                    <li>Code: {{dev['code']}}</li>
+                                    <li>Build: {{dev['build']}}</li>
+                                    <li>Device ID: {{dev['device_id']}}</li>
+                                    <li>Phần cứng: {{dev['hardware']}}</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger" onclick="delete_dev({{dev['netid']}})">Xoá</button>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </table>
+                    {%endif%}
+                </div>
+            </div>
+
+        </section>
+        {%block content%}
+        {%include 'head_foot/footer.html' %}
+        {%endblock%}
+    </body>
+
+    <script src="./static/js/javis_ir.js"></script>
+
+</html>

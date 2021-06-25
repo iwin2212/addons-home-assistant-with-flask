@@ -36,10 +36,9 @@ def add_media_player_device():
             list_gateway = get_broadlink_device_from_api()
             IR_CODE = load_ircode()
             list_ir = IR_CODE['media_player']
-            # print(list_ir)
             list_ir = {k: v for k, v in sorted(list_ir.items())}
-            # print(list_ir)
-            return render_template('./media/add_media_player.html', list_gateway=list_gateway, list_ir=list_ir)
+            list_javis_ir = get_javis_dev()
+            return render_template('./media/add_media_player.html', list_gateway=list_gateway, list_ir=list_ir, list_javis_ir=list_javis_ir)
         return render_template('./login.html', error='')
     return render_template('./login.html', error='')
 
@@ -104,17 +103,21 @@ def media_off():
 @mod.route('/check_command_media_on', methods=['POST'])
 def media_on():
     gateway = request.args.get('gateway')
-    model = request.args.get('model')
-    mac, ip = from_entity_id_get_mac_ip(gateway)
-    model = model + '.json'
+    if (request.args.get('gateway') != None):
+        model = request.args.get('model')
+        mac, ip = from_entity_id_get_mac_ip(gateway)
+        model = model + '.json'
 
-    filedir = os.path.join(
-        ROOT_DIR + '/custom_components/smartir/codes/media_player/', model)
+        filedir = os.path.join(
+            ROOT_DIR + '/custom_components/smartir/codes/media_player/', model)
 
-    with open(filedir) as json_file:
-        data = json.load(json_file)
-        on_cmd = data['commands']['on']
-        sending_ir_packet(mac, ip, on_cmd)
+        with open(filedir) as json_file:
+            data = json.load(json_file)
+            on_cmd = data['commands']['on']
+            sending_ir_packet(mac, ip, on_cmd)
+    else:
+        # publish here
+        return
     return jsonify()
 
 
@@ -367,37 +370,70 @@ def tv_remote_handle():
 
 @mod.route('/hoc_lenh', methods=['POST'])
 def hoc_lenh_handle():
-    model = request.form['model']
-    manu = request.form['manufacture']
-    data = {}
-    data['commands'] = {}
-    data["manufacturer"] = manu
-    data['supportedModels'] = [model]
-    data['supportedController'] = "Broadlink"
-    data['commandsEncoding'] = "Base64"
-    data['commands']['on'] = request.form['turn_on']
-    data['commands']['off'] = request.form['turn_off']
-    data['commands']['previousChannel'] = request.form['previous_channel']
-    data['commands']['nextChannel'] = request.form['next_channel']
-    data['commands']['volumeUp'] = request.form['volume_up']
-    data['commands']['volumeDown'] = request.form['volume_down']
-    data['commands']['mute'] = request.form['mute']
-    data['commands']['sources'] = {}
-    for i in range(10):
-        data['commands']['sources']['Channel ' +
-                                    str(i)] = request.form['channel' + str(i)]
-    code = int(time.time())
-    filename = str(code) + '.json'
-    with open(os.path.join(ROOT_DIR, 'custom_components/smartir/codes/media_player', filename), 'w') as outfile:
-        json.dump(data, outfile, indent=4)
+    if (request.args.get('gateway') != None):
+        model = request.form['model']
+        manu = request.form['manufacture']
+        data = {}
+        data['commands'] = {}
+        data["manufacturer"] = manu
+        data['supportedModels'] = [model]
+        data['supportedController'] = "Broadlink"
+        data['commandsEncoding'] = "Base64"
+        data['commands']['on'] = request.form['turn_on']
+        data['commands']['off'] = request.form['turn_off']
+        data['commands']['previousChannel'] = request.form['previous_channel']
+        data['commands']['nextChannel'] = request.form['next_channel']
+        data['commands']['volumeUp'] = request.form['volume_up']
+        data['commands']['volumeDown'] = request.form['volume_down']
+        data['commands']['mute'] = request.form['mute']
+        data['commands']['sources'] = {}
+        for i in range(10):
+            data['commands']['sources']['Channel ' +
+                                        str(i)] = request.form['channel' + str(i)]
+        code = int(time.time())
+        filename = str(code) + '.json'
+        with open(os.path.join(ROOT_DIR, 'custom_components/smartir/codes/media_player', filename), 'w') as outfile:
+            json.dump(data, outfile, indent=4)
 
-    IR_CODE = load_ircode()
-    try:
-        IR_CODE['media_player'][manu][model] = code
-    except:
-        IR_CODE['media_player'][manu] = {}
-        IR_CODE['media_player'][manu][model] = code
-    write_ircode(IR_CODE)
+        IR_CODE = load_ircode()
+        try:
+            IR_CODE['media_player'][manu][model] = code
+        except:
+            IR_CODE['media_player'][manu] = {}
+            IR_CODE['media_player'][manu][model] = code
+        write_ircode(IR_CODE)
+    else:
+        model = request.form['model']
+        manu = request.form['manufacture']
+        data = {}
+        data['commands'] = {}
+        data["manufacturer"] = manu
+        data['supportedModels'] = [model]
+        data['supportedController'] = "MQTT"
+        data['commandsEncoding'] = "Base64"
+        data['commands']['on'] = request.form['turn_on']
+        data['commands']['off'] = request.form['turn_off']
+        data['commands']['previousChannel'] = request.form['previous_channel']
+        data['commands']['nextChannel'] = request.form['next_channel']
+        data['commands']['volumeUp'] = request.form['volume_up']
+        data['commands']['volumeDown'] = request.form['volume_down']
+        data['commands']['mute'] = request.form['mute']
+        data['commands']['sources'] = {}
+        for i in range(10):
+            data['commands']['sources']['Channel ' +
+                                        str(i)] = request.form['channel' + str(i)]
+        code = int(time.time())
+        filename = str(code) + '.json'
+        with open(os.path.join(ROOT_DIR, 'custom_components/smartir/codes/media_player', filename), 'w') as outfile:
+            json.dump(data, outfile, indent=4)
+
+        IR_CODE = load_ircode()
+        try:
+            IR_CODE['media_player'][manu][model] = code
+        except:
+            IR_CODE['media_player'][manu] = {}
+            IR_CODE['media_player'][manu][model] = code
+        write_ircode(IR_CODE)
     return list_TV()
 
 
@@ -406,7 +442,8 @@ def hoc_lenh():
     if 'logged_in' in session:
         if session['logged_in']:
             list_broadlink, list_mac, list_host = broadlink_devices_info()
-            return render_template('./media/hoc_lenh.html', list_broadlink=list_broadlink, list_mac=list_mac, list_host=list_host)
+            list_javis_ir = get_javis_dev()
+            return render_template('./media/hoc_lenh.html', list_broadlink=list_broadlink, list_mac=list_mac, list_host=list_host, list_javis_ir=list_javis_ir)
         else:
             return render_template('./login.html', error='')
     return render_template('./login.html', error='')

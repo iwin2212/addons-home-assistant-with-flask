@@ -25,15 +25,24 @@
                 </a>
                 <table class="table">
                     <tr>
-                        <td>Chọn bộ Broadlink RM</td>
+                        <td>Chọn bộ hồng ngoại</td>
                         <td>
-                            <select id="gateway" class='form-control' form='form1' name='gateway'
-                                onchange='gatewayFunc()'>
-                                {%for broadlink in list_broadlink%}
-                                <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}">
-                                    {{broadlink['entity_id']}}
-                                </option>
-                                {%endfor%}
+                            <select id="gateway" class='form-control' form='form1' name='gateway'>
+                                <optgroup label="Broadlink RM mini/Pro">
+                                    {%for broadlink in list_broadlink%}
+                                    <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}" {% if broadlink['entity_id']==entity_id %} selected {% endif %}>
+                                        {{broadlink['entity_id']}}
+                                    </option>
+                                    {%endfor%}
+                                </optgroup>
+
+                                <optgroup label="Javishome IR">
+                                    {%for dev in list_javis_ir%}
+                                    <option>
+                                        {{dev['netid']}}
+                                    </option>
+                                    {%endfor%}
+                                </optgroup>
                             </select>
                         </td>
                         <td></td>
@@ -243,11 +252,20 @@
         var countdown = "countdown_" + attr;
         var res = '#' + attr + "_res"
         $(cmd).prop('disabled', true);
-        $.post('./learn_command?' + gateway, function (data, status) {
-            $(res).val(data['result']);
-            $(cmd).prop('disabled', false);
-            document.getElementById(countdown).innerHTML = "";
-        });
+        if (gateway.search("remote") != -1) {
+            $.post('./learn_command?' + gateway, function (data, status) {
+                $(res).val(data['result']);
+                $(cmd).prop('disabled', false);
+                document.getElementById(countdown).innerHTML = "";
+            });
+        }
+        else {
+            $.post('./learning_with_smart_ir?' + gateway, function (data, status) {
+                $(res).val(data.cmd);
+                $(cmd).prop('disabled', false);
+                document.getElementById(countdown).innerHTML = "";
+            });
+        }
     }
 
 </script>

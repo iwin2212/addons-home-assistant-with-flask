@@ -47,7 +47,7 @@
                         </tr>
                     </table>
                     <input id="save" type="button" value="Connect" class="btn btn-primary">
-                    <!-- <button class="btn btn-primary" id type="submit">Connect</button> -->
+                    <div style="display: none;" id='pending' class="spinner-border text-primary"></div>
                     <div id="a"></div>
                 </form>
 
@@ -68,6 +68,8 @@
             }
         });
         $("#save").on('click', function () {
+            $("#save").hide();
+            $("#pending").show();
             setTimeout(function () {
                 $('#error_log').hide();
                 var x = $("#ip").val();
@@ -76,6 +78,7 @@
                     type: "GET",
                     success: function (data) {
                         try {
+                            $("#pending").hide();
                             res = JSON.parse(data);
                             type = res['model'];
                             for (i in type) {
@@ -84,9 +87,10 @@
                                 }
                             }
                             $('.con').remove();
-
+                            
                             $("table").append("<tr colspan='2'><td><div style='background-color: rgb(206, 255, 192); align-content: center'>Đã kết nối thành công bộ GSM</div></td></tr>");
                             $('#save').replaceWith(`<input id = "save" type = 'submit' value = "Lưu" class = "btn btn-primary" >`)
+                            $("#save").show();
                         }
                         catch (error) {
                             document.getElementById('error_log').innerHTML = data;

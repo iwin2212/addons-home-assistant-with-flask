@@ -34,6 +34,10 @@
                             broadlink</a><br>
                     </div>
                     <div>
+                        <a class="btn btn-outline-info submit-button2" href='./javis_ir'>Danh sách thiết bị
+                            Javishome IR</a><br>
+                    </div>
+                    <div>
                         <a class="btn btn-outline-info submit-button2" href='./add_switch_co_san?entity_id={{entity_id}}'>Thêm
                             công tắc hồng ngoại</a>
                     </div>
@@ -51,6 +55,36 @@
                             <th>Thao tác</th>
                         </tr>
                         {% for item in items %}
+                        {% if item['platform'] == "mqtt" %}
+                        <tr>
+                            <td width='15%'>
+                                <ul>
+                                    <li class="controller">{{item['command_topic'].split("/")[0]}}</li>
+                                </ul>
+                            </td>
+                            <td width='25%'>
+                                <ul>
+                                    <li><strong>Công tắc:</strong> {{item['name']}}</li>
+                                    <li><strong>Platform:</strong> {{item['platform']}}</li>
+                                </ul>
+                            </td>
+                            <td class='word-break' width='50%'>
+                                <ul>
+                                    <li><strong>command_on:</strong><br>
+                                        <p class="addReadMore showlesscontent">{{item['payload_on']}}</p>
+                                    </li>
+                                    <li><strong>command_off:</strong><br>
+                                        <p class="addReadMore showlesscontent">{{item['payload_off']}}</p>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td width='10%'>
+                                <form action='./delete_device_broadlink_with_mac?mac=' method='POST'>
+                                    <input onclick="return confirm('Bạn chắc chắn muốn xóa ?');" type="submit" value="Xoá" class="btn btn-danger">
+                                </form>
+                            </td>
+                        </tr>
+                        {%else%}
                         {% for x in item['switches'] %}
                         {% if x is mapping %}
                         <tr>
@@ -67,6 +101,7 @@
                                 <ul>
                                     <li><strong>Công tắc: </strong>{{x['name']}}</li>
                                     <li><strong>Địa chỉ Mac: </strong>{{item['mac']}}</li>
+                                    <li><strong>Platform:</strong> {{item['platform']}}</li>
                                 </ul>
                             </td>
                             <td class='word-break' width='50%'>
@@ -122,6 +157,7 @@
                         </tr>
                         {% endif %}
                         {%endfor%}
+                        {% endif %}
                         {% endfor %}
                     </table>
                 </div>

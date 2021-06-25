@@ -20,6 +20,15 @@
                 <h3 id='title'>Thiết lập cấu hình chung cho JAVIS HC</h3><br>
                 <div class="row">
                     <div class="col-md-12 col-12">
+                        <div class="border" style='padding:1%'>
+                            <h4 class="text-primary">Kiểm tra hệ thống</h4>
+                            <!-- <span>Kiểm tra file cấu hình trước khi khởi động lại dịch vụ của JAVIS HC Để không xảy ra
+                                lỗi. Chỉ khởi động lại dịch vụ Javis HC khi file cấu hình không có lỗi.</span><br><br> -->
+                            <div id="status_div" class='text-success'></div>
+                            <input type="submit" value="Dịch vụ HC nội bộ" onclick="check_mxapi()" class="btn btn-primary">
+                            <input type="submit" value="Kết nối HC đến CLOUD " onclick="check_mxha()" class="btn btn-primary">
+                            <input type="submit" value="Xoá LOG và giải phóng dung lượng" onclick="check_log()" class="btn btn-primary">
+                        </div>
                         <!-- <div class="border container" style='padding:1%'>
                             <h4 class="text-primary">Kiểm tra bản cập nhật JAVIS HC</h4>
                             <div id='update_hc_state' class='text-info' style="display: none;"><br>
@@ -120,8 +129,7 @@
                     </div>
                 </div>
                 <!-- Modal -->
-                <div id="asking_update" class="modal fade" tabindex="-1" role="dialog" style="margin-top: 10%;"
-                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div id="asking_update" class="modal fade" tabindex="-1" role="dialog" style="margin-top: 10%;" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -239,5 +247,6 @@
             }
         }
     </script>
+    <script src="./static/js/logging.js"></script>
 
 </html>

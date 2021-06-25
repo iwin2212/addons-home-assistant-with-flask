@@ -23,8 +23,7 @@
                     {{info}}
                 </div>
                 {%endif%}
-                <a target="_blank" rel="noopener noreferrer" href=" http://congtaccambien.javisco.vn"
-                    style="float: right;">
+                <a target="_blank" rel="noopener noreferrer" href=" http://congtaccambien.javisco.vn" style="float: right;">
                     Bấm vào đây để xem hướng dẫn
                 </a>
                 <form style="margin-top: 5%;" action='./add_switch_sensor' method='POST'>
@@ -47,21 +46,19 @@
                         <tr>
                             <td>Payload_off</td>
                             <td>
-                                <select class="form-control" id='payload_off' name="payload_off"
-                                    onchange="check_condition()" required>
+                                <select class="form-control" id='payload_off' name="payload_off" onchange="check_condition()" required>
                                     <option selected disabled value=""> -- Chọn kiểu -- </option>
                                     <option value='{"warning": {"duration": 1, "mode": "stop", "strobe": false}}'>
                                         {"warning": {"duration": 1, "mode": "stop", "strobe": false}}</option>
-                                    <option value='{"alarm”:false}'>
+                                    <option value='{"alarm":false}'>
                                         {"alarm":false}</option>
                                     <option value='{"humidity_alarm":false}'>
                                         {"humidity_alarm":false}</option>
-                                    <option value='{“temperature_alarm":false}'>
+                                    <option value='{"temperature_alarm":false}'>
                                         {"temperature_alarm":false}</option>
                                 </select>
                             </td>
-                            <td id='status1' style="display: none;"><img src="./static/icon/check.png" alt="OK"
-                                    height="20" width="20">
+                            <td id='status1' style="display: none;"><img src="./static/icon/check.png" alt="OK" height="20" width="20">
                             </td>
                             <td id='err1'><img src="./static/icon/close.png" alt="OK" height="20" width="20">
                             </td>
@@ -69,21 +66,19 @@
                         <tr>
                             <td>Payload_on</td>
                             <td>
-                                <select class="form-control" id='payload_on' name="payload_on"
-                                    onchange="check_condition()" required>
+                                <select class="form-control" id='payload_on' name="payload_on" onchange="check_condition()" required>
                                     <option selected disabled value=""> -- Chọn kiểu -- </option>
                                     <option value='{"warning": {"duration": 10, "mode": "emergency", "strobe": true}}'>
-                                        {"warning": {"10, "mode": "emergency", "strobe": true}}</option>
-                                    <option value='{"alarm”:true}'>
+                                        {"warning": {"duration": 10, "mode": "emergency", "strobe": true}}</option>
+                                    <option value='{"alarm":true}'>
                                         {"alarm":true}</option>
                                     <option value='{"humidity_alarm":true}'>
                                         {"humidity_alarm":true}</option>
-                                    <option value='{“temperature_alarm":true}'>
+                                    <option value='{"temperature_alarm":true}'>
                                         {"temperature_alarm":true}</option>
                                 </select>
                             </td>
-                            <td id='status2' style="display: none;"><img src="./static/icon/check.png" alt="OK"
-                                    height="20" width="20">
+                            <td id='status2' style="display: none;"><img src="./static/icon/check.png" alt="OK" height="20" width="20">
                             </td>
                             <td id='err2'><img src="./static/icon/close.png" alt="OK" height="20" width="20">
                             </td>

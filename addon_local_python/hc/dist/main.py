@@ -1,6 +1,6 @@
 from view import air_condition, scripts_manager, newspaper, qrcode, media, gateway_xiaomi, sensor, wifi, homekit, alarm, automation, camera, sim, switch, climate, fan, light, xiaomi, learn, e_measure, gg_cast, switchbot, count_down, spotify, telegram
-from view import update_ir
-from flask import Flask, render_template, request, session, send_file
+from view import update_ir, group, javis_ir
+from flask import Flask, render_template, request, session, send_file, jsonify
 from yaml_util import yaml2dict, dict2yaml
 from const import *
 import os
@@ -8,9 +8,9 @@ import requests
 from utils import *
 import subprocess
 # Addons
-app = Flask(__name__, static_folder='/static', template_folder='/templates')
+# app = Flask(__name__, static_folder='/static', template_folder='/templates')
 # Chạy trực tiếp 5005
-# app = Flask(__name__)
+app = Flask(__name__)
 app.config['SECRET_KEY'] = 'oh_so_secret'
 
 app.register_blueprint(air_condition.mod)
@@ -39,6 +39,8 @@ app.register_blueprint(count_down.mod)
 app.register_blueprint(spotify.mod)
 app.register_blueprint(telegram.mod)
 app.register_blueprint(update_ir.mod)
+app.register_blueprint(group.mod)
+app.register_blueprint(javis_ir.mod)
 
 
 @app.route('/login')
@@ -404,5 +406,47 @@ def not_found():
     return render_template('./error/not_found.html')
 
 
+@app.route('/check_mxapi', methods=['POST'])
+def check_mxapi():
+    url = "http://"+ local_ip +":123/check_mxapi"
+
+    headers = {
+        'Authorization': 'Bearer ' + get_token(),
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data={})
+
+    return jsonify(response.text)
+
+
+@app.route('/check_mxha', methods=['POST'])
+def check_mxha():
+    url = "http://"+ local_ip +":123/check_mxha"
+
+    headers = {
+        'Authorization': 'Bearer ' + get_token(),
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data={})
+
+    return jsonify(response.text)
+
+
+@app.route('/release_log', methods=['POST'])
+def release_log():
+    url = "http://"+ local_ip +":123/release_log"
+
+    headers = {
+        'Authorization': 'Bearer ' + get_token(),
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data={})
+
+    return jsonify(response.text)
+
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=2021, debug=False)
+    app.run(host='0.0.0.0', port=2021, debug=True)

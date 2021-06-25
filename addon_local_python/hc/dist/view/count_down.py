@@ -20,7 +20,7 @@ def show_count_down():
                 list_climate = yaml2dict(climate_file)
                 return render_template('./count_down/count_down_home.html')
             except:
-                return render_template('./index.html', error='Thiết bị đang khởi động. Vui lòng thử lại sau')
+                return render_template('./index.html', error='Home Assistant chưa sắn sàng. Vui lòng kiểm tra và thử lại')
         return render_template('./login.html', error='')
     return render_template('./login.html', error='')
 

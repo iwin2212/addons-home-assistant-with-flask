@@ -49,11 +49,10 @@
                             <tr>
                                 <td width="10%">{{loop.index}}</td>
                                 <td width="40%">{{list_scripts[item]['alias']}}</td>
-                                <td width="20%"><a href="./homeassistant" class="link_item">Kiểm tra</a></td>
-                                <td width="15%"><a href="./add_scripts_recall_edit?id_item={{item}}"
-                                        class="link_item">Sửa</a></td>
-                                <td width="15%"><a href="./add_scripts_recall_delete?id_item={{item}}" class="link_item"
-                                        onclick="return confirm('Bạn chắc chắn muốn xóa ?');">Xóa</a></td>
+                                <td><button type="button" class="btn btn-primary" onclick='window.location.href="./homeassistant";'>Kiểm tra</button></td>
+                                <td><button class="btn btn-warning" onclick='window.location.href="./add_scripts_recall_edit?id_item={{item}}";'>Sửa</button></td>
+                                <td><button class="btn btn-danger" onclick='window.location.href="./add_scripts_recall_delete?id_item={{item}}";'
+                                        onclick="return confirm('Bạn chắc chắn muốn xóa ?');">Xóa</button></td>
                             </tr>
                             {%endfor%}
                         </tbody>

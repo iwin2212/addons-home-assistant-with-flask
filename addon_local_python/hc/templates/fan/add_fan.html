@@ -22,19 +22,27 @@
                     <table class="table">
                         <tr>
                             <td>Tên quạt</td>
-                            <td><input type='text' name='name' class="form-control" placeholder="ví dụ: quạt phòng ngủ"
-                                    required></td>
+                            <td><input type='text' name='name' class="form-control" placeholder="ví dụ: quạt phòng ngủ" required></td>
                         </tr>
                         <tr>
                             <td>Địa chỉ GATEWAY</td>
                             <td>
                                 <select id="entity_id" name='gateway' class='form-control' value="" required>
-                                    <option disabled selected value> -- Chọn remote -- </option>
-                                    {%for broadlink in list_broadlink%}
-                                    <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}">
-                                        {{broadlink['entity_id']}}
-                                    </option>
-                                    {%endfor%}
+                                    <optgroup label="Broadlink RM mini/Pro">
+                                        {%for broadlink in list_broadlink%}
+                                        <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}">
+                                            {{broadlink['entity_id']}}
+                                        </option>
+                                        {%endfor%}
+                                    </optgroup>
+
+                                    <optgroup label="Javishome IR">
+                                        {%for dev in list_javis_ir%}
+                                        <option>
+                                            {{dev['netid']}}
+                                        </option>
+                                        {%endfor%}
+                                    </optgroup>
                                 </select>
                             </td>
                         </tr>
@@ -53,8 +61,7 @@
                         <tr id='code'>
                             <td>Mã Code</td>
                             <td id="code">
-                                <input type='text' name='device_code' class='form-control' required
-                                    placeholder="nhập số nguyên dương, ví dụ: 1000">
+                                <input type='text' name='device_code' class='form-control' required placeholder="nhập số nguyên dương, ví dụ: 1000">
                             </td>
                         </tr>
 

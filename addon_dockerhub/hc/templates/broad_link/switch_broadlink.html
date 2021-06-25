@@ -63,23 +63,27 @@
                     <table style="margin-top: 1%" class='table table-borderless table-hover'>
                         <tr class="thead-light">
                             <th>STT</th>
-                            <th>Danh sách thiết bị Broadlink</th>
-                            <th>Tên</th>
-                            <th>Chi tiết</th>
+                            <th>Thiết bị Broadlink</th>
+                            <th>Thông số chi tiết</th>
+                            <th>Danh sách</th>
                             <th>Hành động</th>
                         </tr>
-
                         {%for broadlink in list_broadlink%}
                         <tr>
                             <td width="10%">{{loop.index}}</td>
-                            <td width="40%">
+                            <td width="20%">
                                 <ul>
                                     <li>{{broadlink['entity_id']}}</li>
                                 </ul>
                             </td>
-                            <td width="15%">
+                            <td width="35%">
                                 <ul>
-                                    <li>{{broadlink['attributes']['friendly_name'].split(' Remote')[0]}}</li>
+                                    <li>Tên thiết bị: {{data_broadlink[loop.index-1][0]['title']}}</li>
+                                    <li>Trạng thái: <strong {% if broadlink['state']=='unavailable' %}style="color: red;" {% else %} style="color: green; " {% endif %}>{{broadlink['state']}}</strong></li>
+                                    <li>Địa chỉ IP: <strong>{{data_broadlink[loop.index-1][0]['data']['host']}}</strong></li>
+                                    <li>Địa chỉ MAC: <strong>{{data_broadlink[loop.index-1][0]['data']['mac']}}</strong></li>
+                                    <li>Loại: {{model}}</li>
+                                    <li>Timeout: {{data_broadlink[loop.index-1][0]['data']['timeout']}}</li>
                                 </ul>
                             </td>
                             <td width="25%">

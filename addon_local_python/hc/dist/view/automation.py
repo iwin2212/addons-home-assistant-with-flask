@@ -531,7 +531,7 @@ def add_bathroom_automation():
                             "to": "on",
                             "entity_id": door
                         }],
-                        "condition": effective_time_condition + switch_condition_off,
+                        "condition": effective_time_condition + switch_condition_off + [{"condition": "numeric_state", "entity_id": "sensor.ha_uptime", "above": 1}],
                         "action": action_on
                     }
                 else:
@@ -543,7 +543,7 @@ def add_bathroom_automation():
                             "to": "on",
                             "entity_id": door
                         }],
-                        "condition": effective_time_condition + switch_condition_off,
+                        "condition": effective_time_condition + switch_condition_off + [{"condition": "numeric_state", "entity_id": "sensor.ha_uptime", "above": 1}],
                         "action": action_on + [{"data": {"entity_id": "automation." + name.replace(" ", "_") + code + "6"}, "service": "automation.turn_on"}, {"data": {"entity_id": "automation." + name.replace(" ", "_") + code + "7"}, "service": "automation.turn_on"}]
                     }
                 # kịch bản 2 ###################################################

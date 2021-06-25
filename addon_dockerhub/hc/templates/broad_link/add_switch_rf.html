@@ -35,18 +35,13 @@
                 </a>
                 <table class="table">
                     <tr>
-                        <td colspan="2" id='instruction' style="color: #830B29;"><big>Bước 1: chọn bộ Broadlink RM4
-                                Pro và nhập tên công tắc RF</big></td>
-                    </tr>
-
-                    <tr>
                         <td>Chọn bộ Broadlink RM4 Pro</td>
                         <td>
                             <select name='entity_id' id='entity_id' class='form-control' form='form1'
                                 onchange="get_form()" required>
                                 <option disabled>--Chọn 1 Broadlink RM4 Pro đã thiết lập--</option>
                                 {%for broadlink in list_broadlink%}
-                                <option value="mac={{list_mac[loop.index-1]}}&host={{list_host[loop.index-1]}}" {% if
+                                <option value="entity_id={{broadlink['entity_id']}}" {% if
                                     broadlink['entity_id']==entity_id %} selected {% endif %} {% if
                                     list_mac[loop.index-1] in list_mini_devices %} disabled {% endif %}>
                                     {{broadlink['entity_id']}}
@@ -62,32 +57,8 @@
                                 placeholder="Nên viết có dấu. Ví dụ: rèm cửa sổ" required></td>
                         <td></td>
                     </tr>
-                    <tr>
-                        <td colspan="2" id='instruction2' style="display: none; color: #830B29;"><big>Bước 2: Nhận
-                                dạng
-                                tần số RF bằng cách <b>"Bấm và Giữ"</b> một nút bất kỳ trên điều khiển đến khi có
-                                thông báo thành công</big></td>
-                    </tr>
 
-                    <tr>
-                        <td></td>
-                        <td id='pairing' style="display: none;">
-                            <input type='button' onclick="pairing_rf()" value='Tiến hành nhận dạng' form='form4'
-                                class='btn btn-primary' id='pair' name='pairing' class="btn btn-primary">
-                            <input style="display: none;" type='text' name='command_on' class='form-control'
-                                id='pair_res' required>
-                            <div id="countdown3" style="background-color: rgb(206, 255, 192); align-content: center">
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td colspan="2" id='instruction3' style="display: none; color: #830B29;"><big>Bước 3: Tiến
-                                hành
-                                học lệnh cho từng nút</big></td>
-                    </tr>
-
-                    <tr id='command_on' style="display: none;">
+                    <tr id='command_on'>
                         <td>Lệnh bật (Command On)</td>
                         <td>
                             <div id="countdown" style="background-color: pink; align-content: center"></div>
@@ -99,7 +70,7 @@
                                 class='btn btn-primary' id='cmd_on' class="btn btn-primary">
                         </td>
                     </tr>
-                    <tr id='command_off' style="display: none;">
+                    <tr id='command_off'>
                         <td>Lệnh tắt (Command Off)</td>
                         <td>
                             <div id="countdown2" style="background-color: pink; align-content: center"></div>
@@ -112,7 +83,7 @@
                         </td>
                     </tr>
                 </table>
-                <input id="save" style="display: none;" type='submit' value='Lưu' class="btn btn-primary" form='form1'>
+                <input id="save" type='submit' value='Lưu' class="btn btn-primary" form='form1'>
                 </form>
 
             </div>

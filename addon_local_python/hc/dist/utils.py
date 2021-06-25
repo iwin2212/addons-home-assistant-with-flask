@@ -901,5 +901,66 @@ def get_token():
     return secret_data['token']
 
 
+def get_info_broadlink(name) -> dict:
+    with open(os.path.join(ROOT_DIR, ".storage", "core.config_entries")) as json_file:
+        config_entries = json.load(json_file)['data']['entries']
+    try:
+        data = [device for device in config_entries if device["domain"]
+                == "broadlink" and device["title"] == name]
+        return data
+    except Exception as error:
+        print(error)
+        return
+
+
+def get_model_broadlink(name) -> dict:
+    with open(os.path.join(ROOT_DIR, ".storage", "core.device_registry")) as json_file:
+        devices_data = json.load(json_file)['data']['devices']
+    try:
+        model = [device for device in devices_data if "broadlink" in device["identifiers"]
+                 [0] and device["name"] == name][0]['model']
+        return model
+    except:
+        return
+
+
+# int to bytes && vice versa
+def int_to_bytes(x: int) -> bytes:
+    return x.to_bytes((x.bit_length() + 7) // 8, 'big')
+
+
+def int_from_bytes(xbytes: bytes) -> int:
+    return int.from_bytes(xbytes, 'big')
+
+
+def get_info_dev(ip):
+    try:
+        url = "http://"+ip+"/api/info"
+
+        payload = ""
+        headers = {
+            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1YTg4NGFiZmZlMTU0MDM3OGUyYzBkYjhkMzhlM2IyNCIsImlhdCI6MTYyMjM4NjU0OSwiZXhwIjoxOTM3NzQ2NTQ5fQ.nsHUhjshUyBq4qxLFZPa_pPvBh_M_Fw-K7hYkjyVv78',
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+        return (response.json())
+    except Exception as error:
+        return {"error": str(error)}
+
+
+def get_javis_dev():
+    try:
+        with open(os.path.join(data_file, "javishome_device.json")) as json_file:
+            return json.load(json_file)
+    except:
+        return []
+
+
+def write_javis_dev(javis_dev):
+    with open(os.path.join(data_file, "javishome_device.json"), 'w') as json_file:
+        json.dump(javis_dev, json_file, indent=4)
+
+
 if __name__ == "__main__":
     compress_data("c.zip", "config_folder")

@@ -75,7 +75,7 @@ def spotify():
                 return render_template('./spotify/spotify.html', spotify_data=spotify_account, require=require)
             except Exception as error:
                 logging.warning("Error: {}".format(error))
-                return render_template('./index.html', error='Thiết bị đang khởi động. Vui lòng thử lại sau')
+                return render_template('./index.html', error='Home Assistant chưa sắn sàng. Vui lòng kiểm tra và thử lại')
         return render_template('./login.html', error='')
     return render_template('./login.html', error='')
 

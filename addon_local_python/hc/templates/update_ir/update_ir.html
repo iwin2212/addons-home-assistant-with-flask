@@ -17,29 +17,41 @@
         <section id='main'>
             <div class="container">
                 <h3 id='title'>Cập nhật IR</h3>
-                <div class="alert alert-success alert-dismissible fade show" id="restart" role="alert" style="display: none;">
-                    Yêu cầu đã được thực hiện.
+                <div class="alert alert-success alert-dismissible fade show" id="note" role="alert" style="display: none;">
+                    SmartIR đã cập nhật thành công.
                     Bạn vui lòng check config và khởi động lại hệ thống tại <a href="./homeassistant">đây</a>.
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                {%if require == 'error'%}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    Bạn cần cài đặt component spotcast trước khi thiết lập ở màn hình này. Vui lòng xem hướng dẫn để biết thêm chi tiết tại <a target="_blank" rel="noopener noreferrer" href="http://spotify.javisco.vn">đây</a>.
+
+                {% if restart == "OK" %}
+                    {% if "smartir.update_component" in update %}
+                    <div class="alert alert-info alert-dismissible fade show" id="update_div" role="alert">
+                        SmartIR đã có bản cập nhật mới <strong>{{update.split("(")[1].split(")")[0]}}</strong>. Bấm nút cập nhật để cập nhật lên phiên bản SmartIR mới nhất.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <button class="btn btn-primary" type="button" id="update_btn" onclick="update()">Cập nhật</button>
+                    {% else %}
+                    <div class="alert alert-success alert-dismissible fade show" id="update_div" role="alert">
+                        SmartIR hiện đang là bản cập nhật mới nhật.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endif %}
+                {% else %}
+                <div class="alert alert-danger alert-dismissible fade show" id="update_div" role="alert">
+                    Bạn cần khởi động lại Home Assistant để sử dụng chức năng này.<br>
+                    Bạn vui lòng check config và khởi động lại hệ thống tại <a href="./homeassistant">đây</a>.
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                {% else%}
-
-                <table class="table">
-                    <tr>
-                        <td colspan="3" style="background-color: #a1d3f7;"><strong>Tài khoản Spotcast</strong></td>
-                    </tr>
-                </table>
-                <button class="btn btn-primary" type="button" onclick="">Lưu lại</button>
-                {%endif%}
+                {% endif %}
+                <div style="display: none;" id='pending' class="spinner-border text-primary"></div>
             </div>
         </section>
         {%block content%}
@@ -48,4 +60,4 @@
     </body>
 </html>
 
-<script src="./static/js/spotify.js"></script>
+<script src="./static/js/update_ir.js"></script>

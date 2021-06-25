@@ -1,0 +1,13 @@
+[
+    {
+        "device_id": "ecfabc734560",
+        "type": "Generic Wi-Fi Device",
+        "netid": "260561647650144",
+        "model": "JSIR01",
+        "version": "1.5.0",
+        "code": "4133451433",
+        "build": 66,
+        "hardware": "JSIR01_MYQ_TYWE3S_IO_DC4",
+        "ip": "192.168.1.55"
+    }
+]

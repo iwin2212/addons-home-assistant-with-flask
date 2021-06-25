@@ -25,27 +25,33 @@
                     <table class="table">
                         <tr>
                             <td width="35%">Tên TV</td>
-                            <td><input type='text' name='name' class="form-control" placeholder="Ví dụ: TV Sony"
-                                    required>
+                            <td><input type='text' name='name' class="form-control" placeholder="Ví dụ: TV Sony" required>
                             </td>
                         </tr>
                         <tr>
                             <td width="35%">Chọn remote hồng ngoại</td>
                             <td>
-                                <select id="entity_id" name='gateway' class='form-control' onchange="show_brand()"
-                                    required>
-                                    <option disabled selected value>-- Chọn remote --</option>
-                                    {%for gateway in list_gateway%}
-                                    <option>{{gateway['entity_id']}}</option>
-                                    {%endfor%}
+                                <select id="entity_id" name='gateway' class='form-control' onchange="show_brand()" required>
+                                    <optgroup label="Broadlink RM mini/Pro">
+                                        {%for gateway in list_gateway%}
+                                        <option>{{gateway['entity_id']}}</option>
+                                        {%endfor%}
+                                    </optgroup>
+
+                                    <optgroup label="Javishome IR">
+                                        {%for dev in list_javis_ir%}
+                                        <option>
+                                            {{dev['netid']}}
+                                        </option>
+                                        {%endfor%}
+                                    </optgroup>
                                 </select>
                             </td>
                         </tr>
                         <tr id='device' style="display: none;">
                             <td width="35%">Chọn hãng sản xuất</td>
                             <td>
-                                <select name='model' onchange="myFunc({{list_ir}})" id='model' class='form-control'
-                                    required>
+                                <select name='model' onchange="myFunc({{list_ir}})" id='model' class='form-control' required>
                                     <option disabled selected value>--Chọn hãng từ danh sách--</option>
                                     {% for model in list_ir%}
                                     <option>{{model}}</option>
@@ -57,8 +63,7 @@
                         <tr id='code' style="display: none;">
                             <td width="35%">Mã thiết bị</td>
                             <td>
-                                <input type='text' name='device_code' class='form-control' required
-                                    placeholder="nhập số nguyên dương, ví dụ: 1000">
+                                <input type='text' name='device_code' class='form-control' required placeholder="nhập số nguyên dương, ví dụ: 1000">
                             </td>
                         </tr>
                     </table>

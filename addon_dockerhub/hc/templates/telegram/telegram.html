@@ -45,19 +45,32 @@
                         </td>
                     </tr>
                     <tr>
-                        <td width="20%">Kênh thông báo</td>
-                        <td><input type='number' id='chat_id' name='chat_id' value='{{telegram_data["notify"][0]["chat_id"]}}' placeholder="1889492588" class='form-control' required></td>
+                        <td width="20%">ID của kênh thông báo</td>
+                        <td><input type='number' id='chat_id' name='chat_id' value='{{telegram_data["notify"][0]["chat_id"]}}' placeholder="123456789" class='form-control' required></td>
                     </tr>
-                    </tr>
+                    {% if telegram_data['telegram_bot'][0]['allowed_chat_ids']|length == 1 %}
+                        <tr>
+                            <td width="20%">ID group thông báo</td>
+                            <td><input type='number' id='group_chat_id' name='group_chat_id' value='' placeholder="987654321" class='form-control' required></td>
+                        </tr>
+
+                    {% else %}
+                        {% for i in telegram_data['telegram_bot'][0]['allowed_chat_ids'] %}
+
+                            {% if i < 0 %}
+                            <tr>
+                                <td width="20%">ID group thông báo</td>
+                                <td><input type='number' id='group_chat_id' name='group_chat_id' value='{{0-i}}' placeholder="987654321" class='form-control' required></td>
+                            </tr>
+                            {% endif %}
+
+                        {% endfor %}
+                    {% endif %}
+
                     <tr>
                         <td width="20%">Username</td>
                         <td>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">@</span>
-                                </div>
-                                <input type='text' id='user' name='user' value='{{telegram_data["notify"][1]["data"]["user"]}}' placeholder="Nhập username tài khoản telegram của bạn" class='form-control' required>
-                            </div>
+                            <input type='text' id='user' name='user' value='{{telegram_data["notify"][1]["data"]["user"]}}' placeholder="Nhập username tài khoản telegram của bạn" class='form-control' required>
                         </td>
                     </tr>
                     </tr>

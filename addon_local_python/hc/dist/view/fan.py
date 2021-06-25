@@ -31,7 +31,8 @@ def add_fan():
                 list_broadlink, list_mac, list_host = broadlink_devices_info()
                 IR_CODE = load_ircode()
                 list_ir = IR_CODE['fan']
-                return render_template('./fan/add_fan.html', list_broadlink=list_broadlink, list_ir=list_ir, list_mac=list_mac, list_host=list_host)
+                list_javis_ir = get_javis_dev()
+                return render_template('./fan/add_fan.html', list_broadlink=list_broadlink, list_ir=list_ir, list_mac=list_mac, list_host=list_host, list_javis_ir=list_javis_ir)
             return render_template('./login.html', error='')
         return render_template('./login.html', error='')
     elif request.method == 'POST':
@@ -220,45 +221,85 @@ def hoc_lenh_fan():
         if session['logged_in'] == True:
             if request.method == "GET":
                 list_broadlink, list_mac, list_host = broadlink_devices_info()
-                return render_template('./fan/hoc_lenh_fan.html', list_broadlink=list_broadlink, list_mac=list_mac, list_host=list_host)
+                list_javis_ir = get_javis_dev()
+                return render_template('./fan/hoc_lenh_fan.html', list_broadlink=list_broadlink, list_mac=list_mac, list_host=list_host, list_javis_ir=list_javis_ir)
             else:
-                model = request.form['model']
-                manu = request.form['manufacture']
-                data = {}
-                data['commands'] = {}
-                data["manufacturer"] = [manu]
-                data['supportedModels'] = model
-                data['supportedController'] = "Broadlink"
-                data['commandsEncoding'] = "Base64"
-                data['commands']['off'] = request.form['turn_on']
-                data['commands']['default'] = {}
-                num_of_speed = int(request.form['numspeed'])
-                switcher = {
-                    1: ["low"],
-                    2: ["low", "high"],
-                    3: ["low", "medium", "high"],
-                    4: ["lowest", "low", "medium", "high"],
-                    5: ["lowest", "low", "medium", "high", "very high"],
-                    6: ["lowest", "low", "mediumlow", "medium", "mediumhigh", "high"]
-                }
-                list_speed = switcher.get(num_of_speed)
-                data["speed"] = list_speed[:num_of_speed]
-                for i in range(num_of_speed):
-                    data["commands"]['default'][list_speed[i]
-                                                ] = request.form["button"+str(i+1)]
+                if (request.args.get('gateway') != None):
+                    model = request.form['model']
+                    manu = request.form['manufacture']
+                    data = {}
+                    data['commands'] = {}
+                    data["manufacturer"] = [manu]
+                    data['supportedModels'] = model
+                    data['supportedController'] = "Broadlink"
+                    data['commandsEncoding'] = "Base64"
+                    data['commands']['off'] = request.form['turn_on']
+                    data['commands']['default'] = {}
+                    num_of_speed = int(request.form['numspeed'])
+                    switcher = {
+                        1: ["low"],
+                        2: ["low", "high"],
+                        3: ["low", "medium", "high"],
+                        4: ["lowest", "low", "medium", "high"],
+                        5: ["lowest", "low", "medium", "high", "very high"],
+                        6: ["lowest", "low", "mediumlow", "medium", "mediumhigh", "high"]
+                    }
+                    list_speed = switcher.get(num_of_speed)
+                    data["speed"] = list_speed[:num_of_speed]
+                    for i in range(num_of_speed):
+                        data["commands"]['default'][list_speed[i]
+                                                    ] = request.form["button"+str(i+1)]
 
-                code = int(time.time())
-                filename = str(code) + '.json'
-                with open(os.path.join(ROOT_DIR, 'custom_components/smartir/codes/fan', filename), 'w') as outfile:
-                    json.dump(data, outfile, indent=4)
+                    code = int(time.time())
+                    filename = str(code) + '.json'
+                    with open(os.path.join(ROOT_DIR, 'custom_components/smartir/codes/fan', filename), 'w') as outfile:
+                        json.dump(data, outfile, indent=4)
 
-                IR_CODE = load_ircode()
-                try:
-                    IR_CODE['fan'][manu][model] = code
-                except:
-                    IR_CODE['fan'][manu] = {}
-                    IR_CODE['fan'][manu][model] = code
-                write_ircode(IR_CODE)
+                    IR_CODE = load_ircode()
+                    try:
+                        IR_CODE['fan'][manu][model] = code
+                    except:
+                        IR_CODE['fan'][manu] = {}
+                        IR_CODE['fan'][manu][model] = code
+                    write_ircode(IR_CODE)
+                else:
+                    model = request.form['model']
+                    manu = request.form['manufacture']
+                    data = {}
+                    data['commands'] = {}
+                    data["manufacturer"] = [manu]
+                    data['supportedModels'] = model
+                    data['supportedController'] = "MQTT"
+                    data['commandsEncoding'] = "Base64"
+                    data['commands']['off'] = request.form['turn_on']
+                    data['commands']['default'] = {}
+                    num_of_speed = int(request.form['numspeed'])
+                    switcher = {
+                        1: ["low"],
+                        2: ["low", "high"],
+                        3: ["low", "medium", "high"],
+                        4: ["lowest", "low", "medium", "high"],
+                        5: ["lowest", "low", "medium", "high", "very high"],
+                        6: ["lowest", "low", "mediumlow", "medium", "mediumhigh", "high"]
+                    }
+                    list_speed = switcher.get(num_of_speed)
+                    data["speed"] = list_speed[:num_of_speed]
+                    for i in range(num_of_speed):
+                        data["commands"]['default'][list_speed[i]
+                                                    ] = request.form["button"+str(i+1)]
+
+                    code = int(time.time())
+                    filename = str(code) + '.json'
+                    with open(os.path.join(ROOT_DIR, 'custom_components/smartir/codes/fan', filename), 'w') as outfile:
+                        json.dump(data, outfile, indent=4)
+
+                    IR_CODE = load_ircode()
+                    try:
+                        IR_CODE['fan'][manu][model] = code
+                    except:
+                        IR_CODE['fan'][manu] = {}
+                        IR_CODE['fan'][manu][model] = code
+                    write_ircode(IR_CODE)
                 return list_fan()
 
 

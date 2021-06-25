@@ -37,10 +37,19 @@
                         <tr>
                             <td width="35%">Chọn remote hồng ngoại</td>
                             <td><select id="entity_id" name='entity_id' class='form-control' value="" required>
-                                    <option disabled selected value> -- Chọn remote -- </option>
-                                    {%for gateway in list_gateway%}
-                                    <option>{{gateway['entity_id']}}</option>
-                                    {%endfor%}
+                                    <optgroup label="Broadlink RM mini/Pro">
+                                        {%for gateway in list_gateway%}
+                                        <option>{{gateway['entity_id']}}</option>
+                                        {%endfor%}
+                                    </optgroup>
+
+                                    <optgroup label="Javishome IR">
+                                        {%for dev in list_javis_ir%}
+                                        <option>
+                                            {{dev['netid']}}
+                                        </option>
+                                        {%endfor%}
+                                    </optgroup>
                                 </select>
                             </td>
                         </tr>
